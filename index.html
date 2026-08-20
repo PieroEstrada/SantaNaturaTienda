@@ -1,0 +1,1006 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Santa Natura — Catálogo Oficial y Pedidos por WhatsApp</title>
+<meta name="description" content="Catálogo oficial Santa Natura con precios vigentes. Haz tu pedido por WhatsApp y consulta precios especiales por cantidad."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        try {
+            // Cada token de color apunta a una variable CSS con los canales RGB
+            // (definidas en styles.css). Así, al alternar la clase .dark en <html>,
+            // todo el catálogo cambia de tema sin tocar cada elemento, y las clases
+            // con opacidad (bg-surface/90, text-primary/50, …) siguen funcionando.
+            const TOKENS_COLOR = [
+                "inverse-on-surface", "tertiary-fixed", "on-tertiary-fixed", "primary",
+                "primary-container", "on-primary-fixed-variant", "surface-container-highest",
+                "on-surface-variant", "tertiary-container", "secondary-fixed", "secondary-fixed-dim",
+                "on-secondary-fixed-variant", "primary-fixed", "inverse-primary", "tertiary-fixed-dim",
+                "on-secondary-fixed", "on-tertiary-container", "surface-bright", "error-container",
+                "on-primary", "secondary", "on-primary-container", "on-secondary-container",
+                "surface-container-high", "on-primary-fixed", "background", "secondary-container",
+                "on-error-container", "outline", "on-surface", "outline-variant", "surface-container",
+                "on-background", "on-error", "surface-container-low", "error", "surface-tint",
+                "inverse-surface", "surface-dim", "surface", "on-tertiary", "primary-fixed-dim",
+                "on-tertiary-fixed-variant", "surface-variant", "surface-container-lowest",
+                "on-secondary", "tertiary"
+            ];
+            const colors = {};
+            TOKENS_COLOR.forEach((t) => { colors[t] = `rgb(var(--c-${t}) / <alpha-value>)`; });
+
+            // Colores de marca que NO cambian entre tema claro y oscuro:
+            // el verde oficial de WhatsApp, el dorado de las estrellas de
+            // valoración y el blanco puro del pie de página.
+            colors["action-whatsapp"] = "#25D366";
+            colors["rating-gold"] = "#FFC107";
+            colors["botanical-white"] = "#FFFFFF";
+
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors,
+                        "borderRadius": {
+                            "DEFAULT": "0.5rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                        },
+                        "spacing": {
+                            "xs": "8px",
+                            "lg": "40px",
+                            "md": "24px",
+                            "xl": "64px",
+                            "container-max": "1280px",
+                            "sm": "16px",
+                            "base": "4px",
+                            "gutter": "24px"
+                        },
+                        // Los títulos usan Plus Jakarta Sans (más carácter y
+                        // mejor peso en negrita); el cuerpo se queda en Inter.
+                        "fontFamily": {
+                            "display-lg-mobile": ["Plus Jakarta Sans", "Inter"],
+                            "label-md": ["Inter"],
+                            "label-caps": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "headline-md-mobile": ["Plus Jakarta Sans", "Inter"],
+                            "headline-md": ["Plus Jakarta Sans", "Inter"],
+                            "body-md": ["Inter"],
+                            "display-lg": ["Plus Jakarta Sans", "Inter"],
+                            "title-lg": ["Plus Jakarta Sans", "Inter"],
+                            "title-sm": ["Plus Jakarta Sans", "Inter"]
+                        },
+                        "fontSize": {
+                            "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                            "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                            "headline-md-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                            "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                            "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                        }
+                    },
+                },
+            }
+        } catch (_e) {}
+    </script>
+<!-- Fija el tema (claro/oscuro) ANTES de pintar para evitar el parpadeo inicial.
+     Respeta lo guardado por el usuario y, si no hay, la preferencia del sistema. -->
+<script>
+        (function () {
+            try {
+                var guardado = localStorage.getItem('tema');
+                var oscuro = guardado
+                    ? guardado === 'oscuro'
+                    : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var raiz = document.documentElement;
+                raiz.classList.toggle('dark', oscuro);
+                raiz.classList.toggle('light', !oscuro);
+            } catch (_e) {}
+        })();
+    </script>
+<link href="styles.css" rel="stylesheet"/>
+
+<!-- ==========================================================================
+     Ajustes del hero (imagen principal + tarjeta de "productos")
+     Va DESPUES de styles.css para que mande sobre lo anterior.
+     ========================================================================== -->
+<style id="hero-ajustes">
+    /* Marco de la foto: proporcion fija, asi nunca queda ni aplastada ni gigante. */
+    #inicio .hero-media {
+        position: relative;
+        display: block;
+        width: 100%;
+        height: auto;
+        min-height: 0;
+        padding: 0;
+        aspect-ratio: 4 / 3;          /* movil: mas alta, se aprecia mejor */
+        border-radius: 1.25rem;
+        overflow: hidden;
+        background: rgb(var(--c-surface-container, 240 244 240) / 1);
+    }
+    @media (min-width: 768px) {
+        #inicio .hero-media { aspect-ratio: 5 / 4; }   /* escritorio */
+    }
+
+    /* La foto llena el marco sin deformarse. */
+    #inicio #hero-imagen {
+        position: absolute;
+        inset: 0;
+        z-index: 1;
+        width: 100%;
+        height: 100%;
+        max-width: none;
+        object-fit: cover;
+        object-position: 50% 42%;     /* sube el encuadre: se ven caras y productos */
+        display: block;
+        transform: scale(1);
+        transition: transform .6s cubic-bezier(.22,.61,.36,1);
+    }
+    #inicio .hero-marco:hover #hero-imagen { transform: scale(1.045); }
+
+    /* Icono de respaldo mientras carga (o si la foto falla). */
+    #inicio .hero-media__respaldo {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        display: grid;
+        place-items: center;
+        font-size: 4.5rem;
+        opacity: .35;
+    }
+
+    /* Velo suave abajo-izquierda: da contraste a la tarjeta y evita que la
+       foto "compita" con el texto. */
+    #inicio .hero-media::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        pointer-events: none;
+        background: linear-gradient(to top right, rgba(0,0,0,.22), rgba(0,0,0,0) 55%);
+        animation: none;
+        opacity: 1;
+    }
+
+    /* LA CLAVE: la tarjeta de productos SIEMPRE por encima de la foto. */
+    #inicio .hero-marco { z-index: 1; }
+    #inicio #hero-contador { z-index: 30; }
+</style>
+
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+
+<!-- ==========================================================================
+     Iconos SVG reutilizables
+     --------------------------------------------------------------------------
+     Se declaran una sola vez y se insertan donde haga falta con:
+        <svg class="w-6 h-6"><use href="#ico-whatsapp"></use></svg>
+     El icono hereda el color del texto (fill="currentColor"), así que funciona
+     igual sobre el verde de WhatsApp que sobre cualquier otro fondo.
+     ========================================================================== -->
+<svg class="hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+<symbol id="ico-whatsapp" viewBox="0 0 24 24">
+<path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+</symbol>
+</svg>
+
+<!-- ==========================================================================
+     Popup de bienvenida — precios especiales por cantidad
+     ========================================================================== -->
+<!-- <div class="fixed inset-0 z-[200] flex items-center justify-center p-md bg-black/60 opacity-0 pointer-events-none transition-opacity duration-500" id="popup-oferta" onclick="if (event.target === this) cerrarPopup()">
+<div class="bg-surface rounded-3xl overflow-hidden max-w-lg w-full shadow-2xl relative">
+<button aria-label="Cerrar" class="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface z-10" onclick="cerrarPopup()">
+<span class="material-symbols-outlined">close</span>
+</button>
+<div class="img-placeholder h-40 grid place-items-center bg-surface-container">
+<span class="material-symbols-outlined text-7xl text-primary/50" style="font-variation-settings: 'FILL' 1;">local_florist</span>
+</div>
+<div class="p-lg text-center space-y-md">
+<div class="inline-block bg-tertiary-fixed text-on-tertiary-fixed px-sm py-1 rounded-full font-label-md text-xs">PRECIOS ESPECIALES 🌿</div>
+<h2 class="font-headline-md text-headline-md-mobile text-primary">¿Llevas mayor cantidad?</h2>
+<p class="font-body-md text-on-surface-variant" data-nota-cantidad>Solicita tu precio especial con descuento al enviar tu pedido por WhatsApp.</p>
+<a class="flex items-center justify-center gap-xs w-full bg-[#25D366] text-white py-md rounded-xl font-title-lg hover:brightness-105 transition-all shadow-lg pulse-whatsapp"
+   data-wa="Hola, quiero consultar por el precio especial por cantidad de los productos Santa Natura." href="#" target="_blank" rel="noopener">
+<svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+                Consultar por WhatsApp
+            </a>
+</div>
+</div>
+</div> -->
+
+<!-- ==========================================================================
+     Popup de bienvenida — Rediseñado
+     ========================================================================== -->
+<div class="fixed inset-0 z-[200] flex items-center justify-center p-4 sm:p-md bg-black/70 backdrop-blur-md opacity-0 pointer-events-none transition-all duration-300" id="popup-oferta" onclick="if (event.target === this) cerrarPopup()">
+  <div class="bg-surface rounded-3xl overflow-hidden max-w-md w-full shadow-2xl relative border border-outline-variant/40 transform scale-95 transition-transform duration-300">
+    
+    <!-- Botón Cerrar -->
+    <button aria-label="Cerrar" class="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface z-10 bg-surface/80 hover:bg-surface rounded-full p-2 backdrop-blur-sm transition-all" onclick="cerrarPopup()">
+      <span class="material-symbols-outlined text-lg">close</span>
+    </button>
+
+    <!-- Encabezado con degradado suave -->
+    <div class="relative bg-gradient-to-br from-primary/20 via-primary/5 to-transparent p-8 text-center flex flex-col items-center justify-center border-b border-outline-variant/30">
+      <div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-3 shadow-inner">
+        <span class="material-symbols-outlined text-4xl text-primary" style="font-variation-settings: 'FILL' 1;">local_florist</span>
+      </div>
+      <span class="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full font-label-caps text-xs tracking-wider uppercase">
+        <span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Precios Especiales 🌿
+      </span>
+    </div>
+
+    <!-- Cuerpo del Popup -->
+    <div class="p-6 text-center space-y-4">
+      <h2 class="font-headline-md text-2xl font-bold text-on-surface">¿Compras por cantidad?</h2>
+      <p class="font-body-md text-sm text-on-surface-variant leading-relaxed" data-nota-cantidad>
+        Obtén un descuento exclusivo y precios de distribuidor solicitando tu cotización directamente por WhatsApp.
+      </p>
+
+      <div class="pt-2">
+        <a class="flex items-center justify-center gap-2 w-full bg-action-whatsapp text-white py-3.5 px-6 rounded-full font-title-sm text-base hover:brightness-105 transition-all shadow-lg shadow-action-whatsapp/25 hover:shadow-xl active:scale-[0.98]"
+           data-wa="Hola, quiero consultar por el precio especial por cantidad de los productos Santa Natura." href="#" target="_blank" rel="noopener">
+          <svg class="w-5 h-5 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+          Consultar por WhatsApp
+        </a>
+      </div>
+
+      <button class="text-xs text-on-surface-variant hover:text-primary transition-colors font-label-caps" onclick="cerrarPopup()">
+        Continuar viendo el catálogo
+      </button>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ==========================================================================
+     Ficha de producto
+     ========================================================================== -->
+<div class="fixed inset-0 z-[200] flex items-center justify-center p-md bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300" id="modal-producto" onclick="if (event.target === this) cerrarFichaProducto()">
+<div class="bg-surface rounded-3xl overflow-hidden max-w-4xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto scroll-suave">
+<button aria-label="Cerrar" class="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface z-10 bg-surface/80 rounded-full p-2" onclick="cerrarFichaProducto()">
+<span class="material-symbols-outlined">close</span>
+</button>
+<div class="grid md:grid-cols-2">
+<div class="bg-surface-container p-md md:p-lg flex items-center justify-center">
+<div class="w-full rounded-2xl overflow-hidden" id="ficha-imagen"></div>
+</div>
+<div class="p-md md:p-xl space-y-md">
+<span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full font-label-caps text-[11px] uppercase" id="ficha-categoria">Categoría</span>
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface leading-tight" id="ficha-titulo">Nombre del producto</h2>
+
+<div>
+<div class="flex items-center gap-sm">
+<span class="text-3xl font-bold text-primary" id="ficha-precio">S/ 0.00</span>
+<span class="hidden bg-error text-on-error px-2 py-1 rounded-full text-[11px] font-bold" id="ficha-descuento">-0%</span>
+</div>
+<del class="hidden text-on-surface-variant text-sm" id="ficha-precio-original">S/ 0.00</del>
+<p class="text-xs text-on-surface-variant mt-1">Precio de venta al público</p>
+</div>
+
+<div class="flex items-center gap-xs text-primary bg-primary/10 rounded-full px-sm py-2 w-fit">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-caps text-sm">Acumulas <strong id="ficha-puntos">0.00 pts</strong></span>
+</div>
+
+<p class="font-body-md text-on-surface-variant text-sm" id="ficha-descripcion">Descripción del producto.</p>
+
+<!-- Aviso obligatorio de precios por cantidad -->
+<div class="flex gap-xs items-start bg-primary/5 border border-primary/20 rounded-2xl p-sm">
+<span class="material-symbols-outlined text-primary text-lg shrink-0">sell</span>
+<p class="font-body-md text-xs text-on-surface-variant" data-nota-cantidad></p>
+</div>
+
+<div class="space-y-xs pt-xs">
+<button class="w-full bg-primary text-on-primary py-md rounded-full font-title-sm text-base hover:brightness-110 transition-all shadow-md flex items-center justify-center gap-xs active:scale-[0.98]"
+        onclick="agregarDesdeFicha()">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+                        Agregar al pedido
+                    </button>
+<a class="w-full bg-action-whatsapp text-white py-md rounded-full font-title-sm text-base hover:brightness-105 transition-all shadow-md shadow-action-whatsapp/25 flex items-center justify-center gap-xs active:scale-[0.98]"
+   href="#" id="ficha-whatsapp" target="_blank" rel="noopener">
+<svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+                        Consultar por WhatsApp
+                    </a>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ==========================================================================
+     Carrito / Resumen del pedido
+     ========================================================================== -->
+<div class="fixed inset-0 z-[190] bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300" id="carrito-fondo" onclick="cerrarCarrito()"></div>
+
+<aside class="fixed top-0 right-0 h-full w-full max-w-md z-[195] bg-surface shadow-2xl flex flex-col translate-x-full transition-transform duration-300" id="carrito-panel">
+<header class="flex items-center justify-between p-md border-b border-outline-variant/30">
+<div>
+<h2 class="font-headline-md text-xl text-on-surface">Tu pedido</h2>
+<p class="text-xs text-on-surface-variant" id="carrito-unidades">0 unidades</p>
+</div>
+<button aria-label="Cerrar carrito" class="text-on-surface-variant hover:text-on-surface rounded-full p-2 hover:bg-surface-container transition-colors" onclick="cerrarCarrito()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</header>
+
+<div class="flex-1 overflow-y-auto px-md scroll-suave">
+<div id="carrito-lineas"></div>
+<div class="hidden py-xl text-center space-y-sm" id="carrito-vacio">
+<span class="material-symbols-outlined text-5xl text-outline-variant">shopping_bag</span>
+<p class="font-body-md text-on-surface-variant text-sm">Aún no agregas productos.</p>
+<button class="text-primary font-label-caps text-sm hover:underline" onclick="cerrarCarrito()">Ver el catálogo</button>
+</div>
+</div>
+
+<div class="hidden border-t border-outline-variant/30 p-md space-y-md bg-surface-container-low" id="carrito-resumen">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-on-surface-variant">Total</span>
+<span class="text-2xl font-bold text-on-surface" id="carrito-total">S/ 0.00</span>
+</div>
+<div class="flex items-center justify-between text-primary">
+<span class="font-label-caps text-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">stars</span>
+                Puntos acumulados
+            </span>
+<span class="font-bold" id="carrito-puntos">0.00 pts</span>
+</div>
+
+<!-- Aviso obligatorio de precios por cantidad -->
+<div class="flex gap-xs items-start bg-primary/5 border border-primary/20 rounded-2xl p-sm">
+<span class="material-symbols-outlined text-primary text-lg shrink-0">sell</span>
+<p class="font-body-md text-xs text-on-surface-variant" data-nota-cantidad></p>
+</div>
+
+<button class="w-full bg-action-whatsapp text-white py-md rounded-full font-title-sm text-base hover:brightness-105 transition-all shadow-lg shadow-action-whatsapp/25 flex items-center justify-center gap-xs active:scale-[0.98]"
+        onclick="enviarPedidoPorWhatsApp()">
+<svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+            Enviar pedido por WhatsApp
+        </button>
+<p class="text-[11px] text-center text-on-surface-variant">El pago se coordina directamente con tu asesor. No cobramos en línea.</p>
+<button class="w-full text-xs text-outline hover:text-error" onclick="vaciarCarrito()">Vaciar pedido</button>
+</div>
+</aside>
+
+<!-- Aviso flotante -->
+<div class="fixed bottom-28 left-1/2 -translate-x-1/2 z-[210] bg-inverse-surface text-inverse-on-surface px-md py-3 rounded-full shadow-xl text-sm font-label-caps opacity-0 translate-y-4 transition-all duration-300 pointer-events-none max-w-[90vw] text-center" id="aviso"></div>
+
+<!-- ==========================================================================
+     Barra promocional
+     ========================================================================== -->
+<div class="bg-primary text-on-primary">
+<a class="max-w-container-max mx-auto flex items-center justify-center gap-2 py-2 px-md text-[11px] md:text-xs font-label-caps hover:opacity-90 transition-opacity"
+   data-wa="Hola, quiero conocer las promociones del mes de Santa Natura." href="#" target="_blank" rel="noopener">
+<span>🌿 Catálogo oficial vigente · Envíos a todo el Perú</span>
+<span class="hidden sm:inline-flex items-center gap-1 bg-white/20 rounded-full px-2 py-0.5">
+<svg class="w-3 h-3" aria-hidden="true"><use href="#ico-whatsapp"></use></svg> Escríbenos
+</span>
+</a>
+</div>
+
+<!-- ==========================================================================
+     Header
+     --------------------------------------------------------------------------
+     Una sola fila alta (80px) con marca, botón de «Categorías», buscador y
+     acciones. Las 19 categorías no caben en línea, así que todas viven en el
+     mega menú, que se abre con el botón «Categorías» (y con el botón de menú
+     en móvil). La fila de accesos rápidos (#nav-categorias) sigue existiendo
+     oculta porque store.js la rellena; se puede volver a mostrar quitándole
+     la clase «hidden» al contenedor.
+     ========================================================================== -->
+<header class="bg-surface/80 backdrop-blur-md sticky top-0 z-[100] border-b border-outline-variant/30 shadow-sm transition-all">
+<div class="max-w-container-max mx-auto px-md md:px-lg">
+
+<div class="flex justify-between items-center gap-md h-20">
+<div class="flex items-center gap-sm shrink-0">
+<button aria-label="Abrir menú" class="lg:hidden p-2 rounded-full text-on-surface-variant hover:bg-surface-container transition-colors" onclick="alternarMegaMenu()">
+<span class="material-symbols-outlined">menu</span>
+</button>
+
+<a class="flex items-center gap-2 shrink-0 hover:opacity-90 active:scale-95 transition-transform" href="#inicio">
+<span class="grid place-items-center w-10 h-10 rounded-full bg-primary text-on-primary shrink-0">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">eco</span>
+</span>
+<span class="leading-tight hidden sm:block">
+<span class="block font-headline-md text-headline-md-mobile md:text-headline-md font-bold text-primary whitespace-nowrap">Santa Natura</span>
+</span>
+</a>
+</div>
+
+<!-- Botón del mega menú (en móvil se usa el icono de menú de la izquierda) -->
+<div class="hidden lg:flex items-center gap-md">
+<button class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors font-label-caps"
+        id="btn-mega" aria-expanded="false" aria-controls="mega-menu" onclick="alternarMegaMenu()">
+<span class="material-symbols-outlined text-lg">apps</span>
+        Categorías
+        <span class="material-symbols-outlined text-lg transition-transform duration-200" id="mega-flecha">expand_more</span>
+</button>
+
+<a class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors font-label-caps" href="afiliacion.html">
+<span class="material-symbols-outlined text-lg">workspace_premium</span>
+        Afíliate
+      </a>
+</div>
+
+<div class="flex items-center gap-sm ml-auto">
+<div class="hidden lg:block relative w-64 xl:w-80">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">search</span>
+<input autocomplete="off" class="w-full bg-surface-container-low border border-transparent rounded-full py-2.5 pl-12 pr-4 text-sm placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="buscador" placeholder="Buscar…" type="search"
+       role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias"/>
+<!-- Sugerencias mientras escribes (las llena store.js) -->
+<ul class="hidden absolute left-0 right-0 top-full mt-2 z-[120] bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden max-h-96 overflow-y-auto scroll-suave" id="sugerencias" role="listbox"></ul>
+</div>
+
+<button aria-label="Cambiar tema claro/oscuro" class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-all duration-300" onclick="alternarTema()">
+<span class="material-symbols-outlined" id="icono-tema">dark_mode</span>
+</button>
+<button aria-label="Ver mi pedido" class="relative p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-all duration-300" onclick="abrirCarrito()">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="hidden absolute top-0 right-0 bg-primary text-on-primary text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full text-center leading-[18px] ring-2 ring-surface" id="carrito-contador">0</span>
+</button>
+<a class="hidden md:inline-flex bg-action-whatsapp text-white px-4 py-2 rounded-full font-label-caps text-sm hover:brightness-105 transition-all items-center gap-2 shadow-sm hover:opacity-90 active:scale-95"
+   data-wa="Hola, quiero hacer una consulta sobre los productos Santa Natura." href="#" target="_blank" rel="noopener">
+<svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg> WhatsApp
+</a>
+</div>
+</div>
+
+<!-- Buscador para pantallas pequeñas -->
+<div class="lg:hidden pb-3">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">search</span>
+<input autocomplete="off" class="w-full bg-surface-container-low border border-transparent rounded-full py-2.5 pl-10 pr-4 text-sm placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="buscador-movil" placeholder="Busca un producto…" type="search"
+       role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias-movil"/>
+<ul class="hidden absolute left-0 right-0 top-full mt-2 z-[120] bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden max-h-80 overflow-y-auto scroll-suave" id="sugerencias-movil" role="listbox"></ul>
+</div>
+</div>
+
+<!-- Accesos rápidos de categoría (ocultos en el diseño actual) -->
+<div class="hidden items-center gap-sm h-14 border-t border-outline-variant/30">
+<nav class="flex items-center gap-2 overflow-x-auto sin-barra" id="nav-categorias"></nav>
+</div>
+</div>
+
+<!-- Mega menú: el árbol completo de categorías. En móvil hace de menú lateral. -->
+<div class="hidden border-t border-outline-variant/30 bg-surface shadow-xl max-h-[70vh] overflow-y-auto scroll-suave" id="mega-menu">
+<!-- En móvil este panel hace de menú principal, así que aquí va el acceso a
+     la página de afiliación (en escritorio ya está en la barra superior). -->
+<div class="lg:hidden max-w-container-max mx-auto px-md pt-md">
+<a class="flex items-center gap-2 bg-primary/5 border border-primary/20 text-primary rounded-2xl px-md py-3 font-title-sm text-base" href="afiliacion.html">
+<span class="material-symbols-outlined">workspace_premium</span>
+      Afíliate y compra con descuento
+    </a>
+</div>
+<div class="max-w-container-max mx-auto px-md md:px-lg py-md grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-lg gap-y-md" id="mega-contenido"></div>
+</div>
+</div>
+</header>
+
+<!-- ==========================================================================
+     Hero
+     ========================================================================== -->
+<section class="relative flex items-center py-lg md:py-xl overflow-hidden bg-surface-container-lowest" id="inicio">
+<div class="max-w-container-max mx-auto px-md grid md:grid-cols-2 gap-lg md:gap-xl items-center relative z-10">
+<div class="space-y-md">
+<div class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-sm tracking-wider uppercase">Distribuidor Autorizado Oficial</div>
+<h1 class="font-headline-md text-4xl md:text-5xl lg:text-6xl text-on-surface leading-tight font-bold">
+                Catálogo Oficial <br/><span class="text-primary">Santa Natura</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl leading-relaxed">
+                Arma tu pedido con los precios vigentes, revisa tus puntos acumulados y envíanoslo por WhatsApp. Te confirmamos stock, precio final y envío al instante.
+            </p>
+<div class="flex flex-col sm:flex-row flex-wrap gap-sm md:gap-md pt-xs">
+<a class="bg-primary text-on-primary px-lg py-md rounded-full font-title-sm flex items-center justify-center gap-xs shadow-lg hover:brightness-110 transition-all w-full sm:w-auto active:scale-[0.98]" href="#productos">
+<span class="material-symbols-outlined">grid_view</span> Ver catálogo
+</a>
+<a class="pulse-whatsapp bg-action-whatsapp text-white px-lg py-md rounded-full font-title-sm flex items-center justify-center gap-xs shadow-lg hover:brightness-105 transition-all w-full sm:w-auto"
+   data-wa="Hola, deseo recibir el catálogo y la lista de precios vigente de Santa Natura." href="#" target="_blank" rel="noopener">
+<svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+                    Pedir por WhatsApp
+                </a>
+</div>
+</div>
+
+<!-- ----------------------------------------------------------------------
+     Columna derecha: imagen principal.
+
+     PARA CAMBIAR LA FOTO: edita store.js → CONFIG.heroImagen (acepta una URL
+     https://… o una ruta local como 'img/hero.jpg'). El src de abajo es solo
+     el respaldo que se ve mientras carga el JavaScript.
+     Si la imagen no existe, se muestra el fondo decorativo con la hoja.
+     ---------------------------------------------------------------------- -->
+<div class="relative order-last">
+<div class="absolute -inset-6 bg-primary/10 blur-3xl rounded-full" aria-hidden="true"></div>
+<figure class="hero-marco relative bg-surface p-2 md:p-3 rounded-3xl shadow-2xl border border-outline-variant/50 overflow-hidden">
+<div class="hero-media img-placeholder">
+<span class="material-symbols-outlined hero-media__respaldo" style="font-variation-settings: 'FILL' 1;">local_florist</span>
+<img alt="Productos naturales Santa Natura" decoding="async" id="hero-imagen"
+     width="1200" height="960" loading="eager" fetchpriority="high"
+     onerror="this.style.display='none'"
+     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqG9y0bjIcgMdE3FMn7UHAU_LGr2bVGAs7xwFENL-5IH5DC2cOZIkyKiFtagOBYwt0LvkEDQC5SlM4_ocueZob4EYRQDuU52bOSLWaNmsNkMhmlvI_MCfBEBBXPLV_B3yg9u1jduE73NscYHGLICStSb8_ptn_7E2ksWBNFUf96Kg6QwDClJwTYeJBD1_NyJi8XcCcYKX7n6EkhoTX4FfeHCOWQy57sNp0-v_XE0QReor8oXLWHqV_tA" />
+</div>
+</figure>
+
+<!-- Contador de productos (se actualiza solo desde products.js) -->
+<div class="absolute z-30 -bottom-5 left-2 md:-bottom-7 md:-left-7 bg-surface rounded-2xl shadow-2xl ring-1 ring-outline-variant/50 px-md py-sm flex items-center gap-sm whitespace-nowrap" id="hero-contador">
+<span class="material-symbols-outlined text-3xl text-primary shrink-0" style="font-variation-settings: 'FILL' 1;">inventory_2</span>
+<div class="leading-tight">
+<p class="font-headline-md text-xl text-on-surface font-bold" id="hero-total">87</p>
+<p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">productos</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     Afiliación — resumen de los planes
+     --------------------------------------------------------------------------
+     Las tarjetas NO se escriben aquí: las pinta store.js desde la constante
+     PLANES_AFILIACION, que es la misma que usa afiliacion.html. Así los
+     precios nunca se desincronizan entre las dos páginas.
+     La página completa (plan de compensación, bonos y formulario) está en
+     afiliacion.html.
+     ========================================================================== -->
+<section class="py-xl bg-surface-container-low border-y border-outline-variant/30" id="afiliacion">
+<div class="max-w-container-max mx-auto px-md">
+
+<div class="text-center max-w-2xl mx-auto mb-lg space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-xs tracking-wider uppercase">Emprende con nosotros</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">Planes de afiliación</h2>
+<p class="font-body-md text-base text-on-surface-variant">Compra con descuento de distribuidor desde tu primer pedido y accede al plan de compensación. Elige el paquete con el que quieres empezar.</p>
+</div>
+
+<!-- Tarjetas de planes (las llena store.js) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-sm md:gap-md items-stretch" id="planes-afiliacion"></div>
+
+<div class="mt-lg bg-primary/5 border border-primary/20 rounded-3xl p-md md:p-lg flex flex-col md:flex-row items-center justify-between gap-md">
+<div class="text-center md:text-left">
+<h3 class="font-headline-md text-xl text-primary mb-1">¿Quieres conocer todas las formas de ganar?</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Descuentos por volumen, Bono Mercadeo, Bono Matricial 3x3 y regalías por generación.</p>
+</div>
+<a class="shrink-0 inline-flex items-center gap-2 bg-primary text-on-primary px-lg py-3 rounded-full font-title-sm text-base shadow-lg hover:brightness-110 transition-all active:scale-[0.98]" href="afiliacion.html">
+                Ver el plan completo
+                <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+
+</div>
+</section>
+
+<!-- ==========================================================================
+     Catálogo
+     ========================================================================== -->
+<section class="py-xl" id="productos">
+<div class="max-w-container-max mx-auto px-md">
+<div class="flex flex-col lg:flex-row gap-gutter">
+
+<!-- Barra lateral -->
+<!-- La barra lateral se queda fija al hacer scroll. Como junta varias tarjetas
+     y puede pasar del alto de la pantalla, se le limita la altura y se le da
+     scroll propio; si no, el filtro de precio queda fuera de alcance. -->
+<aside class="w-full lg:w-72 flex-shrink-0 space-y-md lg:sticky lg:top-28 lg:self-start lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto scroll-suave lg:pr-2">
+<div class="bg-surface p-md rounded-3xl shadow-sm border border-outline-variant/50">
+<h3 class="font-headline-md text-lg mb-sm text-on-surface">Categorías</h3>
+<!-- Árbol completo (categorías y subcategorías). Se genera desde COLECCIONES
+     en products.js; los conteos no suman el total porque un producto está en
+     varias categorías a la vez. -->
+<ul class="space-y-sm max-h-[17rem] overflow-y-auto scroll-suave pr-2 font-body-md" id="sidebar-categorias"></ul>
+</div>
+
+<!-- Filtrar por precio. Los topes (mín. y máx.) los calcula store.js con los
+     precios reales del catálogo, así que no hay que tocar números aquí. -->
+<div class="bg-surface p-md rounded-3xl shadow-sm border border-outline-variant/50">
+<h3 class="font-headline-md text-lg mb-sm text-on-surface">Filtrar por precio</h3>
+
+<div class="grid grid-cols-2 gap-sm">
+<div>
+<label class="block font-label-caps text-[10px] text-on-surface-variant mb-1 uppercase tracking-wider" for="precio-min">Mínimo</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-outline pointer-events-none">S/</span>
+<input class="w-full bg-surface-container-low border-transparent rounded-xl py-2 pl-8 pr-2 text-sm focus:ring-primary focus:border-primary transition-colors"
+       id="precio-min" inputmode="numeric" min="0" step="1" type="number"/>
+</div>
+</div>
+<div>
+<label class="block font-label-caps text-[10px] text-on-surface-variant mb-1 uppercase tracking-wider" for="precio-max">Máximo</label>
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-xs text-outline pointer-events-none">S/</span>
+<input class="w-full bg-surface-container-low border-transparent rounded-xl py-2 pl-8 pr-2 text-sm focus:ring-primary focus:border-primary transition-colors"
+       id="precio-max" inputmode="numeric" min="0" step="1" type="number"/>
+</div>
+</div>
+</div>
+
+<!-- Barra de rango: mueve el tope máximo sin tener que escribir. -->
+<input class="w-full mt-md accent-primary cursor-pointer" id="precio-slider" type="range"/>
+
+<div class="flex items-center justify-between gap-xs mt-sm">
+<p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider" id="precio-resumen"></p>
+<button class="font-label-caps text-[10px] text-primary hover:underline uppercase tracking-wider hidden" id="precio-limpiar" onclick="limpiarFiltroPrecio()">Limpiar</button>
+</div>
+</div>
+
+<div class="bg-primary/5 border border-primary/20 p-md rounded-3xl space-y-xs">
+<span class="material-symbols-outlined text-primary">sell</span>
+<h3 class="font-headline-md text-sm text-primary">Precios especiales</h3>
+<p class="font-body-md text-xs text-on-surface-variant" data-nota-cantidad></p>
+</div>
+</aside>
+
+<!-- Grilla -->
+<div class="flex-1">
+<div class="flex flex-wrap justify-between items-center gap-sm mb-md">
+<div>
+<h2 class="font-headline-md text-3xl text-on-surface font-bold">Nuestro catálogo</h2>
+<p class="font-body-md text-sm text-on-surface-variant mt-1" id="contador-resultados">0 productos</p>
+</div>
+<div class="flex flex-wrap items-center gap-sm">
+<div class="flex items-center gap-xs">
+<label class="font-label-caps text-xs text-on-surface-variant uppercase tracking-wider" for="por-pagina">Mostrar:</label>
+<select class="bg-surface border-outline-variant/50 rounded-full py-1.5 px-4 text-sm focus:ring-primary focus:border-primary font-body-md" id="por-pagina">
+<option value="12">12</option>
+<option selected value="24">24</option>
+<option value="48">48</option>
+<option value="96">96</option>
+</select>
+</div>
+<div class="flex items-center gap-xs">
+<label class="font-label-caps text-xs text-on-surface-variant uppercase tracking-wider" for="orden">Ordenar:</label>
+<select class="bg-surface border-outline-variant/50 rounded-full py-1.5 px-4 text-sm focus:ring-primary focus:border-primary font-body-md" id="orden">
+<option value="popular">Recomendados</option>
+<option value="precio-asc">Precio: de menor a mayor</option>
+<option value="precio-desc">Precio: de mayor a menor</option>
+<option value="puntos-asc">Puntos: de menor a mayor</option>
+<option value="puntos-desc">Puntos: de mayor a menor</option>
+</select>
+</div>
+</div>
+</div>
+
+<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-sm md:gap-gutter" id="grid-productos"></div>
+
+<div class="hidden py-xl text-center space-y-sm" id="grid-vacio">
+<span class="material-symbols-outlined text-5xl text-outline-variant">search_off</span>
+<p class="font-body-md text-on-surface-variant">No encontramos productos con esos filtros.</p>
+</div>
+
+<!-- Paginación (la genera store.js; se oculta sola si todo cabe en una página) -->
+<nav class="hidden flex-wrap items-center justify-center gap-2 mt-lg" id="paginacion" aria-label="Páginas del catálogo"></nav>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     Precios especiales por cantidad + puntos
+     ========================================================================== -->
+<section class="py-xl bg-surface-container" id="ofertas">
+<div class="max-w-container-max mx-auto px-md">
+<div class="bg-surface rounded-3xl border border-primary/20 shadow-xl p-lg md:p-xl grid md:grid-cols-2 gap-lg items-center relative overflow-hidden">
+<!-- Mancha difuminada decorativa (no interfiere con el clic) -->
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none" aria-hidden="true"></div>
+<div class="space-y-md relative z-10">
+<div class="inline-block bg-primary text-on-primary px-4 py-1.5 rounded-full font-label-caps text-xs tracking-wider uppercase">COMPRAS POR CANTIDAD</div>
+<h2 class="font-headline-md text-3xl md:text-4xl text-primary font-bold">Mientras más llevas, mejor es tu precio</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed" data-nota-cantidad></p>
+<a class="pulse-whatsapp inline-flex bg-action-whatsapp text-white px-lg py-md rounded-full font-title-sm items-center gap-xs shadow-lg hover:brightness-105 transition-all mt-sm"
+   data-wa="Hola, quiero cotizar una compra por cantidad y conocer mi precio especial con descuento." href="#" target="_blank" rel="noopener">
+<svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+                    Cotizar por cantidad
+                </a>
+</div>
+<div class="grid gap-sm relative z-10">
+<div class="flex gap-md items-start bg-surface-container-low rounded-3xl p-md hover:shadow-md transition-shadow">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-2xl text-primary" style="font-variation-settings: 'FILL' 1;">shopping_cart</span>
+</div>
+<div>
+<h3 class="font-headline-md text-lg text-on-surface mb-1">1. Arma tu pedido</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Agrega los productos que quieras al carrito. Verás el total y los puntos que acumulas.</p>
+</div>
+</div>
+<div class="flex gap-md items-start bg-surface-container-low rounded-3xl p-md hover:shadow-md transition-shadow">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-2xl text-primary" style="font-variation-settings: 'FILL' 1;">send</span>
+</div>
+<div>
+<h3 class="font-headline-md text-lg text-on-surface mb-1">2. Envíalo por WhatsApp</h3>
+<p class="font-body-md text-sm text-on-surface-variant">El resumen se envía automáticamente a tu asesor con el detalle completo.</p>
+</div>
+</div>
+<div class="flex gap-md items-start bg-surface-container-low rounded-3xl p-md hover:shadow-md transition-shadow">
+<div class="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-2xl text-primary" style="font-variation-settings: 'FILL' 1;">handshake</span>
+</div>
+<div>
+<h3 class="font-headline-md text-lg text-on-surface mb-1">3. Cierra tu precio</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Confirmamos stock, tu precio especial por cantidad y coordinamos el envío.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     Beneficios
+     ========================================================================== -->
+<section class="py-xl bg-surface-container-low" id="beneficios">
+<div class="max-w-container-max mx-auto px-md">
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<div class="flex flex-col items-center text-center gap-sm bg-surface p-lg rounded-3xl shadow-sm border border-outline-variant/30 hover:shadow-md transition-all group">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">local_shipping</span>
+</div>
+<div>
+<h3 class="font-headline-md text-lg mb-2">Envío Express</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Lima &amp; Provincias</p>
+</div>
+</div>
+<div class="flex flex-col items-center text-center gap-sm bg-surface p-lg rounded-3xl shadow-sm border border-outline-variant/30 hover:shadow-md transition-all group">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">verified</span>
+</div>
+<div>
+<h3 class="font-headline-md text-lg mb-2">Garantía Total</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Productos 100% Originales</p>
+</div>
+</div>
+<div class="flex flex-col items-center text-center gap-sm bg-surface p-lg rounded-3xl shadow-sm border border-outline-variant/30 hover:shadow-md transition-all group">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">payments</span>
+</div>
+<div>
+<h3 class="font-headline-md text-lg mb-2">Pago Seguro</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Contra entrega en Lima</p>
+</div>
+</div>
+<div class="flex flex-col items-center text-center gap-sm bg-surface p-lg rounded-3xl shadow-sm border border-outline-variant/30 hover:shadow-md transition-all group">
+<div class="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-3xl text-primary">support_agent</span>
+</div>
+<div>
+<h3 class="font-headline-md text-lg mb-2">Asesoría Personalizada</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Te ayudamos a elegir</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     Sección de Testimonios
+     ========================================================================== -->
+<section class="py-xl bg-surface-container-low border-y border-outline-variant/40" id="testimonios">
+  <div class="max-w-container-max mx-auto px-md">
+    
+    <div class="text-center max-w-2xl mx-auto mb-lg space-y-sm">
+      <span class="bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-xs uppercase tracking-wider">
+        Clientes Satisfechos
+      </span>
+      <h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">
+        Lo que dicen quienes confían en nosotros
+      </h2>
+      <p class="font-body-md text-base text-on-surface-variant">
+        Cientos de familias peruanas cuidan su salud con nuestros productos 100% originales.
+      </p>
+    </div>
+
+    <!-- Grilla de testimonios -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-gutter">
+      
+      <!-- Tarjeta 1 -->
+      <div class="testimonial-card opacity-0 bg-surface p-lg rounded-3xl shadow-sm border border-outline-variant/40 flex flex-col justify-between space-y-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+        <div class="space-y-sm">
+          <div class="flex text-rating-gold gap-1">
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+          </div>
+          <p class="font-body-md text-base text-on-surface-variant italic leading-relaxed">
+            "Excelente atención por WhatsApp. Pedí el Colágeno Premium y los batidos en cantidad para mi familia; me dieron un precio especial muy bueno y llegó súper rápido a Trujillo."
+          </p>
+        </div>
+        <div class="flex items-center gap-sm pt-sm border-t border-outline-variant/20">
+          <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline-md flex items-center justify-center text-lg">
+            MR
+          </div>
+          <div>
+            <h3 class="font-headline-md text-base text-on-surface leading-tight">María Rodríguez</h3>
+            <p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider mt-1">Cliente verificada · Trujillo</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta 2 -->
+      <div class="testimonial-card opacity-0 bg-surface p-lg rounded-3xl shadow-sm border border-outline-variant/40 flex flex-col justify-between space-y-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+        <div class="space-y-sm">
+          <div class="flex text-rating-gold gap-1">
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+          </div>
+          <p class="font-body-md text-base text-on-surface-variant italic leading-relaxed">
+            "Siempre compro el Pack Articulaciones y el Kalmapross. Es muy práctico armar el carrito aquí y enviarlo al asesor para coordinar el pago contra entrega en Lima."
+          </p>
+        </div>
+        <div class="flex items-center gap-sm pt-sm border-t border-outline-variant/20">
+          <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline-md flex items-center justify-center text-lg">
+            CG
+          </div>
+          <div>
+            <h3 class="font-headline-md text-base text-on-surface leading-tight">Carlos Gómez</h3>
+            <p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider mt-1">Cliente verificado · Lima</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tarjeta 3 -->
+      <div class="testimonial-card opacity-0 bg-surface p-lg rounded-3xl shadow-sm border border-outline-variant/40 flex flex-col justify-between space-y-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
+        <div class="space-y-sm">
+          <div class="flex text-rating-gold gap-1">
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+            <span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">star</span>
+          </div>
+          <p class="font-body-md text-base text-on-surface-variant italic leading-relaxed">
+            "Súper recomendados. Todo 100% original de Santa Natura. Me explicaron el tema de los puntos y el descuento por volumen de manera clara."
+          </p>
+        </div>
+        <div class="flex items-center gap-sm pt-sm border-t border-outline-variant/20">
+          <div class="w-12 h-12 rounded-full bg-primary-container text-on-primary-container font-headline-md flex items-center justify-center text-lg">
+            LV
+          </div>
+          <div>
+            <h3 class="font-headline-md text-base text-on-surface leading-tight">Luz Valeria S.</h3>
+            <p class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider mt-1">Cliente verificada · Arequipa</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================================
+     Preguntas frecuentes
+     ========================================================================== -->
+<section class="py-xl bg-surface">
+<div class="max-w-3xl mx-auto px-md">
+<h2 class="font-headline-md text-3xl md:text-4xl text-center mb-lg text-on-surface font-bold">Preguntas frecuentes</h2>
+<div class="space-y-sm">
+
+<details class="group bg-surface-container-low rounded-3xl border border-outline-variant/30 overflow-hidden transition-all duration-300">
+<summary class="flex justify-between items-center gap-sm p-md cursor-pointer hover:bg-surface-container transition-colors">
+<span class="font-headline-md text-lg text-on-surface">¿Cómo realizo un pedido?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 shrink-0 text-primary">expand_more</span>
+</summary>
+<div class="p-md pt-0 text-on-surface-variant font-body-md text-base leading-relaxed">
+                    Agrega los productos que quieras al carrito y presiona “Enviar pedido por WhatsApp”. El resumen con el detalle, el total y tus puntos llega automáticamente a tu asesor, que confirmará stock, precio final y envío.
+                </div>
+</details>
+
+<details class="group bg-surface-container-low rounded-3xl border border-outline-variant/30 overflow-hidden transition-all duration-300">
+<summary class="flex justify-between items-center gap-sm p-md cursor-pointer hover:bg-surface-container transition-colors">
+<span class="font-headline-md text-lg text-on-surface">¿Puedo obtener un mejor precio?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 shrink-0 text-primary">expand_more</span>
+</summary>
+<div class="p-md pt-0 text-on-surface-variant font-body-md text-base leading-relaxed" data-nota-cantidad></div>
+</details>
+
+<details class="group bg-surface-container-low rounded-3xl border border-outline-variant/30 overflow-hidden transition-all duration-300">
+<summary class="flex justify-between items-center gap-sm p-md cursor-pointer hover:bg-surface-container transition-colors">
+<span class="font-headline-md text-lg text-on-surface">¿Para qué sirven los puntos?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 shrink-0 text-primary">expand_more</span>
+</summary>
+<div class="p-md pt-0 text-on-surface-variant font-body-md text-base leading-relaxed">
+                    Cada producto otorga puntos. En el resumen de tu pedido verás cuántos acumulas en total, y tu asesor te explicará cómo se aplican según tu tipo de afiliación.
+                </div>
+</details>
+
+<details class="group bg-surface-container-low rounded-3xl border border-outline-variant/30 overflow-hidden transition-all duration-300">
+<summary class="flex justify-between items-center gap-sm p-md cursor-pointer hover:bg-surface-container transition-colors">
+<span class="font-headline-md text-lg text-on-surface">¿Cuáles son los métodos de pago?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 shrink-0 text-primary">expand_more</span>
+</summary>
+<div class="p-md pt-0 text-on-surface-variant font-body-md text-base leading-relaxed">
+                    No cobramos en línea. El pago se coordina directamente con tu asesor por WhatsApp: pago contra entrega (Lima), Yape, Plin o transferencia bancaria.
+                </div>
+</details>
+
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     Pie de página
+     ========================================================================== -->
+<!-- El pie va en verde oscuro con texto blanco. Se usa primary-container (y no
+     primary) porque en el tema oscuro primary se aclara y el blanco dejaría de
+     leerse; primary-container es verde oscuro en ambos temas. -->
+<footer class="bg-primary-container text-botanical-white py-xl w-full mt-auto">
+<div class="max-w-container-max mx-auto px-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+<div class="space-y-sm">
+<span class="font-headline-md text-2xl font-bold">Santa Natura</span>
+<p class="font-body-md text-sm text-botanical-white/80 leading-relaxed">Distribuidor Independiente Autorizado. Llevando lo mejor de nuestra tierra a tu hogar con productos 100% naturales.</p>
+</div>
+<div>
+<h3 class="font-headline-md text-lg mb-md">Líneas</h3>
+<ul class="space-y-xs font-body-md text-sm text-botanical-white/80" id="footer-categorias"></ul>
+</div>
+<div>
+<h3 class="font-headline-md text-lg mb-md">Atención al cliente</h3>
+<ul class="space-y-xs font-body-md text-sm text-botanical-white/80">
+<li><a class="hover:text-botanical-white transition-colors" href="afiliacion.html">Afíliate y gana</a></li>
+<li><a class="hover:text-botanical-white transition-colors" href="#">Términos y Condiciones</a></li>
+<li><a class="hover:text-botanical-white transition-colors" href="#">Políticas de Envío</a></li>
+<li><a class="hover:text-botanical-white transition-colors" href="#">Libro de Reclamaciones</a></li>
+</ul>
+</div>
+<div class="space-y-md">
+<h3 class="font-headline-md text-lg">Síguenos</h3>
+<div class="flex gap-sm">
+<a aria-label="Facebook" class="w-12 h-12 rounded-full bg-botanical-white/10 flex items-center justify-center text-botanical-white hover:bg-botanical-white/20 transition-colors" href="#"><span class="material-symbols-outlined">facebook</span></a>
+<a aria-label="Instagram" class="w-12 h-12 rounded-full bg-botanical-white/10 flex items-center justify-center text-botanical-white hover:bg-botanical-white/20 transition-colors" href="#"><span class="material-symbols-outlined">photo_camera</span></a>
+</div>
+<p class="font-label-caps text-[10px] text-botanical-white/60 uppercase tracking-wider">Lista de precios vigente: Enero 2026. Precios en soles (S/), sujetos a disponibilidad de stock.</p>
+</div>
+</div>
+<div class="max-w-container-max mx-auto mt-lg pt-md px-md border-t border-botanical-white/20 text-center">
+<p class="font-label-caps text-botanical-white/60 text-xs tracking-wider uppercase">© 2026 Santa Natura Distribuidor Autorizado. Todos los derechos reservados.</p>
+</div>
+</footer>
+
+<!-- Botón flotante de WhatsApp -->
+<a aria-label="Escríbenos por WhatsApp" class="fixed bottom-6 right-6 z-[150] w-16 h-16 bg-action-whatsapp rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform pulse-whatsapp"
+   data-wa="Hola, quiero hacer una consulta sobre los productos Santa Natura." href="#" target="_blank" rel="noopener">
+<svg class="w-8 h-8" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+</a>
+
+<script src="products.js"></script>
+<script src="store.js"></script>
+
+<!-- Los testimonios entran con un fundido hacia arriba, uno detrás de otro,
+     la primera vez que aparecen en pantalla. Si el visitante pidió menos
+     movimiento, simplemente se muestran sin animación. -->
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const tarjetas = document.querySelectorAll('.testimonial-card');
+    if (!tarjetas.length) return;
+
+    const sinMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (sinMovimiento || !('IntersectionObserver' in window)) {
+        tarjetas.forEach((t) => t.classList.remove('opacity-0'));
+        return;
+    }
+
+    const observador = new IntersectionObserver((entradas, obs) => {
+        entradas.forEach((entrada) => {
+            if (!entrada.isIntersecting) return;
+            const i = Array.from(tarjetas).indexOf(entrada.target);
+            entrada.target.style.animationDelay = `${i * 0.15}s`;
+            entrada.target.classList.add('animate-fade-in-up');
+            obs.unobserve(entrada.target);
+        });
+    }, { threshold: 0.1 });
+
+    tarjetas.forEach((t) => observador.observe(t));
+});
+</script>
+</body>
+</html>

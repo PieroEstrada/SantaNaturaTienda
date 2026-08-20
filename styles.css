@@ -1,0 +1,250 @@
+/* ============================================================================
+   Santa Natura — Estilos propios
+   Todo lo demás se resuelve con clases de Tailwind (ver config en index.html).
+   ========================================================================== */
+
+/* ----------------------------------------------------------------------------
+   Paleta de colores (tema claro y oscuro)
+   ----------------------------------------------------------------------------
+   Cada token guarda sus canales RGB ("R G B"). El config de Tailwind los usa
+   como rgb(var(--c-token) / <alpha-value>), por eso siguen funcionando las
+   clases con opacidad. La clase .dark (en <html>) redefine solo lo que cambia;
+   los colores "fixed" de Material se comparten entre ambos temas.
+   -------------------------------------------------------------------------- */
+:root {
+    --c-inverse-on-surface: 243 240 240;
+    --c-tertiary-fixed: 255 223 160;
+    --c-on-tertiary-fixed: 38 26 0;
+    --c-primary: 46 125 50;
+    --c-primary-container: 46 125 50;
+    --c-on-primary-fixed-variant: 0 83 18;
+    --c-surface-container-highest: 228 226 225;
+    --c-on-surface-variant: 64 73 61;
+    --c-tertiary-container: 140 104 0;
+    --c-secondary-fixed: 148 249 144;
+    --c-secondary-fixed-dim: 120 220 119;
+    --c-on-secondary-fixed-variant: 0 83 19;
+    --c-primary-fixed: 163 246 156;
+    --c-inverse-primary: 136 217 130;
+    --c-tertiary-fixed-dim: 248 189 42;
+    --c-on-secondary-fixed: 0 34 4;
+    --c-on-tertiary-container: 255 239 215;
+    --c-surface-bright: 251 249 248;
+    --c-error-container: 255 218 214;
+    --c-on-primary: 255 255 255;
+    --c-secondary: 0 110 28;
+    --c-on-primary-container: 203 255 194;
+    --c-on-secondary-container: 0 115 30;
+    --c-surface-container-high: 234 232 231;
+    --c-on-primary-fixed: 0 34 4;
+    --c-background: 251 249 248;
+    --c-secondary-container: 145 247 142;
+    --c-on-error-container: 147 0 10;
+    --c-outline: 112 122 108;
+    --c-on-surface: 27 28 28;
+    --c-outline-variant: 191 202 186;
+    --c-surface-container: 240 237 237;
+    --c-on-background: 27 28 28;
+    --c-on-error: 255 255 255;
+    --c-surface-container-low: 246 243 242;
+    --c-error: 186 26 26;
+    --c-surface-tint: 46 125 50;
+    --c-inverse-surface: 48 48 48;
+    --c-surface-dim: 220 217 217;
+    --c-surface: 251 249 248;
+    --c-on-tertiary: 255 255 255;
+    --c-primary-fixed-dim: 136 217 130;
+    --c-on-tertiary-fixed-variant: 92 67 0;
+    --c-surface-variant: 228 226 225;
+    --c-surface-container-lowest: 255 255 255;
+    --c-on-secondary: 255 255 255;
+    --c-tertiary: 110 81 0;
+}
+
+.dark {
+    --c-inverse-on-surface: 45 49 44;
+    --c-primary: 136 217 130;
+    --c-primary-container: 0 83 19;
+    --c-surface-container-highest: 50 54 48;
+    --c-on-surface-variant: 192 201 189;
+    --c-tertiary-container: 83 63 0;
+    --c-inverse-primary: 46 125 50;
+    --c-on-tertiary-container: 255 222 160;
+    --c-surface-bright: 55 58 53;
+    --c-error-container: 147 0 10;
+    --c-on-primary: 0 57 15;
+    --c-secondary: 120 220 119;
+    --c-on-primary-container: 163 246 156;
+    --c-on-secondary-container: 148 249 144;
+    --c-surface-container-high: 39 43 38;
+    --c-background: 17 20 18;
+    --c-secondary-container: 35 80 36;
+    --c-on-error-container: 255 218 214;
+    --c-outline: 138 147 132;
+    --c-on-surface: 226 227 223;
+    --c-outline-variant: 66 73 64;
+    --c-surface-container: 29 33 28;
+    --c-on-background: 226 227 223;
+    --c-on-error: 105 0 5;
+    --c-surface-container-low: 25 29 24;
+    --c-error: 255 180 171;
+    --c-surface-tint: 136 217 130;
+    --c-inverse-surface: 226 227 223;
+    --c-surface-dim: 17 20 18;
+    --c-surface: 17 20 18;
+    --c-on-tertiary: 58 47 0;
+    --c-surface-variant: 66 73 64;
+    --c-surface-container-lowest: 12 15 13;
+    --c-on-secondary: 0 57 15;
+    --c-tertiary: 248 189 42;
+}
+
+/* Transición suave al cambiar de tema (respetando reduce-motion más abajo). */
+body, .bg-surface, .bg-surface-container, .bg-surface-container-low,
+.bg-surface-container-lowest, .bg-background {
+    transition: background-color .3s ease, border-color .3s ease;
+}
+
+/* Botón de WhatsApp con latido para llamar la atención */
+.pulse-whatsapp {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%   { transform: scale(1);    box-shadow: 0 0 0 0    rgba(37, 211, 102, 0.7); }
+    70%  { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(37, 211, 102, 0); }
+    100% { transform: scale(1);    box-shadow: 0 0 0 0    rgba(37, 211, 102, 0); }
+}
+
+/* Aparición suave de las tarjetas de testimonios al entrar en pantalla.
+   La clase la añade el observador de index.html; si el visitante prefiere
+   menos movimiento, el script quita el opacity-0 y no anima nada. */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp .8s cubic-bezier(0.21, 1.02, 0.73, 1) forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pulse-whatsapp { animation: none; }
+    .animate-fade-in-up { animation: none; opacity: 1; }
+    body, .bg-surface, .bg-surface-container, .bg-surface-container-low,
+    .bg-surface-container-lowest, .bg-background { transition: none; }
+}
+
+/* Acordeón de preguntas frecuentes: ocultamos la flecha nativa */
+details > summary { list-style: none; }
+details > summary::-webkit-details-marker { display: none; }
+
+/* Deja desplazar de lado sin que se vea la barra (fila de categorías del menú). */
+.sin-barra { scrollbar-width: none; -ms-overflow-style: none; }
+.sin-barra::-webkit-scrollbar { display: none; }
+
+/* Placeholder de producto: se dibuja cuando el producto aún no tiene foto.
+   Evita cuadros vacíos mientras se cargan las imágenes reales del catálogo. */
+.img-placeholder {
+    background-image:
+        radial-gradient(circle at 30% 20%, rgba(46, 125, 50, 0.14), transparent 55%),
+        radial-gradient(circle at 75% 80%, rgba(140, 104, 0, 0.12), transparent 55%);
+}
+
+/* ----------------------------------------------------------------------------
+   Hero — imagen principal
+   ----------------------------------------------------------------------------
+   El marco mantiene una proporción fija para que la foto luzca grande sin
+   deformarse, sea cual sea el tamaño real del archivo que se coloque:
+   la imagen se recorta (object-fit: cover) y siempre llena el recuadro.
+   Proporción más panorámica en móvil y más cuadrada (y más alta) en escritorio.
+   -------------------------------------------------------------------------- */
+.hero-media {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 11;
+    border-radius: 1.5rem;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+}
+
+.hero-media > img {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    grid-area: 1 / 1;
+}
+
+/* Hoja decorativa que queda debajo: se ve solo si la foto no carga. */
+.hero-media__respaldo {
+    grid-area: 1 / 1;
+    z-index: 0;
+    font-size: 88px;
+    color: rgb(var(--c-primary) / 0.35);
+}
+
+@media (min-width: 768px) {
+    .hero-media {
+        aspect-ratio: 4 / 3;
+        min-height: 340px;
+    }
+}
+
+@media (min-width: 1024px) {
+    .hero-media { min-height: 440px; }
+}
+
+/* Panel lateral del carrito.
+   Lleva !important para ganarle a la clase translate-x-full de Tailwind, que el
+   CDN inyecta después de esta hoja de estilos. */
+.drawer-abierto { transform: translateX(0) !important; }
+
+/* Barra de scroll discreta dentro del carrito y los paneles con scroll propio.
+   El pulgar se aclara al pasar el cursor para que se note dónde estás. */
+.scroll-suave::-webkit-scrollbar { width: 6px; height: 6px; }
+.scroll-suave::-webkit-scrollbar-track { background: transparent; }
+.scroll-suave::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-outline-variant));
+    border-radius: 9999px;
+}
+.scroll-suave:hover::-webkit-scrollbar-thumb {
+    background: rgb(var(--c-outline));
+}
+
+/* Corta el nombre del producto a 2 líneas para que las tarjetas queden parejas */
+.linea-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* ----------------------------------------------------------------------------
+   Árbol de duplicación 3x3 (afiliacion.html)
+   ----------------------------------------------------------------------------
+   Las líneas que unen los niveles son lo único que Tailwind no cubre con
+   utilidades, así que van aquí. Se dibujan con divs vacíos en vez de una
+   imagen para que el diagrama siga siendo texto: se lee con lector de
+   pantalla, se adapta a 360 px y respeta el tema claro y el oscuro (el color
+   sale del token --c-outline-variant, no de un valor fijo).
+
+   La rama horizontal mide 2/3 del ancho porque, en una rejilla de 3 columnas,
+   esa es justo la distancia entre el centro de la primera y el de la última.
+   -------------------------------------------------------------------------- */
+.arbol-3x3__tallo {
+    width: 2px;
+    height: 16px;
+    margin-inline: auto;
+    background: rgb(var(--c-outline-variant));
+}
+
+.arbol-3x3__rama {
+    height: 2px;
+    width: 66.6667%;
+    margin-inline: auto;
+    background: rgb(var(--c-outline-variant));
+}

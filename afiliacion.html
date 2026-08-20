@@ -1,0 +1,1254 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Afíliate a Santa Natura Network — Planes y Plan de Compensación</title>
+<!-- OJO: es el único monto de plan escrito a mano en la web. Va estático a
+     propósito, porque los buscadores indexan el meta sin ejecutar JavaScript.
+     Si cambia la tabla de PLANES_AFILIACION, actualiza esta línea también. -->
+<meta name="description" content="Afíliate a Santa Natura Network desde S/ 240 y compra con 20–40% de descuento. Planes Básico, Profesional, Empresarial y Millonario."/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        try {
+            // Misma configuración que index.html: los colores apuntan a las
+            // variables CSS de styles.css, así el tema claro/oscuro y las
+            // clases con opacidad funcionan igual en las dos páginas.
+            const TOKENS_COLOR = [
+                "inverse-on-surface", "tertiary-fixed", "on-tertiary-fixed", "primary",
+                "primary-container", "on-primary-fixed-variant", "surface-container-highest",
+                "on-surface-variant", "tertiary-container", "secondary-fixed", "secondary-fixed-dim",
+                "on-secondary-fixed-variant", "primary-fixed", "inverse-primary", "tertiary-fixed-dim",
+                "on-secondary-fixed", "on-tertiary-container", "surface-bright", "error-container",
+                "on-primary", "secondary", "on-primary-container", "on-secondary-container",
+                "surface-container-high", "on-primary-fixed", "background", "secondary-container",
+                "on-error-container", "outline", "on-surface", "outline-variant", "surface-container",
+                "on-background", "on-error", "surface-container-low", "error", "surface-tint",
+                "inverse-surface", "surface-dim", "surface", "on-tertiary", "primary-fixed-dim",
+                "on-tertiary-fixed-variant", "surface-variant", "surface-container-lowest",
+                "on-secondary", "tertiary"
+            ];
+            const colors = {};
+            TOKENS_COLOR.forEach((t) => { colors[t] = `rgb(var(--c-${t}) / <alpha-value>)`; });
+
+            colors["action-whatsapp"] = "#25D366";
+            colors["rating-gold"] = "#FFC107";
+            colors["botanical-white"] = "#FFFFFF";
+
+            tailwind.config = {
+                darkMode: "class",
+                theme: {
+                    extend: {
+                        colors,
+                        "borderRadius": {
+                            "DEFAULT": "0.5rem",
+                            "lg": "0.5rem",
+                            "xl": "0.75rem",
+                            "full": "9999px"
+                        },
+                        "spacing": {
+                            "xs": "8px",
+                            "lg": "40px",
+                            "md": "24px",
+                            "xl": "64px",
+                            "container-max": "1280px",
+                            "sm": "16px",
+                            "base": "4px",
+                            "gutter": "24px"
+                        },
+                        "fontFamily": {
+                            "display-lg-mobile": ["Plus Jakarta Sans", "Inter"],
+                            "label-md": ["Inter"],
+                            "label-caps": ["Inter"],
+                            "body-lg": ["Inter"],
+                            "headline-md-mobile": ["Plus Jakarta Sans", "Inter"],
+                            "headline-md": ["Plus Jakarta Sans", "Inter"],
+                            "body-md": ["Inter"],
+                            "display-lg": ["Plus Jakarta Sans", "Inter"],
+                            "title-lg": ["Plus Jakarta Sans", "Inter"],
+                            "title-sm": ["Plus Jakarta Sans", "Inter"]
+                        },
+                        "fontSize": {
+                            "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                            "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                            "headline-md-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                            "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                            "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                        }
+                    },
+                },
+            }
+        } catch (_e) {}
+    </script>
+<!-- Fija el tema antes de pintar, igual que en el index, para que no parpadee
+     al navegar entre las dos páginas. -->
+<script>
+        (function () {
+            try {
+                var guardado = localStorage.getItem('tema');
+                var oscuro = guardado
+                    ? guardado === 'oscuro'
+                    : window.matchMedia('(prefers-color-scheme: dark)').matches;
+                var raiz = document.documentElement;
+                raiz.classList.toggle('dark', oscuro);
+                raiz.classList.toggle('light', !oscuro);
+            } catch (_e) {}
+        })();
+    </script>
+<link href="styles.css" rel="stylesheet"/>
+</head>
+<body class="bg-background text-on-background font-body-md overflow-x-hidden">
+
+<!-- Icono de WhatsApp reutilizable (mismo que en el index) -->
+<svg class="hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+<symbol id="ico-whatsapp" viewBox="0 0 24 24">
+<path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
+</symbol>
+</svg>
+
+<!-- ==========================================================================
+     Ficha de producto
+     --------------------------------------------------------------------------
+     Se incluye para que el buscador del header funcione también aquí: al
+     elegir una sugerencia se abre la ficha y se puede agregar al pedido sin
+     salir de la página de afiliación.
+     ========================================================================== -->
+<div class="fixed inset-0 z-[200] flex items-center justify-center p-md bg-black/60 opacity-0 pointer-events-none transition-opacity duration-300" id="modal-producto" onclick="if (event.target === this) cerrarFichaProducto()">
+<div class="bg-surface rounded-3xl overflow-hidden max-w-4xl w-full shadow-2xl relative max-h-[90vh] overflow-y-auto scroll-suave">
+<button aria-label="Cerrar" class="absolute top-4 right-4 text-on-surface-variant hover:text-on-surface z-10 bg-surface/80 rounded-full p-2" onclick="cerrarFichaProducto()">
+<span class="material-symbols-outlined">close</span>
+</button>
+<div class="grid md:grid-cols-2">
+<div class="bg-surface-container p-md md:p-lg flex items-center justify-center">
+<div class="w-full rounded-2xl overflow-hidden" id="ficha-imagen"></div>
+</div>
+<div class="p-md md:p-xl space-y-md">
+<span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full font-label-caps text-[11px] uppercase" id="ficha-categoria">Categoría</span>
+<h2 class="font-headline-md text-headline-md-mobile text-on-surface leading-tight" id="ficha-titulo">Nombre del producto</h2>
+
+<div>
+<div class="flex items-center gap-sm">
+<span class="text-3xl font-bold text-primary" id="ficha-precio">S/ 0.00</span>
+<span class="hidden bg-error text-on-error px-2 py-1 rounded-full text-[11px] font-bold" id="ficha-descuento">-0%</span>
+</div>
+<del class="hidden text-on-surface-variant text-sm" id="ficha-precio-original">S/ 0.00</del>
+<p class="text-xs text-on-surface-variant mt-1">Precio de venta al público</p>
+</div>
+
+<div class="flex items-center gap-xs text-primary bg-primary/10 rounded-full px-sm py-2 w-fit">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">stars</span>
+<span class="font-label-caps text-sm">Acumulas <strong id="ficha-puntos">0.00 pts</strong></span>
+</div>
+
+<p class="font-body-md text-on-surface-variant text-sm" id="ficha-descripcion">Descripción del producto.</p>
+
+<div class="flex gap-xs items-start bg-primary/5 border border-primary/20 rounded-2xl p-sm">
+<span class="material-symbols-outlined text-primary text-lg shrink-0">sell</span>
+<p class="font-body-md text-xs text-on-surface-variant" data-nota-cantidad></p>
+</div>
+
+<div class="space-y-xs pt-xs">
+<button class="w-full bg-primary text-on-primary py-md rounded-full font-title-sm text-base hover:brightness-110 transition-all shadow-md flex items-center justify-center gap-xs active:scale-[0.98]"
+        onclick="agregarDesdeFicha()">
+<span class="material-symbols-outlined">add_shopping_cart</span>
+                        Agregar al pedido
+                    </button>
+<a class="w-full bg-action-whatsapp text-white py-md rounded-full font-title-sm text-base hover:brightness-105 transition-all shadow-md shadow-action-whatsapp/25 flex items-center justify-center gap-xs active:scale-[0.98]"
+   href="#" id="ficha-whatsapp" target="_blank" rel="noopener">
+<svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+                        Consultar por WhatsApp
+                    </a>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- ==========================================================================
+     Carrito / Resumen del pedido
+     --------------------------------------------------------------------------
+     Es el mismo carrito del index: store.js lo guarda en el navegador, así que
+     lo que agregues aquí sigue estando al volver al catálogo.
+     ========================================================================== -->
+<div class="fixed inset-0 z-[190] bg-black/50 opacity-0 pointer-events-none transition-opacity duration-300" id="carrito-fondo" onclick="cerrarCarrito()"></div>
+
+<aside class="fixed top-0 right-0 h-full w-full max-w-md z-[195] bg-surface shadow-2xl flex flex-col translate-x-full transition-transform duration-300" id="carrito-panel">
+<header class="flex items-center justify-between p-md border-b border-outline-variant/30">
+<div>
+<h2 class="font-headline-md text-xl text-on-surface">Tu pedido</h2>
+<p class="text-xs text-on-surface-variant" id="carrito-unidades">0 unidades</p>
+</div>
+<button aria-label="Cerrar carrito" class="text-on-surface-variant hover:text-on-surface rounded-full p-2 hover:bg-surface-container transition-colors" onclick="cerrarCarrito()">
+<span class="material-symbols-outlined">close</span>
+</button>
+</header>
+
+<div class="flex-1 overflow-y-auto px-md scroll-suave">
+<div id="carrito-lineas"></div>
+<div class="hidden py-xl text-center space-y-sm" id="carrito-vacio">
+<span class="material-symbols-outlined text-5xl text-outline-variant">shopping_bag</span>
+<p class="font-body-md text-on-surface-variant text-sm">Aún no agregas productos.</p>
+<a class="inline-block text-primary font-label-caps text-sm hover:underline" href="index.html#productos">Ver el catálogo</a>
+</div>
+</div>
+
+<div class="hidden border-t border-outline-variant/30 p-md space-y-md bg-surface-container-low" id="carrito-resumen">
+<div class="flex items-center justify-between">
+<span class="font-body-md text-on-surface-variant">Total</span>
+<span class="text-2xl font-bold text-on-surface" id="carrito-total">S/ 0.00</span>
+</div>
+<div class="flex items-center justify-between text-primary">
+<span class="font-label-caps text-sm flex items-center gap-xs">
+<span class="material-symbols-outlined text-lg" style="font-variation-settings: 'FILL' 1;">stars</span>
+                Puntos acumulados
+            </span>
+<span class="font-bold" id="carrito-puntos">0.00 pts</span>
+</div>
+
+<div class="flex gap-xs items-start bg-primary/5 border border-primary/20 rounded-2xl p-sm">
+<span class="material-symbols-outlined text-primary text-lg shrink-0">sell</span>
+<p class="font-body-md text-xs text-on-surface-variant" data-nota-cantidad></p>
+</div>
+
+<button class="w-full bg-action-whatsapp text-white py-md rounded-full font-title-sm text-base hover:brightness-105 transition-all shadow-lg shadow-action-whatsapp/25 flex items-center justify-center gap-xs active:scale-[0.98]"
+        onclick="enviarPedidoPorWhatsApp()">
+<svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+            Enviar pedido por WhatsApp
+        </button>
+<p class="text-[11px] text-center text-on-surface-variant">El pago se coordina directamente con tu asesor. No cobramos en línea.</p>
+<button class="w-full text-xs text-outline hover:text-error" onclick="vaciarCarrito()">Vaciar pedido</button>
+</div>
+</aside>
+
+<!-- Aviso flotante -->
+<div class="fixed bottom-28 left-1/2 -translate-x-1/2 z-[210] bg-inverse-surface text-inverse-on-surface px-md py-3 rounded-full shadow-xl text-sm font-label-caps opacity-0 translate-y-4 transition-all duration-300 pointer-events-none max-w-[90vw] text-center" id="aviso"></div>
+
+<!-- ==========================================================================
+     Barra promocional
+     ========================================================================== -->
+<div class="bg-primary text-on-primary">
+<a class="max-w-container-max mx-auto flex items-center justify-center gap-2 py-2 px-md text-[11px] md:text-xs font-label-caps hover:opacity-90 transition-opacity"
+   data-wa="Hola, quiero información para afiliarme a Santa Natura Network." href="#" target="_blank" rel="noopener">
+<span>🌿 Afíliate desde <span data-monto-entrada>S/ 240</span> y compra con descuento de distribuidor</span>
+<span class="hidden sm:inline-flex items-center gap-1 bg-white/20 rounded-full px-2 py-0.5">
+<svg class="w-3 h-3" aria-hidden="true"><use href="#ico-whatsapp"></use></svg> Escríbenos
+</span>
+</a>
+</div>
+
+<!-- ==========================================================================
+     Header — el mismo del catálogo, para que la subpágina no se sienta aparte
+     ========================================================================== -->
+<header class="bg-surface/80 backdrop-blur-md sticky top-0 z-[100] border-b border-outline-variant/30 shadow-sm transition-all">
+<div class="max-w-container-max mx-auto px-md md:px-lg">
+
+<div class="flex justify-between items-center gap-md h-20">
+<div class="flex items-center gap-sm shrink-0">
+<button aria-label="Abrir menú" class="lg:hidden p-2 rounded-full text-on-surface-variant hover:bg-surface-container transition-colors" onclick="alternarMegaMenu()">
+<span class="material-symbols-outlined">menu</span>
+</button>
+
+<a class="flex items-center gap-2 shrink-0 hover:opacity-90 active:scale-95 transition-transform" href="index.html">
+<span class="grid place-items-center w-10 h-10 rounded-full bg-primary text-on-primary shrink-0">
+<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">eco</span>
+</span>
+<span class="leading-tight hidden sm:block">
+<span class="block font-headline-md text-headline-md-mobile md:text-headline-md font-bold text-primary whitespace-nowrap">Santa Natura</span>
+</span>
+</a>
+</div>
+
+<div class="hidden lg:flex items-center gap-md">
+<button class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors font-label-caps"
+        id="btn-mega" aria-expanded="false" aria-controls="mega-menu" onclick="alternarMegaMenu()">
+<span class="material-symbols-outlined text-lg">apps</span>
+        Categorías
+        <span class="material-symbols-outlined text-lg transition-transform duration-200" id="mega-flecha">expand_more</span>
+</button>
+
+<!-- Estamos en esta página: el enlace va subrayado y lleva al catálogo -->
+<a class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors font-label-caps" href="index.html#productos">
+<span class="material-symbols-outlined text-lg">grid_view</span>
+        Catálogo
+      </a>
+<span class="inline-flex items-center gap-1.5 text-primary font-label-caps border-b-2 border-primary pb-0.5">
+<span class="material-symbols-outlined text-lg">workspace_premium</span>
+        Afíliate
+      </span>
+</div>
+
+<div class="flex items-center gap-sm ml-auto">
+<div class="hidden lg:block relative w-64 xl:w-80">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">search</span>
+<input autocomplete="off" class="w-full bg-surface-container-low border border-transparent rounded-full py-2.5 pl-12 pr-4 text-sm placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="buscador" placeholder="Buscar…" type="search"
+       role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias"/>
+<ul class="hidden absolute left-0 right-0 top-full mt-2 z-[120] bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden max-h-96 overflow-y-auto scroll-suave" id="sugerencias" role="listbox"></ul>
+</div>
+
+<button aria-label="Cambiar tema claro/oscuro" class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-all duration-300" onclick="alternarTema()">
+<span class="material-symbols-outlined" id="icono-tema">dark_mode</span>
+</button>
+<button aria-label="Ver mi pedido" class="relative p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-all duration-300" onclick="abrirCarrito()">
+<span class="material-symbols-outlined">shopping_cart</span>
+<span class="hidden absolute top-0 right-0 bg-primary text-on-primary text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full text-center leading-[18px] ring-2 ring-surface" id="carrito-contador">0</span>
+</button>
+<a class="hidden md:inline-flex bg-action-whatsapp text-white px-4 py-2 rounded-full font-label-caps text-sm hover:brightness-105 transition-all items-center gap-2 shadow-sm hover:opacity-90 active:scale-95"
+   data-wa="Hola, quiero información para afiliarme a Santa Natura Network." href="#" target="_blank" rel="noopener">
+<svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg> WhatsApp
+</a>
+</div>
+</div>
+
+<!-- Buscador para pantallas pequeñas -->
+<div class="lg:hidden pb-3">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">search</span>
+<input autocomplete="off" class="w-full bg-surface-container-low border border-transparent rounded-full py-2.5 pl-10 pr-4 text-sm placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="buscador-movil" placeholder="Busca un producto…" type="search"
+       role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias-movil"/>
+<ul class="hidden absolute left-0 right-0 top-full mt-2 z-[120] bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden max-h-80 overflow-y-auto scroll-suave" id="sugerencias-movil" role="listbox"></ul>
+</div>
+</div>
+</div>
+
+<!-- Mega menú: al elegir una categoría se salta al catálogo ya filtrado. -->
+<div class="hidden border-t border-outline-variant/30 bg-surface shadow-xl max-h-[70vh] overflow-y-auto scroll-suave" id="mega-menu">
+<div class="lg:hidden max-w-container-max mx-auto px-md pt-md">
+<a class="flex items-center gap-2 bg-primary/5 border border-primary/20 text-primary rounded-2xl px-md py-3 font-title-sm text-base" href="index.html#productos">
+<span class="material-symbols-outlined">grid_view</span>
+      Ver el catálogo completo
+    </a>
+</div>
+<div class="max-w-container-max mx-auto px-md md:px-lg py-md grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-lg gap-y-md" id="mega-contenido"></div>
+</div>
+</div>
+</header>
+
+<!-- ==========================================================================
+     Índice de la página
+     --------------------------------------------------------------------------
+     La página sigue el orden del argumento de venta y quedó larga, así que
+     esta fila permite saltar a cualquier bloque. En móvil se desplaza de lado
+     con la misma clase .sin-barra que usa la fila de categorías del catálogo.
+     No es sticky a propósito: el encabezado ya lo es y dos barras fijas se
+     comen media pantalla en móvil.
+     ========================================================================== -->
+<nav aria-label="Secciones de esta página" class="bg-surface-container-low border-b border-outline-variant/30">
+<div class="max-w-container-max mx-auto px-md">
+<ul class="flex items-center gap-1 overflow-x-auto sin-barra py-2 font-label-caps text-[11px] uppercase tracking-wider whitespace-nowrap">
+<li><a class="inline-block px-3 py-1.5 rounded-full text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors" href="#oportunidad">Oportunidad</a></li>
+<li><a class="inline-block px-3 py-1.5 rounded-full text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors" href="#respaldo">Respaldo</a></li>
+<li><a class="inline-block px-3 py-1.5 rounded-full text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors" href="#ganar">Formas de ganar</a></li>
+<li><a class="inline-block px-3 py-1.5 rounded-full text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors" href="#duplicacion">Duplicación 3x3</a></li>
+<li><a class="inline-block px-3 py-1.5 rounded-full text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors" href="#formacion">Formación</a></li>
+<li><a class="inline-block px-3 py-1.5 rounded-full text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors" href="#comunidad">Comunidad</a></li>
+<li><a class="inline-block px-3 py-1.5 rounded-full text-on-surface-variant hover:bg-primary/10 hover:text-primary transition-colors" href="#planes">Planes</a></li>
+<li><a class="inline-block px-3 py-1.5 rounded-full bg-primary/10 text-primary hover:brightness-95 transition-all" href="#quiero-afiliarme">Afíliate</a></li>
+</ul>
+</div>
+</nav>
+
+<!-- ==========================================================================
+     1. Portada de afiliación
+     ========================================================================== -->
+<section class="relative flex items-center py-lg md:py-xl overflow-hidden bg-surface-container-lowest" id="inicio">
+<div class="max-w-container-max mx-auto px-md grid md:grid-cols-2 gap-lg md:gap-xl items-center relative z-10">
+<div class="space-y-md">
+<div class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-sm tracking-wider uppercase">Oportunidad de negocio</div>
+<h1 class="font-headline-md text-4xl md:text-5xl lg:text-6xl text-on-surface leading-tight font-bold">
+                Construye ingresos con <span class="text-primary">productos naturales</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-xl leading-relaxed">
+                Afíliate desde <span class="whitespace-nowrap" data-monto-entrada>S/&nbsp;240</span>, compra todo el catálogo con descuento de distribuidor y gana comisiones por lo que vendes y por el equipo que construyes.
+</p>
+
+<div class="flex flex-col sm:flex-row flex-wrap gap-sm md:gap-md pt-xs">
+<a class="bg-primary text-on-primary px-lg py-md rounded-full font-title-sm flex items-center justify-center gap-xs shadow-lg hover:brightness-110 transition-all w-full sm:w-auto active:scale-[0.98]" href="#planes">
+<span class="material-symbols-outlined">workspace_premium</span> Ver los planes
+</a>
+<a class="pulse-whatsapp bg-action-whatsapp text-white px-lg py-md rounded-full font-title-sm flex items-center justify-center gap-xs shadow-lg hover:brightness-105 transition-all w-full sm:w-auto"
+   data-wa="Hola, quiero que me expliquen cómo afiliarme a Santa Natura Network." href="#" target="_blank" rel="noopener">
+<svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+                    Hablar con un asesor
+                </a>
+</div>
+
+<!-- Resumen rápido de la propuesta -->
+<dl class="grid grid-cols-3 gap-sm pt-sm max-w-lg">
+<div class="bg-surface rounded-2xl border border-outline-variant/40 px-sm py-3 text-center">
+<dt class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Desde</dt>
+<dd class="font-headline-md text-xl text-primary font-bold" data-monto-entrada>S/ 240</dd>
+</div>
+<div class="bg-surface rounded-2xl border border-outline-variant/40 px-sm py-3 text-center">
+<dt class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Descuento</dt>
+<dd class="font-headline-md text-xl text-primary font-bold" data-rango-descuento>20–40%</dd>
+</div>
+<!-- REVISAR CON EL ASESOR: aquí iba el contador dinámico del catálogo
+     (PRODUCTS.length = 87), pero 30 de esos 87 registros son packs, así que
+     inflaba el dato. Se usa el claim oficial de la marca, «+60 productos
+     naturales», que además es el que aparece en la presentación de negocio.
+     El contador dinámico del index sí es correcto y se queda como está,
+     porque allí los packs sí son artículos comprables. -->
+<div class="bg-surface rounded-2xl border border-outline-variant/40 px-sm py-3 text-center">
+<dt class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Productos</dt>
+<dd class="font-headline-md text-xl text-primary font-bold">+60</dd>
+</div>
+</dl>
+</div>
+
+<div class="relative order-last">
+<div class="absolute -inset-6 bg-primary/10 blur-3xl rounded-full" aria-hidden="true"></div>
+<figure class="relative bg-surface p-2 md:p-3 rounded-3xl shadow-2xl border border-outline-variant/50 overflow-hidden">
+<div class="hero-media img-placeholder">
+<span class="material-symbols-outlined hero-media__respaldo" style="font-variation-settings: 'FILL' 1;">groups</span>
+<!-- Foto real del equipo, sacada de la presentación de negocio oficial. Antes
+     había aquí una imagen de stock de Unsplash que venía de la maqueta. -->
+<img alt="Equipo de distribuidores de Santa Natura Network reunido en un viaje de incentivos" decoding="async"
+     width="1600" height="900" onerror="this.style.display='none'"
+     src="img/equipo-snn-hero.jpg"/>
+</div>
+</figure>
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     2. Contexto y oportunidad
+     --------------------------------------------------------------------------
+     Diapositivas 3 a 5 de la presentación de negocio. Se presentan como dato
+     de contexto y no como argumento de urgencia: son estadísticas que
+     explican por qué un ingreso adicional importa, nada más.
+     ========================================================================== -->
+<section class="py-xl scroll-mt-24" id="oportunidad">
+<div class="max-w-container-max mx-auto px-md">
+
+<div class="text-center max-w-2xl mx-auto mb-lg space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-xs tracking-wider uppercase">El contexto</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">¿Sientes que el dinero no alcanza?</h2>
+<p class="font-body-md text-base text-on-surface-variant">No es una impresión tuya. Estas son las cifras con las que Santa Natura Network enmarca la oportunidad en el Perú.</p>
+</div>
+
+<dl class="grid grid-cols-1 sm:grid-cols-3 gap-sm md:gap-md">
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 text-center">
+<dt class="font-headline-md text-4xl md:text-5xl text-primary font-bold">7 de 10</dt>
+<dd class="font-body-md text-sm text-on-surface-variant mt-2">peruanos están endeudados</dd>
+</div>
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 text-center">
+<dt class="font-headline-md text-4xl md:text-5xl text-primary font-bold">7 de 10</dt>
+<dd class="font-body-md text-sm text-on-surface-variant mt-2">familias no tienen ahorros para una emergencia</dd>
+</div>
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 text-center">
+<dt class="font-headline-md text-4xl md:text-5xl text-primary font-bold">8 de 10</dt>
+<dd class="font-body-md text-sm text-on-surface-variant mt-2">adultos mayores no tienen pensión de jubilación</dd>
+</div>
+
+</dl>
+
+<!-- REVISAR CON EL ASESOR: la presentación muestra estas tres cifras sin citar
+     la fuente ni el año. Conviene pedirle a la empresa el estudio del que
+     salen antes de dejarlas publicadas, o retirarlas si no hay respaldo. -->
+<p class="font-body-md text-base text-on-surface-variant text-center max-w-2xl mx-auto mt-md">
+        Detrás de cada cifra hay lo mismo: gente que sueña con su casa propia y con más tiempo para quienes más quiere. Un ingreso adicional es lo que acerca esas dos cosas.
+    </p>
+<p class="font-body-md text-xs text-on-surface-variant text-center mt-sm">Cifras de contexto citadas en la presentación de negocio de Santa Natura Network.</p>
+
+</div>
+</section>
+
+<!-- ==========================================================================
+     3. Respaldo de la empresa
+     --------------------------------------------------------------------------
+     Diapositivas 6 a 9. La tarjeta de producto lleva el claim oficial de la
+     marca, «+60 productos naturales», y NO el contador del catálogo: ver el
+     comentario del resumen de la portada.
+     ========================================================================== -->
+<section class="py-xl bg-surface-container-low border-y border-outline-variant/30 scroll-mt-24" id="respaldo">
+<div class="max-w-container-max mx-auto px-md">
+
+<div class="text-center max-w-2xl mx-auto mb-lg space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-xs tracking-wider uppercase">La empresa</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">El respaldo que te sostiene</h2>
+<p class="font-body-md text-base text-on-surface-variant">No empiezas de cero: detrás de tu negocio hay una empresa con planta propia y tres décadas de trayectoria.</p>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-sm md:gap-md">
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col items-center text-center gap-xs hover:shadow-lg transition-shadow">
+<span class="grid place-items-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-1">
+<span class="material-symbols-outlined text-3xl">flag</span>
+</span>
+<h3 class="font-title-sm text-base text-on-surface">Empresa peruana</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Fórmulas hechas en el Perú a partir de nuestros superalimentos.</p>
+</div>
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col items-center text-center gap-xs hover:shadow-lg transition-shadow">
+<span class="grid place-items-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-1">
+<span class="material-symbols-outlined text-3xl">history</span>
+</span>
+<h3 class="font-title-sm text-base text-on-surface">+30 años</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Desarrollando y produciendo fórmulas en base a superalimentos.</p>
+</div>
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col items-center text-center gap-xs hover:shadow-lg transition-shadow">
+<span class="grid place-items-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-1">
+<span class="material-symbols-outlined text-3xl">factory</span>
+</span>
+<h3 class="font-title-sm text-base text-on-surface">Planta propia</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Producción propia, sin intermediarios entre la fábrica y tu cliente.</p>
+</div>
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col items-center text-center gap-xs hover:shadow-lg transition-shadow">
+<span class="grid place-items-center w-14 h-14 rounded-full bg-primary/10 text-primary mb-1">
+<span class="material-symbols-outlined text-3xl">eco</span>
+</span>
+<h3 class="font-title-sm text-base text-on-surface">+60 productos naturales</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Sin azúcar, sin endulzantes ni colorantes artificiales y sin conservantes químicos.</p>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     4. Formas de ganar — entradilla
+     ========================================================================== -->
+<section class="pt-xl pb-lg scroll-mt-24" id="ganar">
+<div class="max-w-container-max mx-auto px-md text-center max-w-2xl space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-xs tracking-wider uppercase">Cómo gano</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">Dos formas de ganar con Santa Natura&nbsp;Network</h2>
+<p class="font-body-md text-base text-on-surface-variant">La primera depende solo de ti: vender. La segunda multiplica lo que ya haces enseñándoselo a otros. Puedes hacer una, la otra o las dos.</p>
+</div>
+</section>
+
+<!-- ==========================================================================
+     4.a Forma de ganar 1 — Venta directa
+     --------------------------------------------------------------------------
+     Diapositiva 11. La cifra de «+ S/ 2,160 al mes» NO está escrita a mano:
+     store.js la recalcula con el precio vigente del colágeno del catálogo y
+     el mayor descuento de la tabla de planes (pintarEjemploDeVenta). Si el
+     producto desaparece o baja de precio, el bloque se oculta o se corrige
+     solo, en vez de quedarse prometiendo un margen que ya no existe.
+     ========================================================================== -->
+<section class="pb-xl scroll-mt-24" id="venta-directa">
+<div class="max-w-container-max mx-auto px-md">
+
+<div class="text-center max-w-2xl mx-auto mb-lg space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full font-label-caps text-xs tracking-wider uppercase">Forma 1</span>
+<h3 class="font-headline-md text-2xl md:text-3xl text-on-surface font-bold">Gana vendiendo productos que funcionan</h3>
+<p class="font-body-md text-base text-on-surface-variant">Compras con tu descuento de socio y vendes al precio de lista. Esa diferencia es tuya desde el primer pedido.</p>
+</div>
+
+<!-- Ejemplo calculado con el catálogo real (lo rellena store.js) -->
+<div class="bg-surface rounded-3xl p-md md:p-lg border border-outline-variant/40 shadow-sm mb-md" id="ejemplo-venta">
+<div class="grid lg:grid-cols-2 gap-md lg:gap-lg items-center">
+
+<div class="space-y-sm">
+<h4 class="font-headline-md text-xl md:text-2xl text-on-surface font-bold">Vendiendo un colágeno al día</h4>
+<p class="font-body-md text-base text-on-surface-variant">
+                    Tomamos un producto real del catálogo, <strong class="text-on-surface" data-venta-producto>el colágeno</strong>, y el descuento del
+                    <a class="text-primary font-bold hover:underline" href="#planes"><span data-venta-plan>plan de mayor descuento</span></a>.
+                </p>
+
+<!-- El cálculo, paso a paso: es lo que convierte la cifra en algo comprobable -->
+<dl class="space-y-2 font-body-md text-sm">
+<div class="flex items-baseline justify-between gap-sm border-b border-outline-variant/40 pb-2">
+<dt class="text-on-surface-variant">Precio de lista</dt>
+<dd class="font-title-sm text-base text-on-surface" data-venta-lista>—</dd>
+</div>
+<div class="flex items-baseline justify-between gap-sm border-b border-outline-variant/40 pb-2">
+<dt class="text-on-surface-variant">Tu precio como socio (<span data-venta-descuento>—</span> de descuento)</dt>
+<dd class="font-title-sm text-base text-on-surface" data-venta-socio>—</dd>
+</div>
+<div class="flex items-baseline justify-between gap-sm">
+<dt class="text-on-surface">Ganas por cada unidad</dt>
+<dd class="font-title-sm text-base text-primary font-bold" data-venta-margen>—</dd>
+</div>
+</dl>
+</div>
+
+<div class="bg-primary text-on-primary rounded-3xl p-md md:p-lg text-center space-y-2">
+<p class="font-label-caps text-[11px] uppercase tracking-wider text-on-primary/80">
+                    <span data-venta-margen>—</span> × <span data-venta-dias>30</span> días
+                </p>
+<p class="font-headline-md text-4xl md:text-5xl font-bold">+ <span data-venta-mensual>—</span></p>
+<p class="font-body-md text-sm text-on-primary/90">al mes, vendiendo una unidad por día</p>
+</div>
+
+</div>
+</div>
+
+<!-- Bonos y viajes: los importes del Bono Mercadeo viven en su propia sección,
+     aquí solo se enlazan para no tener dos veces las mismas cifras. -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-sm md:gap-md mb-lg">
+
+<a class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex items-start gap-sm hover:shadow-lg transition-shadow" href="#bono-mercadeo">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary shrink-0">
+<span class="material-symbols-outlined">redeem</span>
+</span>
+<div>
+<h4 class="font-title-sm text-base text-on-surface mb-1">Bonos adicionales por tus ventas</h4>
+<p class="font-body-md text-sm text-on-surface-variant">El Bono Mercadeo crece cada periodo que mantienes tu negocio activo. <span class="text-primary font-bold">Ver los montos y periodos →</span></p>
+</div>
+</a>
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex items-start gap-sm">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary shrink-0">
+<span class="material-symbols-outlined">flight_takeoff</span>
+</span>
+<div>
+<h4 class="font-title-sm text-base text-on-surface mb-1">Viajes por cumplir tus metas</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Viajes nacionales e internacionales para quienes alcanzan los objetivos del periodo.</p>
+</div>
+</div>
+
+</div>
+
+<!-- Niveles de descuento: son los mismos cuatro planes de la tabla oficial,
+     vistos desde el lado del margen. Los nombres y los puntos salen de ahí. -->
+<div class="text-center max-w-2xl mx-auto mb-md space-y-1">
+<h4 class="font-headline-md text-xl text-on-surface font-bold">Tu margen sube con tu plan</h4>
+<p class="font-body-md text-sm text-on-surface-variant">El descuento con el que compras es tu ganancia al vender. Cada plan te deja en un nivel distinto.</p>
+</div>
+
+<!-- Las cuatro tarjetas las pinta store.js desde PLANES_AFILIACION: son los
+     mismos planes de la tabla oficial, vistos desde el lado del margen. -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-sm md:gap-md" id="niveles-margen"></div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     4.b Forma de ganar 2 — Duplicación 3x3
+     --------------------------------------------------------------------------
+     Diapositivas 12 a 16 de la presentación de negocio.
+
+     REVISAR CON EL ASESOR: en la presentación, los S/ 500 que aparecen en cada
+     nodo son el volumen de compra con el que trabaja el ejemplo, NO el precio
+     de entrada al negocio. La inversión mínima real es la del Plan Básico
+     (ver la tabla de planes), que es bastante menor. Aquí se rotulan siempre
+     como «volumen», nunca como inversión, para no contradecir la tabla.
+     ========================================================================== -->
+<section class="py-xl bg-surface-container-low border-y border-outline-variant/30 scroll-mt-24" id="duplicacion">
+<div class="max-w-container-max mx-auto px-md">
+
+<div class="text-center max-w-2xl mx-auto mb-lg space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full font-label-caps text-xs tracking-wider uppercase">Forma 2</span>
+<h3 class="font-headline-md text-2xl md:text-3xl text-on-surface font-bold">Forma tu equipo y multiplica lo que ganas</h3>
+<p class="font-body-md text-base text-on-surface-variant">No se trata de vender más tú solo, sino de enseñar a otros tres a hacer lo mismo que ya sabes hacer.</p>
+</div>
+
+<!-- Árbol: tú, tus 3 directos y los 9 del segundo nivel.
+     Se mantiene en 3 columnas también en móvil porque son nodos pequeños y
+     apilarlos rompería la idea de «cada uno invita a tres». Lo que sí se
+     apila en móvil son los tres escalones de más abajo. -->
+<div class="bg-surface rounded-3xl p-md md:p-lg border border-outline-variant/40 shadow-sm mb-md">
+<figure>
+<figcaption class="sr-only">
+            Esquema de duplicación: tú, con un volumen de compra de S/ 500, invitas a 3 personas
+            con el mismo volumen, y cada una de ellas invita a 3 más, sumando 9 en el segundo nivel.
+        </figcaption>
+
+<div aria-hidden="true">
+
+<!-- Nivel 0: tú -->
+<div class="flex flex-col items-center">
+<span class="grid place-items-center w-16 h-16 rounded-full bg-primary text-on-primary font-title-sm text-base shadow-lg">TÚ</span>
+<span class="mt-1 font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Volumen S/ 500</span>
+</div>
+
+<div class="arbol-3x3__tallo"></div>
+<div class="arbol-3x3__rama"></div>
+
+<!-- Nivel 1: tus 3 directos -->
+<div class="grid grid-cols-3 max-w-md mx-auto">
+<div class="arbol-3x3__tallo"></div>
+<div class="arbol-3x3__tallo"></div>
+<div class="arbol-3x3__tallo"></div>
+</div>
+<div class="grid grid-cols-3 max-w-md mx-auto gap-1">
+<div class="flex flex-col items-center gap-1">
+<span class="grid place-items-center w-11 h-11 rounded-full bg-tertiary-container text-on-tertiary-container font-bold border border-outline-variant/40">1</span>
+<span class="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-wider">S/ 500</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="grid place-items-center w-11 h-11 rounded-full bg-tertiary-container text-on-tertiary-container font-bold border border-outline-variant/40">2</span>
+<span class="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-wider">S/ 500</span>
+</div>
+<div class="flex flex-col items-center gap-1">
+<span class="grid place-items-center w-11 h-11 rounded-full bg-tertiary-container text-on-tertiary-container font-bold border border-outline-variant/40">3</span>
+<span class="font-label-caps text-[9px] text-on-surface-variant uppercase tracking-wider">S/ 500</span>
+</div>
+</div>
+
+<!-- Nivel 2: los 9. Cada grupo de 3 cuelga de su padre. -->
+<div class="grid grid-cols-3 max-w-md mx-auto">
+<div class="arbol-3x3__tallo"></div>
+<div class="arbol-3x3__tallo"></div>
+<div class="arbol-3x3__tallo"></div>
+</div>
+<div class="grid grid-cols-3 max-w-md mx-auto gap-1">
+<div><div class="arbol-3x3__rama"></div></div>
+<div><div class="arbol-3x3__rama"></div></div>
+<div><div class="arbol-3x3__rama"></div></div>
+</div>
+<div class="grid grid-cols-9 max-w-md mx-auto">
+<div class="arbol-3x3__tallo"></div><div class="arbol-3x3__tallo"></div><div class="arbol-3x3__tallo"></div>
+<div class="arbol-3x3__tallo"></div><div class="arbol-3x3__tallo"></div><div class="arbol-3x3__tallo"></div>
+<div class="arbol-3x3__tallo"></div><div class="arbol-3x3__tallo"></div><div class="arbol-3x3__tallo"></div>
+</div>
+<div class="grid grid-cols-9 max-w-md mx-auto gap-0.5 place-items-center">
+<span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-surface-container-high border border-outline-variant/60"></span>
+<span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-surface-container-high border border-outline-variant/60"></span>
+<span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-surface-container-high border border-outline-variant/60"></span>
+<span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-surface-container-high border border-outline-variant/60"></span>
+<span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-surface-container-high border border-outline-variant/60"></span>
+<span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-surface-container-high border border-outline-variant/60"></span>
+<span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-surface-container-high border border-outline-variant/60"></span>
+<span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-surface-container-high border border-outline-variant/60"></span>
+<span class="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-surface-container-high border border-outline-variant/60"></span>
+</div>
+<p class="text-center font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider mt-2">9 personas · volumen S/ 500 cada una</p>
+
+</div>
+</figure>
+</div>
+
+<!-- Los tres escalones. En móvil se apilan en vertical; no se encogen. -->
+<ol class="grid grid-cols-1 md:grid-cols-3 gap-sm md:gap-md">
+
+<li class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col gap-sm">
+<span class="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary font-bold shrink-0">1</span>
+<h4 class="font-title-sm text-base text-on-surface">Invitas a 3 personas</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Tres personas que quieran hacer el negocio, cada una con su propio volumen de compra de S/&nbsp;500.</p>
+</li>
+
+<li class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col gap-sm">
+<span class="grid place-items-center w-10 h-10 rounded-full bg-primary/10 text-primary font-bold shrink-0">2</span>
+<h4 class="font-title-sm text-base text-on-surface">Les enseñas a hacer lo mismo</h4>
+<p class="font-body-md text-sm text-on-surface-variant">Cada una invita a 3: tu segundo nivel llega a 9 personas.</p>
+<p class="mt-auto pt-2 border-t border-outline-variant/40">
+<span class="block font-headline-md text-xl text-primary font-bold">S/ 1,500 a S/ 2,000</span>
+<span class="block font-body-md text-xs text-on-surface-variant">de ingreso estimado con tu equipo en ese punto</span>
+</p>
+</li>
+
+<li class="bg-primary text-on-primary rounded-3xl p-md border border-primary shadow-xl flex flex-col gap-sm">
+<span class="grid place-items-center w-10 h-10 rounded-full bg-botanical-white/20 font-bold shrink-0">3</span>
+<h4 class="font-title-sm text-base">Ayudas a tus 3 a lograrlo</h4>
+<p class="font-body-md text-sm text-on-primary/90">Cuando cada uno de tus 3 directos gana S/&nbsp;1,500 a S/&nbsp;2,000, tu propio ingreso sube.</p>
+<p class="mt-auto pt-2 border-t border-on-primary/20">
+<span class="block font-headline-md text-xl font-bold">S/ 4,000 a S/ 5,000</span>
+<span class="block font-body-md text-xs text-on-primary/80">de ingreso estimado con la matriz completa</span>
+</p>
+</li>
+
+</ol>
+</div>
+</section>
+
+<!-- ==========================================================================
+     5. Bono Mercadeo
+     ========================================================================== -->
+<section class="py-xl bg-surface-container scroll-mt-24" id="bono-mercadeo">
+<div class="max-w-container-max mx-auto px-md">
+<div class="flex flex-col md:flex-row gap-lg items-center">
+
+<div class="md:w-1/3 space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full font-label-caps text-xs tracking-wider uppercase">Bono 1</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">Bono Mercadeo</h2>
+<p class="font-body-md text-base text-on-surface-variant">La constancia paga. Si mantienes tu negocio activo durante cuatro periodos seguidos, el bono crece en cada uno.</p>
+</div>
+
+<div class="md:w-2/3 w-full">
+<div class="bg-surface rounded-3xl p-md md:p-lg border border-outline-variant/40 shadow-sm">
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-sm relative">
+
+<div class="flex flex-col items-center gap-2 text-center">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-surface-container-high border border-outline-variant text-on-surface font-bold">1</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Periodo 1</span>
+<span class="font-headline-md text-xl text-on-surface font-bold">S/ 300</span>
+</div>
+
+<div class="flex flex-col items-center gap-2 text-center">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-surface-container-high border border-outline-variant text-on-surface font-bold">2</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Periodo 2</span>
+<span class="font-headline-md text-xl text-on-surface font-bold">S/ 400</span>
+</div>
+
+<div class="flex flex-col items-center gap-2 text-center">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-surface-container-high border border-outline-variant text-on-surface font-bold">3</span>
+<span class="font-label-caps text-[10px] text-on-surface-variant uppercase tracking-wider">Periodo 3</span>
+<span class="font-headline-md text-xl text-on-surface font-bold">S/ 500</span>
+</div>
+
+<div class="flex flex-col items-center gap-2 text-center">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary text-on-primary font-bold shadow-md">4</span>
+<span class="font-label-caps text-[10px] text-primary uppercase tracking-wider">Periodo 4</span>
+<span class="font-headline-md text-2xl text-primary font-bold">S/ 700</span>
+</div>
+
+</div>
+<p class="font-body-md text-xs text-on-surface-variant text-center mt-md">Montos referenciales del plan oficial. Tu asesor te confirma los requisitos de cada periodo.</p>
+</div>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     6. Bono Matricial 3x3
+     ========================================================================== -->
+<section class="py-xl scroll-mt-24" id="bono-matricial">
+<div class="max-w-container-max mx-auto px-md">
+<div class="bg-surface-container-low rounded-3xl p-md md:p-lg border border-outline-variant/40 relative overflow-hidden">
+<div class="absolute -right-20 -bottom-20 w-64 h-64 bg-primary/10 rounded-full blur-3xl pointer-events-none" aria-hidden="true"></div>
+
+<div class="text-center space-y-sm max-w-2xl mx-auto mb-lg relative z-10">
+<span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full font-label-caps text-xs tracking-wider uppercase">Bono 2</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">Bono Matricial 3x3</h2>
+<p class="font-body-md text-base text-on-surface-variant">El poder de la duplicación: arma una base sólida y gana S/&nbsp;100 adicionales por cada matriz completa.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md relative z-10">
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col items-center text-center gap-sm">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">person</span>
+</span>
+<h3 class="font-title-sm text-base text-on-surface">Paso 1</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Mantén tu consumo personal activo de <strong class="text-on-surface">70 PP</strong>.</p>
+</div>
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col items-center text-center gap-sm">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary">
+<span class="material-symbols-outlined">group</span>
+</span>
+<h3 class="font-title-sm text-base text-on-surface">Paso 2</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Afilia directamente a <strong class="text-on-surface">3 personas</strong> que también consuman 70 PP.</p>
+</div>
+
+<div class="bg-primary text-on-primary rounded-3xl p-md shadow-lg flex flex-col items-center text-center gap-sm">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-botanical-white/20">
+<span class="material-symbols-outlined">celebration</span>
+</span>
+<h3 class="font-title-sm text-base">Paso 3: duplica</h3>
+<p class="font-body-md text-sm text-on-primary/90">Ayuda a tus 3 a conseguir sus 3.</p>
+<span class="bg-botanical-white text-primary px-4 py-2 rounded-full font-title-sm text-base">Ganas S/ 100 extra</span>
+</div>
+
+</div>
+
+<!-- REVISAR CON EL ASESOR: el bono de S/ 100 por matriz y los rangos de la
+     presentación de negocio (S/ 1,500–2,000 y S/ 4,000–5,000) no son lo
+     mismo y no se contradicen: el primero es un bono puntual por completar
+     la matriz y los segundos son el ingreso total proyectado del equipo.
+     Conviene que el asesor confirme cómo se combinan antes de publicarlo
+     como definitivo. -->
+<div class="mt-md bg-surface rounded-3xl p-md border border-outline-variant/40 relative z-10">
+<p class="font-body-md text-sm text-on-surface-variant">
+<strong class="text-on-surface">El bono no es todo lo que entra.</strong>
+                Los S/&nbsp;100 son el pago puntual por completar la matriz. Aparte de eso, la presentación de negocio proyecta un ingreso total de
+                <strong class="text-on-surface">S/&nbsp;1,500 a S/&nbsp;2,000</strong> cuando tienes tus 3 directos con sus equipos, y de
+                <strong class="text-on-surface">S/&nbsp;4,000 a S/&nbsp;5,000</strong> cuando cada uno de esos 3 alcanza ese mismo nivel.
+                Son estimados de un escenario de actividad: <a class="text-primary font-bold hover:underline" href="#duplicacion">mira cómo se arma la matriz</a>.
+            </p>
+</div>
+
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     7. Liderazgo y regalías por generación
+     ========================================================================== -->
+<section class="py-xl bg-surface-container-low border-y border-outline-variant/30 scroll-mt-24" id="liderazgo">
+<div class="max-w-container-max mx-auto px-md">
+
+<div class="text-center max-w-2xl mx-auto mb-lg space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-3 py-1 rounded-full font-label-caps text-xs tracking-wider uppercase">Bono 3</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">Liderazgo y generación</h2>
+<p class="font-body-md text-base text-on-surface-variant">Asciende de rango y desbloquea ingresos en profundidad a medida que formas nuevos líderes.</p>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex items-start gap-sm">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary shrink-0">
+<span class="material-symbols-outlined">military_tech</span>
+</span>
+<div>
+<h3 class="font-title-sm text-base text-on-surface mb-1">Rangos ejecutivos</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Bronce, Plata y Oro. Consolidas tu base y empiezas a cobrar regalías por generación.</p>
+</div>
+</div>
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex items-start gap-sm">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary shrink-0">
+<span class="material-symbols-outlined">diamond</span>
+</span>
+<div>
+<h3 class="font-title-sm text-base text-on-surface mb-1">Rangos diamante</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Diamante, Doble Diamante y Corona. Los niveles más altos de compensación y bonos exclusivos.</p>
+</div>
+</div>
+
+<div class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex items-start gap-sm">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary shrink-0">
+<span class="material-symbols-outlined">account_tree</span>
+</span>
+<div>
+<h3 class="font-title-sm text-base text-on-surface mb-1">Ingreso residual</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Cobras un porcentaje en profundidad, según el rango que hayas alcanzado.</p>
+</div>
+</div>
+
+</div>
+
+<!-- Aviso único para todo el bloque de formas de ganar. Se redacta con el
+     mismo tono que la nota del Bono Mercadeo y la del pie de página, para no
+     repetir cuatro veces la misma advertencia a lo largo de la página. -->
+<p class="font-body-md text-xs text-on-surface-variant text-center max-w-3xl mx-auto mt-lg">
+        Todos los montos de esta página son proyecciones referenciales del plan oficial, basadas en un escenario de actividad. Dependen del esfuerzo, la constancia y las ventas de cada distribuidor, y no constituyen una promesa de ingresos. Tu asesor te confirma los requisitos de cada bono.
+    </p>
+
+</div>
+</section>
+
+<!-- ==========================================================================
+     8. Sistema educativo
+     --------------------------------------------------------------------------
+     Diapositiva 17 de la presentación de negocio.
+     ========================================================================== -->
+<section class="py-xl scroll-mt-24" id="formacion">
+<div class="max-w-container-max mx-auto px-md">
+
+<div class="text-center max-w-2xl mx-auto mb-lg space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-xs tracking-wider uppercase">Formación</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">No necesitas experiencia</h2>
+<p class="font-body-md text-base text-on-surface-variant">Nadie empieza sabiendo. El sistema educativo de Santa Natura Network te enseña desde cero y te acompaña después.</p>
+</div>
+
+<ol class="grid grid-cols-1 md:grid-cols-3 gap-sm md:gap-md">
+
+<li class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col gap-sm">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary font-headline-md text-xl font-bold shrink-0">1</span>
+<h3 class="font-title-sm text-base text-on-surface">Formación inicial</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Te enseñamos todo lo necesario para arrancar: los productos, cómo se vende y cómo funciona el plan.</p>
+</li>
+
+<li class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col gap-sm">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary font-headline-md text-xl font-bold shrink-0">2</span>
+<h3 class="font-title-sm text-base text-on-surface">Capacitación continua</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Talleres, webinars y materiales de apoyo permanentes para que sigas mejorando.</p>
+</li>
+
+<li class="bg-surface rounded-3xl p-md border border-outline-variant/40 flex flex-col gap-sm">
+<span class="grid place-items-center w-12 h-12 rounded-full bg-primary/10 text-primary font-headline-md text-xl font-bold shrink-0">3</span>
+<h3 class="font-title-sm text-base text-on-surface">Mentoría personalizada</h3>
+<p class="font-body-md text-sm text-on-surface-variant">Tu líder te acompaña en cada paso: no aprendes solo, aprendes con alguien que ya lo hizo.</p>
+</li>
+
+</ol>
+</div>
+</section>
+
+<!-- ==========================================================================
+     9. Comunidad y eventos
+     --------------------------------------------------------------------------
+     Diapositivas 18 y 19. La foto se extrajo de la propia presentación de
+     negocio (diapositiva 19) y se guardó optimizada en img/.
+
+     REVISAR CON EL ASESOR: en la foto aparecen personas identificables. Viene
+     del material oficial que la empresa entrega a sus asesores, pero conviene
+     confirmar que se puede publicar en una web pública antes de difundirla.
+     ========================================================================== -->
+<section class="py-xl bg-surface-container-low border-y border-outline-variant/30 scroll-mt-24" id="comunidad">
+<div class="max-w-container-max mx-auto px-md">
+<div class="grid lg:grid-cols-2 gap-lg items-center">
+
+<div class="space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-xs tracking-wider uppercase">Comunidad</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">Esto ya está pasando</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                    Santa Natura Network no es una promesa a futuro: es una comunidad activa que se reúne en eventos presenciales por todo el país. Cuando te afilias, entras a ese grupo.
+                </p>
+<a class="inline-flex items-center gap-2 text-primary font-title-sm text-base hover:underline" href="#quiero-afiliarme">
+                    Sé parte de Santa Natura Network
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</a>
+</div>
+
+<figure class="relative bg-surface p-2 md:p-3 rounded-3xl shadow-2xl border border-outline-variant/50 overflow-hidden">
+<div class="hero-media img-placeholder">
+<span class="material-symbols-outlined hero-media__respaldo" style="font-variation-settings: 'FILL' 1;">groups</span>
+<img alt="Asistentes a un evento presencial de Santa Natura Network levantando la mano" decoding="async" loading="lazy"
+     width="1600" height="900" onerror="this.style.display='none'"
+     src="img/comunidad-evento-snn.jpg"/>
+</div>
+</figure>
+
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     10. Planes de afiliación
+     --------------------------------------------------------------------------
+     Va al final del argumento, no al principio: primero el visitante entiende
+     el respaldo, las formas de ganar y la formación, y recién entonces ve el
+     precio. Las tarjetas las pinta store.js desde PLANES_AFILIACION (la misma
+     fuente que usa el index), así que los precios se editan en un solo sitio.
+     ========================================================================== -->
+<section class="py-xl scroll-mt-24" id="planes">
+<div class="max-w-container-max mx-auto px-md">
+
+<div class="text-center max-w-2xl mx-auto mb-lg space-y-sm">
+<span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-xs tracking-wider uppercase">Emprende con nosotros</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">Elige tu paquete de inicio</h2>
+<p class="font-body-md text-base text-on-surface-variant">Tu inversión no se pierde: se convierte en productos que puedes consumir o vender. A mayor paquete, mayor descuento permanente.</p>
+</div>
+
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-sm md:gap-md items-stretch" id="planes-afiliacion"></div>
+
+<p class="text-center font-body-md text-sm text-on-surface-variant mt-md">
+        ¿No sabes cuál te conviene? <a class="text-primary font-bold hover:underline" href="#quiero-afiliarme">Cuéntanos tu objetivo</a> y te recomendamos uno.
+    </p>
+
+</div>
+</section>
+
+<!-- ==========================================================================
+     11. Formulario de afiliación
+     --------------------------------------------------------------------------
+     No hay servidor: al enviar, store.js arma el mensaje con los datos y abre
+     WhatsApp con la solicitud ya redactada para el asesor.
+     ========================================================================== -->
+<section class="py-xl scroll-mt-24" id="quiero-afiliarme">
+<div class="max-w-container-max mx-auto px-md">
+<div class="grid lg:grid-cols-2 gap-lg items-start">
+
+<div class="space-y-md lg:sticky lg:top-28">
+<span class="inline-block bg-primary/10 text-primary px-4 py-1.5 rounded-full font-label-caps text-xs tracking-wider uppercase">Último paso</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">Quiero afiliarme</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant leading-relaxed">
+                Déjanos tus datos y un asesor autorizado te guía en el registro: te confirma el paquete, la forma de pago y te entrega tu código de distribuidor.
+            </p>
+
+<ul class="space-y-sm">
+<li class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary shrink-0">schedule</span>
+<div>
+<p class="font-title-sm text-base text-on-surface">Te respondemos el mismo día</p>
+<p class="font-body-md text-sm text-on-surface-variant">Atención de lunes a sábado.</p>
+</div>
+</li>
+<li class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary shrink-0">verified_user</span>
+<div>
+<p class="font-title-sm text-base text-on-surface">Sin compromiso</p>
+<p class="font-body-md text-sm text-on-surface-variant">Primero resolvemos tus dudas; tú decides después.</p>
+</div>
+</li>
+<li class="flex items-start gap-sm">
+<span class="material-symbols-outlined text-primary shrink-0">local_shipping</span>
+<div>
+<p class="font-title-sm text-base text-on-surface">Envíos a todo el Perú</p>
+<p class="font-body-md text-sm text-on-surface-variant">Tu kit de inicio llega a tu ciudad.</p>
+</div>
+</li>
+</ul>
+</div>
+
+<form class="bg-surface rounded-3xl p-md md:p-lg border border-outline-variant/40 shadow-sm space-y-md"
+      id="form-afiliacion" onsubmit="enviarAfiliacion(event)" novalidate>
+
+<div>
+<label class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1" for="nombre">Nombre y apellido *</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/60 rounded-2xl py-3 px-4 text-sm text-on-surface placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+       id="nombre" name="nombre" type="text" autocomplete="name" placeholder="Ej. María Rodríguez" required/>
+</div>
+
+<div class="grid sm:grid-cols-2 gap-md">
+<div>
+<label class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1" for="telefono">Teléfono</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/60 rounded-2xl py-3 px-4 text-sm text-on-surface placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+       id="telefono" name="telefono" type="tel" inputmode="tel" autocomplete="tel" placeholder="999 999 999"/>
+</div>
+<div>
+<label class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1" for="ciudad">Ciudad</label>
+<input class="w-full bg-surface-container-low border border-outline-variant/60 rounded-2xl py-3 px-4 text-sm text-on-surface placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+       id="ciudad" name="ciudad" type="text" autocomplete="address-level2" placeholder="Ej. Lima"/>
+</div>
+</div>
+
+<div>
+<label class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1" for="plan-afiliacion">Plan que te interesa</label>
+<!-- Las opciones las llena store.js con los mismos precios de las tarjetas -->
+<select class="w-full bg-surface-container-low border border-outline-variant/60 rounded-2xl py-3 px-4 text-sm text-on-surface focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+        id="plan-afiliacion" name="plan"></select>
+</div>
+
+<div>
+<label class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1" for="objetivo">¿Qué buscas?</label>
+<select class="w-full bg-surface-container-low border border-outline-variant/60 rounded-2xl py-3 px-4 text-sm text-on-surface focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors"
+        id="objetivo" name="objetivo">
+<option value="">Prefiero no decirlo</option>
+<option value="Comprar para mí con descuento">Comprar para mí con descuento</option>
+<option value="Vender y generar un ingreso extra">Vender y generar un ingreso extra</option>
+<option value="Construir un equipo y hacerlo mi negocio">Construir un equipo y hacerlo mi negocio</option>
+</select>
+</div>
+
+<div>
+<label class="block font-label-caps text-[11px] text-on-surface-variant uppercase tracking-wider mb-1" for="mensaje">Comentario (opcional)</label>
+<textarea class="w-full bg-surface-container-low border border-outline-variant/60 rounded-2xl py-3 px-4 text-sm text-on-surface placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors resize-y"
+          id="mensaje" name="mensaje" rows="3" placeholder="Cuéntanos tus dudas o desde qué ciudad escribes."></textarea>
+</div>
+
+<button class="w-full bg-action-whatsapp text-white py-md rounded-full font-title-sm text-base hover:brightness-105 transition-all shadow-lg shadow-action-whatsapp/25 flex items-center justify-center gap-xs active:scale-[0.98]"
+        type="submit">
+<svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+            Enviar solicitud por WhatsApp
+        </button>
+
+<p class="font-body-md text-xs text-center text-on-surface-variant">
+            Al enviar se abre WhatsApp con tus datos ya escritos. No guardamos tu información en ningún servidor.
+        </p>
+
+</form>
+
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     12. Preguntas frecuentes sobre la afiliación
+     ========================================================================== -->
+<section class="py-xl bg-surface">
+<div class="max-w-3xl mx-auto px-md">
+<h2 class="font-headline-md text-3xl md:text-4xl text-center mb-lg text-on-surface font-bold">Preguntas sobre la afiliación</h2>
+<div class="space-y-sm">
+
+<details class="group bg-surface-container-low rounded-3xl border border-outline-variant/30 overflow-hidden transition-all duration-300">
+<summary class="flex justify-between items-center gap-sm p-md cursor-pointer hover:bg-surface-container transition-colors">
+<span class="font-headline-md text-lg text-on-surface">¿Qué recibo al afiliarme?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 shrink-0 text-primary">expand_more</span>
+</summary>
+<div class="p-md pt-0 text-on-surface-variant font-body-md text-base leading-relaxed">
+                Tu código de distribuidor, el paquete de productos que elijas y el descuento permanente sobre todo el catálogo. La inversión no es una cuota: se convierte en productos. El paquete no viene armado de antemano, sino que lo eliges tú del catálogo hasta completar los puntos que otorga tu plan, así que te llevas lo que de verdad vas a consumir o vender.
+</div>
+</details>
+
+<details class="group bg-surface-container-low rounded-3xl border border-outline-variant/30 overflow-hidden transition-all duration-300">
+<summary class="flex justify-between items-center gap-sm p-md cursor-pointer hover:bg-surface-container transition-colors">
+<span class="font-headline-md text-lg text-on-surface">¿Estoy obligado a vender?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 shrink-0 text-primary">expand_more</span>
+</summary>
+<div class="p-md pt-0 text-on-surface-variant font-body-md text-base leading-relaxed">
+                No. Muchos afiliados solo compran para su familia y aprovechan el descuento. Vender y armar equipo es opcional: si lo haces, entran las comisiones y los bonos.
+            </div>
+</details>
+
+<details class="group bg-surface-container-low rounded-3xl border border-outline-variant/30 overflow-hidden transition-all duration-300">
+<summary class="flex justify-between items-center gap-sm p-md cursor-pointer hover:bg-surface-container transition-colors">
+<span class="font-headline-md text-lg text-on-surface">¿Qué son los PP (puntos)?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 shrink-0 text-primary">expand_more</span>
+</summary>
+<div class="p-md pt-0 text-on-surface-variant font-body-md text-base leading-relaxed">
+                Cada producto otorga puntos personales. Con ellos se mide tu actividad mensual y se calculan los bonos, y también son la unidad con la que se arma tu paquete de afiliación. Como referencia, un punto equivale a S/&nbsp;6 de precio público: veinte puntos son S/&nbsp;120 en productos a precio de lista. En el catálogo verás los puntos de cada producto y el total de tu pedido.
+</div>
+</details>
+
+<details class="group bg-surface-container-low rounded-3xl border border-outline-variant/30 overflow-hidden transition-all duration-300">
+<summary class="flex justify-between items-center gap-sm p-md cursor-pointer hover:bg-surface-container transition-colors">
+<span class="font-headline-md text-lg text-on-surface">¿Cómo pago la afiliación?</span>
+<span class="material-symbols-outlined transition-transform duration-300 group-open:rotate-180 shrink-0 text-primary">expand_more</span>
+</summary>
+<div class="p-md pt-0 text-on-surface-variant font-body-md text-base leading-relaxed">
+                No se cobra en línea. Coordinas directamente con tu asesor por WhatsApp: Yape, Plin, transferencia bancaria o pago contra entrega en Lima.
+            </div>
+</details>
+
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     13. Cierre
+     ========================================================================== -->
+<section class="py-xl bg-surface-container">
+<div class="max-w-3xl mx-auto px-md text-center space-y-md">
+<span class="grid place-items-center w-16 h-16 rounded-full bg-primary/10 text-primary mx-auto">
+<span class="material-symbols-outlined text-4xl">support_agent</span>
+</span>
+<h2 class="font-headline-md text-3xl md:text-4xl text-on-surface font-bold">¿Listo para empezar?</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant">Un asesor autorizado resuelve tus dudas y te acompaña en el registro, paso a paso.</p>
+<div class="flex flex-col sm:flex-row justify-center gap-sm md:gap-md pt-xs">
+<a class="pulse-whatsapp bg-action-whatsapp text-white px-lg py-md rounded-full font-title-sm flex items-center justify-center gap-xs shadow-lg hover:brightness-105 transition-all"
+   data-wa="Hola, quiero afiliarme a Santa Natura Network. ¿Me explicas los pasos?" href="#" target="_blank" rel="noopener">
+<svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+                Chatear con un asesor
+            </a>
+<a class="bg-surface text-primary border border-primary/30 px-lg py-md rounded-full font-title-sm flex items-center justify-center gap-xs hover:bg-primary hover:text-on-primary transition-all" href="index.html#productos">
+<span class="material-symbols-outlined">grid_view</span> Ver el catálogo
+</a>
+</div>
+</div>
+</section>
+
+<!-- ==========================================================================
+     Pie de página (idéntico al del catálogo)
+     ========================================================================== -->
+<footer class="bg-primary-container text-botanical-white py-xl w-full mt-auto">
+<div class="max-w-container-max mx-auto px-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
+<div class="space-y-sm">
+<span class="font-headline-md text-2xl font-bold">Santa Natura</span>
+<p class="font-body-md text-sm text-botanical-white/80 leading-relaxed">Distribuidor Independiente Autorizado. Llevando lo mejor de nuestra tierra a tu hogar con productos 100% naturales.</p>
+</div>
+<div>
+<h3 class="font-headline-md text-lg mb-md">Líneas</h3>
+<ul class="space-y-xs font-body-md text-sm text-botanical-white/80" id="footer-categorias"></ul>
+</div>
+<div>
+<h3 class="font-headline-md text-lg mb-md">Atención al cliente</h3>
+<ul class="space-y-xs font-body-md text-sm text-botanical-white/80">
+<li><a class="hover:text-botanical-white transition-colors" href="index.html#productos">Catálogo de productos</a></li>
+<li><a class="hover:text-botanical-white transition-colors" href="#quiero-afiliarme">Quiero afiliarme</a></li>
+<li><a class="hover:text-botanical-white transition-colors" href="#">Términos y Condiciones</a></li>
+<li><a class="hover:text-botanical-white transition-colors" href="#">Libro de Reclamaciones</a></li>
+</ul>
+</div>
+<div class="space-y-md">
+<h3 class="font-headline-md text-lg">Síguenos</h3>
+<div class="flex gap-sm">
+<a aria-label="Facebook" class="w-12 h-12 rounded-full bg-botanical-white/10 flex items-center justify-center text-botanical-white hover:bg-botanical-white/20 transition-colors" href="#"><span class="material-symbols-outlined">facebook</span></a>
+<a aria-label="Instagram" class="w-12 h-12 rounded-full bg-botanical-white/10 flex items-center justify-center text-botanical-white hover:bg-botanical-white/20 transition-colors" href="#"><span class="material-symbols-outlined">photo_camera</span></a>
+</div>
+<p class="font-label-caps text-[10px] text-botanical-white/60 uppercase tracking-wider">Montos y porcentajes referenciales del plan oficial vigente. Tu asesor confirma los requisitos de cada bono.</p>
+</div>
+</div>
+<div class="max-w-container-max mx-auto mt-lg pt-md px-md border-t border-botanical-white/20 text-center">
+<p class="font-label-caps text-botanical-white/60 text-xs tracking-wider uppercase">© 2026 Santa Natura Distribuidor Autorizado. Todos los derechos reservados.</p>
+</div>
+</footer>
+
+<!-- Botón flotante de WhatsApp -->
+<a aria-label="Escríbenos por WhatsApp" class="fixed bottom-6 right-6 z-[150] w-16 h-16 bg-action-whatsapp rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform pulse-whatsapp"
+   data-wa="Hola, quiero información para afiliarme a Santa Natura Network." href="#" target="_blank" rel="noopener">
+<svg class="w-8 h-8" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
+</a>
+
+<script src="products.js"></script>
+<script src="store.js"></script>
+</body>
+</html>
