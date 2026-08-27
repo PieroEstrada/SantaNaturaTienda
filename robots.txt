@@ -1,0 +1,22 @@
+# robots.txt de santanatura.inmuno.lat
+#
+# Todo el sitio es público y rastreable. En particular /packs/ y
+# /packs/colageno/ NO están bloqueadas: son las páginas de destino de los
+# anuncios de Google Ads, y si el rastreador no puede leerlas, el Nivel de
+# Calidad se hunde y los anuncios pueden quedar rechazados.
+#
+# No añadas aquí un Disallow para esas dos rutas.
+
+User-agent: *
+Allow: /
+
+# Carpeta de utilidades del proyecto: no aporta nada en el buscador.
+Disallow: /scripts/
+
+# Panel de gestión e internos. Las páginas del panel llevan además
+# <meta name="robots" content="noindex">, porque robots.txt solo pide que no
+# se rastree, no impide que una URL descubierta por otra vía acabe indexada.
+Disallow: /gestion-sn/
+Disallow: /inc/
+
+Sitemap: https://santanatura.inmuno.lat/sitemap.xml

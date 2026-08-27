@@ -223,6 +223,15 @@ details > summary::-webkit-details-marker { display: none; }
     overflow: hidden;
 }
 
+/* Igual, pero a 3 líneas: lo usa el «Contiene: …» de las tarjetas de pack en
+   las landings, donde interesa que se lea qué trae el pack antes de elegirlo. */
+.linea-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
 /* ----------------------------------------------------------------------------
    Árbol de duplicación 3x3 (afiliacion.html)
    ----------------------------------------------------------------------------

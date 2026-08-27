@@ -4,7 +4,10 @@
    Modelo de venta: catálogo interactivo SIN pasarela de pago. El carrito arma
    un resumen del pedido y redirige a WhatsApp para cerrar la venta.
 
-   Depende de products.js (constantes PRODUCTS y COLECCIONES).
+   Depende, EN ESTE ORDEN, de:
+     config.js            número de WhatsApp, fecha de precios, ADS_CONFIG…
+     products.js          CATALOGO (lo publicado), PRODUCTS y COLECCIONES
+     render-productos.js  tarjetaProducto(), enlaceWhatsApp(), soles()…
    ========================================================================== */
 
 /* --------------------------------------------------------------------------
@@ -12,9 +15,9 @@
    -------------------------------------------------------------------------- */
 
 const CONFIG = {
-    // Número de WhatsApp del asesor, con código de país y sin signos ni espacios.
-    // Se usa en TODOS los botones de la web. Cambiarlo aquí lo cambia en todos.
-    whatsapp: '51923729480',
+    // OJO: el número de WhatsApp ya NO está aquí. Vive en config.js
+    // (WHATSAPP_NUMERO), que es el único sitio donde se escribe, porque también
+    // lo necesita scripts/build-landings.js al pre-generar las landings.
 
     // Aviso de precios especiales por cantidad. Se muestra en la ficha del
     // producto, en el carrito y viaja dentro del mensaje de WhatsApp.
@@ -52,11 +55,8 @@ const solesEnPantalla = (monto) => {
     })}`;
 };
 
-/** Formatea un monto como precio peruano: 50 -> "S/ 50.00" */
-const soles = (monto) => `S/ ${Number(monto).toFixed(2)}`;
-
-/** Formatea puntos con 2 decimales: 8.33 -> "8.33 pts" */
-const pts = (puntos) => `${Number(puntos).toFixed(2)} pts`;
+/* soles(), pts(), escapar() y enlaceWhatsApp() están en render-productos.js:
+   los comparte el build de las landings, así que no pueden vivir aquí. */
 
 /** Quita tildes y pasa a minúsculas, para que el buscador sea tolerante. */
 const normalizar = (texto) => String(texto)
@@ -64,17 +64,24 @@ const normalizar = (texto) => String(texto)
     .normalize('NFD')
     .replace(/[̀-ͯ]/g, '');
 
-/** Escapa texto antes de insertarlo como HTML. */
-const escapar = (texto) => String(texto).replace(/[&<>"']/g, (c) => (
-    { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]
-));
+/**
+ * Busca un producto por su id, SOLO entre los publicados. Así un pack retirado
+ * ("activo": false) no se puede abrir ni añadir al pedido aunque quede su id
+ * guardado en el carrito de un visitante que pasó antes del cambio.
+ */
+const buscarProducto = (id) => CATALOGO.find((p) => p.id === Number(id));
 
-/** Busca un producto por su id. */
-const buscarProducto = (id) => PRODUCTS.find((p) => p.id === Number(id));
+/** Mensaje genérico de WhatsApp de la página actual (config.js → MENSAJES_WA). */
+const mensajeGenerico = () =>
+    MENSAJES_WA[document.documentElement.dataset.pagina] || MENSAJES_WA.home;
 
-/** Abre WhatsApp con un mensaje ya redactado. */
-const enlaceWhatsApp = (mensaje) =>
-    `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(mensaje)}`;
+/**
+ * Prefijo hasta la raíz del sitio ('' en la portada, '../' en /packs/,
+ * '../../' en /packs/colageno/). Lo declara cada página en
+ * <html data-raiz="…">, y así los enlaces e imágenes compartidos funcionan
+ * igual desde cualquier profundidad de carpeta.
+ */
+const raiz = () => document.documentElement.dataset.raiz || '';
 
 /* --------------------------------------------------------------------------
    3. Estado del catálogo y del carrito
@@ -92,8 +99,8 @@ const filtros = {
 
 /** Precio más barato y más caro del catálogo; son los topes del filtro. */
 const LIMITES_PRECIO = {
-    min: Math.floor(Math.min(...PRODUCTS.map((p) => p.pvp))),
-    max: Math.ceil(Math.max(...PRODUCTS.map((p) => p.pvp)))
+    min: Math.floor(Math.min(...CATALOGO.map((p) => p.pvp))),
+    max: Math.ceil(Math.max(...CATALOGO.map((p) => p.pvp)))
 };
 
 /** Carrito en memoria: { idProducto: cantidad } */
@@ -363,9 +370,9 @@ const ahorroDelPlan = (plan) => plan.precioPublico - plan.inversion;
  * no está cargado, para que quien llame pueda omitir la línea sin romperse.
  */
 function productosAproximados(puntos) {
-    if (typeof PRODUCTS === 'undefined' || !Array.isArray(PRODUCTS)) return null;
+    if (typeof CATALOGO === 'undefined' || !Array.isArray(CATALOGO)) return null;
 
-    const sueltos = PRODUCTS.filter((p) => p.categoria !== 'Packs' && p.puntos > 0);
+    const sueltos = CATALOGO.filter((p) => p.categoria !== 'Packs' && p.puntos > 0);
     if (!sueltos.length) return null;
 
     const promedio = sueltos.reduce((suma, p) => suma + p.puntos, 0) / sueltos.length;
@@ -568,7 +575,7 @@ const DIAS_DEL_EJEMPLO = 30;
  * está cargado o el producto ya no existe, para poder ocultar el bloque.
  */
 function ejemploDeVentaDiaria() {
-    if (typeof PRODUCTS === 'undefined' || !Array.isArray(PRODUCTS)) return null;
+    if (typeof CATALOGO === 'undefined' || !Array.isArray(CATALOGO)) return null;
 
     const producto = buscarProducto(ID_PRODUCTO_EJEMPLO);
     if (!producto || !producto.descuentos) return null;
@@ -630,7 +637,7 @@ function pintarEjemploDeVenta() {
 function productosFiltrados() {
     const q = normalizar(filtros.busqueda.trim());
 
-    let lista = PRODUCTS.filter((p) => {
+    let lista = CATALOGO.filter((p) => {
         // Filtrar por una categoría madre incluye también a sus subcategorías.
         if (filtros.categoria && !estaEn(p, filtros.categoria)) return false;
 
@@ -690,79 +697,10 @@ function limpiarFiltroPrecio() {
     aplicarFiltroPrecio();
 }
 
-/**
- * Imagen del producto, o placeholder de marca si todavía no tiene foto.
- * `compacto` se usa en miniaturas (carrito), donde no cabe el texto de marca.
- */
-function bloqueImagen(producto, alto = 'h-52', compacto = false) {
-    // El marco siempre se dibuja con el placeholder de marca detrás. Si el
-    // producto tiene foto, va encima; y si el archivo no existe (nombre mal
-    // escrito, imagen aún no subida) el onerror la quita y vuelve a verse el
-    // placeholder, sin romper la altura de la tarjeta ni mostrar el icono de
-    // imagen rota del navegador.
-    const marca = compacto
-        ? `<span class="material-symbols-outlined text-2xl text-primary/40" style="font-variation-settings: 'FILL' 1;">eco</span>`
-        : `<span class="material-symbols-outlined text-5xl text-primary/40" style="font-variation-settings: 'FILL' 1;">eco</span>
-           <span class="font-label-md text-[10px] uppercase tracking-wide text-outline">Santa Natura</span>`;
-
-    // object-contain (y no cover) para que el envase se vea completo: las fotos
-    // del catálogo son cuadradas y con fondo blanco, así que recortar los bordes
-    // cortaría la etiqueta.
-    const foto = producto.imagen
-        ? `<img src="${escapar(producto.imagen)}" alt="${escapar(producto.producto)}"
-                loading="lazy" onerror="this.remove()"
-                class="absolute inset-0 w-full h-full object-contain ${compacto ? '' : 'p-2'} bg-white transition-transform duration-500 group-hover:scale-105"/>`
-        : '';
-
-    return `<div class="img-placeholder relative overflow-hidden w-full ${alto} flex flex-col items-center justify-center gap-xs bg-surface-container">
-                ${marca}
-                ${foto}
-            </div>`;
-}
-
-function tarjetaProducto(p) {
-    const enCarrito = carrito[p.id] || 0;
-
-    return `
-    <article class="bg-surface rounded-3xl shadow-sm overflow-hidden border border-outline-variant/50 group hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col cursor-pointer"
-             onclick="abrirFichaProducto(${p.id})">
-        <div class="relative overflow-hidden bg-surface-container">
-            ${bloqueImagen(p, 'h-40 sm:h-48 md:h-52')}
-            <div class="absolute top-2 left-2 md:top-3 md:left-3 bg-surface/90 backdrop-blur text-primary px-2 md:px-3 py-1 rounded-full text-[9px] md:text-[10px] font-label-caps uppercase tracking-wider max-w-[70%] truncate">
-                ${escapar(etiquetaCategoria(p))}
-            </div>
-            ${p.etiqueta_descuento ? `<div class="absolute top-2 right-2 md:top-3 md:right-3 bg-error text-on-error px-2 py-1 rounded-full text-[10px] font-bold shadow-md">${escapar(p.etiqueta_descuento)}</div>` : ''}
-            ${enCarrito ? `<div class="absolute bottom-2 right-2 md:bottom-3 md:right-3 bg-primary text-white w-7 h-7 rounded-full grid place-items-center text-xs font-bold shadow">${enCarrito}</div>` : ''}
-        </div>
-
-        <div class="p-sm md:p-md flex-1 flex flex-col">
-            <h3 class="font-headline-md text-[13px] md:text-sm text-on-surface leading-snug linea-2 mb-xs" title="${escapar(p.producto)}">
-                ${escapar(p.producto)}
-            </h3>
-
-            <div class="flex items-center gap-1 text-primary mb-sm">
-                <span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">stars</span>
-                <span class="font-label-caps text-xs">${pts(p.puntos)}</span>
-            </div>
-
-            <div class="mt-auto space-y-sm">
-                <div>
-                    <div class="flex items-baseline flex-wrap gap-x-2 gap-y-0">
-                        <span class="text-lg md:text-xl font-bold text-on-surface">${soles(p.pvp)}</span>
-                        ${p.precio_original ? `<del class="text-on-surface-variant text-xs md:text-sm leading-tight">${soles(p.precio_original)}</del>` : ''}
-                    </div>
-                    <p class="text-[11px] text-on-surface-variant leading-tight mt-0.5">Precio de venta al público</p>
-                </div>
-
-                <button class="w-full bg-primary text-on-primary py-2 rounded-full font-label-caps text-[11px] md:text-xs hover:brightness-110 active:scale-[0.98] transition-all flex items-center justify-center gap-xs"
-                        onclick="event.stopPropagation(); agregarAlCarrito(${p.id})">
-                    <span class="material-symbols-outlined text-sm">add_shopping_cart</span>
-                    <span class="truncate">Agregar al pedido</span>
-                </button>
-            </div>
-        </div>
-    </article>`;
-}
+/* bloqueImagen() y tarjetaProducto() están en render-productos.js, porque el
+   mismo código tiene que dibujar las tarjetas aquí (navegador) y en el build de
+   las landings (Node). tarjetaProducto recibe el estado del carrito por
+   parámetro para no depender de nada global. */
 
 function pintarCatalogo() {
     const grid = document.getElementById('grid-productos');
@@ -780,7 +718,9 @@ function pintarCatalogo() {
     const desde = (filtros.pagina - 1) * filtros.porPagina;
     const pagina = lista.slice(desde, desde + filtros.porPagina);
 
-    grid.innerHTML = pagina.map(tarjetaProducto).join('');
+    grid.innerHTML = pagina
+        .map((p) => tarjetaProducto(p, { enCarrito: carrito[p.id] || 0 }))
+        .join('');
     vacio.classList.toggle('hidden', lista.length > 0);
 
     document.getElementById('contador-resultados').textContent = lista.length === 0
@@ -861,46 +801,11 @@ function reiniciarPagina() {
    los conteos NO suman el total del catálogo: eso es correcto, no un error.
    -------------------------------------------------------------------------- */
 
-/** Nombres que cuentan para una categoría: ella misma más sus subcategorías. */
-function nombresDe(nombre) {
-    const c = COLECCIONES.find((x) => x.nombre === nombre);
-    return c ? [c.nombre, ...c.hijas] : [nombre];
-}
-
-/** ¿El producto entra en esta categoría (o en alguna de sus hijas)? */
-function estaEn(producto, nombre) {
-    const suyas = producto.categorias || [];
-    return nombresDe(nombre).some((n) => suyas.includes(n));
-}
+/* nombresDe(), estaEn() y etiquetaCategoria() están en render-productos.js:
+   el build de las landings necesita las mismas reglas de categorías. */
 
 function contar(nombre) {
-    return PRODUCTS.filter((p) => estaEn(p, nombre)).length;
-}
-
-/**
- * Orden para elegir QUÉ categoría se muestra en la tarjeta y en la ficha.
- * Primero las que dicen qué ES el producto ("Colágenos", "Batidos") y al final
- * las de escaparate ("Top Ventas", "Favoritos de…"), que no describen nada.
- * Lo que no esté en esta lista queda al final, en el orden que traiga.
- */
-const ETIQUETAS_PREFERIDAS = [
-    'Packs Colágeno', 'Packs Hombre', 'Packs',
-    'Colágenos', 'Batidos', 'Harinas del mar y tierra',
-    'Concentrados', 'Bebidas', 'Jarabes de Miel', 'Jarabes naturales',
-    'Propóleos', 'Aceites', 'Algarrobina', 'Miel', 'Vinagres',
-    'Frotaciones', 'Cuidado del cabello',
-    'Cocina Natural', 'Refuerzos', 'Bebidas y concentrados',
-    'Detox', 'Descanso y relax', 'Peso / Grasa'
-];
-
-function etiquetaCategoria(p) {
-    const suyas = p.categorias || [];
-    if (!suyas.length) return p.categoria;
-    const rango = (c) => {
-        const i = ETIQUETAS_PREFERIDAS.indexOf(c);
-        return i === -1 ? ETIQUETAS_PREFERIDAS.length : i;
-    };
-    return [...suyas].sort((a, b) => rango(a) - rango(b))[0];
+    return CATALOGO.filter((p) => estaEn(p, nombre)).length;
 }
 
 /** Para poder pasar cualquier nombre por un onclick sin pelear con comillas. */
@@ -966,7 +871,7 @@ function pintarCategorias() {
                     }">
                 <span class="${hija ? 'text-xs' : 'text-sm'}">${escapar(texto)}</span>
                 <span class="${esActiva ? 'bg-primary/10' : 'bg-surface-container-high'} px-2 py-0.5 rounded-full text-xs shrink-0">${
-                    nombre === '' ? PRODUCTS.length : contar(nombre)
+                    nombre === '' ? CATALOGO.length : contar(nombre)
                 }</span>
             </button>
         </li>`;
@@ -998,9 +903,12 @@ function filtrarPorCategoria(cat) {
     // Desde una subpágina (afiliación, etc.) no hay catálogo que filtrar:
     // se salta al index con la categoría ya elegida en la dirección.
     if (!document.getElementById('grid-productos')) {
+        // raiz() antepone los "../" que hagan falta: las landings de Ads viven
+        // en subcarpetas (/packs/, /packs/colageno/) y sin esto el enlace
+        // apuntaría a sí mismas en vez de a la portada.
         const destino = cat
-            ? `index.html?categoria=${encodeURIComponent(cat)}#productos`
-            : 'index.html#productos';
+            ? `${raiz()}index.php?categoria=${encodeURIComponent(cat)}#productos`
+            : `${raiz()}index.php#productos`;
         window.location.href = destino;
         return;
     }
@@ -1056,8 +964,19 @@ function abrirFichaProducto(id) {
     document.getElementById('ficha-descripcion').textContent =
         p.descripcion || 'Producto original Santa Natura. Consulta a nuestro asesor por modo de uso y disponibilidad.';
 
+    // El mensaje sale del DATO (p.producto), nunca del texto del DOM, y
+    // enlaceWhatsApp() lo pasa por encodeURIComponent: los nombres traen
+    // tildes, comas, barras y la «x» de los formatos.
     const consulta = `Hola, quiero pedir: ${p.producto} — ${soles(p.pvp)}. ¿Tienen stock disponible?\n\n_${CONFIG.notaCantidad}_`;
-    document.getElementById('ficha-whatsapp').href = enlaceWhatsApp(consulta);
+    const fichaWa = document.getElementById('ficha-whatsapp');
+    fichaWa.href = enlaceWhatsApp(consulta);
+    // Para la medición: origen y nombre real del producto.
+    fichaWa.dataset.waOrigen = 'producto';
+    fichaWa.dataset.waProducto = p.producto;
+
+    // «Agregar al pedido» de la ficha: alimenta el evento add_to_order.
+    const fichaAdd = document.getElementById('ficha-agregar');
+    if (fichaAdd) fichaAdd.dataset.addProducto = p.producto;
 
     abrirModal('modal-producto');
 }
@@ -1249,7 +1168,7 @@ function sugerenciasPara(texto) {
         return 99;
     };
 
-    return PRODUCTS
+    return CATALOGO
         .map((p) => ({ p, s: puntaje(p) }))
         .filter((x) => x.s < 99)
         .sort((a, b) => a.s - b.s || a.p.producto.localeCompare(b.p.producto, 'es'))
@@ -1340,6 +1259,139 @@ function elegirSugerencia(id, idInput, idLista) {
     document.getElementById(idLista).classList.add('hidden');
     document.getElementById(idInput).blur();
     abrirFichaProducto(id);
+}
+
+/* --------------------------------------------------------------------------
+   11.c Selección destacada de las landings de Ads
+   --------------------------------------------------------------------------
+   /packs y /packs/colageno llegan con las tarjetas YA escritas en el HTML
+   (las genera scripts/build-landings.js), para que el robot de Google y el
+   visitante vean los productos sin esperar a JavaScript.
+
+   Al cargar, esta función las vuelve a pintar con el mismo módulo de render
+   para que el globo verde de "ya está en tu pedido" refleje el carrito real
+   del visitante. El HTML resultante es idéntico salvo ese globo.
+   -------------------------------------------------------------------------- */
+
+function pintarSeleccion() {
+    const grid = document.getElementById('grid-seleccion');
+    if (!grid) return;   // no es una landing: nada que hacer
+
+    // Los ids los deja escritos el build, así el navegador no tiene que repetir
+    // el criterio de selección (que vive en render-productos.js).
+    const ids = (grid.dataset.seleccion || '')
+        .split(',')
+        .map((n) => Number(n.trim()))
+        .filter(Boolean);
+
+    const lista = ids.map(buscarProducto).filter(Boolean);
+    if (!lista.length) return;   // datos raros: se deja el HTML pre-generado
+
+    grid.innerHTML = lista
+        .map((p, i) => tarjetaProducto(p, {
+            enCarrito: carrito[p.id] || 0,
+            ctaWhatsApp: true,
+            contenido: true,
+            ahorro: true,
+            // Mismos atributos de carga que puso el build, para que el repintado
+            // no reintroduzca el loading="lazy" arriba del pliegue.
+            ansiosa: i < 4,
+            prioritaria: i === 0
+        }))
+        .join('');
+}
+
+/* --------------------------------------------------------------------------
+   11.d Medición: clic a WhatsApp (conversión de Google Ads)
+   --------------------------------------------------------------------------
+   UN SOLO listener delegado en `document`, en fase de captura. Nada de un
+   listener por botón.
+
+   Fase de captura por dos motivos:
+     · corre ANTES que el onclick del elemento, así que la medición se registra
+       aunque ese onclick abra WhatsApp o llame a stopPropagation();
+     · las tarjetas de producto llaman a event.stopPropagation() en sus botones,
+       y en fase de burbuja nunca llegaríamos a verlos.
+
+   Todo va dentro de try/catch y sin await ni preventDefault: si la medición
+   falla, el chat se abre igual. Ese es el requisito duro.
+   -------------------------------------------------------------------------- */
+
+/** ¿Este elemento abre WhatsApp? */
+function esEntradaWhatsApp(el) {
+    if (el.matches('a[href*="wa.me"], a[href*="api.whatsapp.com"]')) return true;
+    // Botones que abren WhatsApp por JavaScript (el del carrito, los de
+    // afiliación): se marcan en el HTML con data-wa-origen.
+    return el.hasAttribute('data-wa-origen');
+}
+
+/**
+ * De dónde salió el clic: 'flotante' | 'carrito' | 'producto' | 'generico'.
+ * Manda siempre el data-wa-origen que traiga el elemento.
+ */
+function origenDelClic(el) {
+    return el.dataset.waOrigen || 'generico';
+}
+
+/** Nombre real del producto asociado al clic, si lo hay. */
+function productoDelClic(el) {
+    // Viene del dato (data-wa-producto lo escribe render-productos.js desde el
+    // campo `producto`), nunca del texto visible de la tarjeta.
+    if (el.dataset.waProducto) return el.dataset.waProducto;
+    // La ficha lo actualiza al abrirse.
+    if (el.id === 'ficha-whatsapp' && productoEnFicha) return productoEnFicha.producto;
+    return null;
+}
+
+/** Empuja un evento al dataLayer de Tag Manager. Nunca lanza. */
+function empujarDataLayer(datos) {
+    window.dataLayer = window.dataLayer || [];
+    window.dataLayer.push(datos);
+}
+
+/** Dispara la conversión de Google Ads, solo si ya pegaste los valores. */
+function dispararConversionAds() {
+    if (!ADS_CONFIG.conversionId || typeof window.gtag !== 'function') return;
+
+    const destino = ADS_CONFIG.conversionLabel
+        ? `${ADS_CONFIG.conversionId}/${ADS_CONFIG.conversionLabel}`
+        : ADS_CONFIG.conversionId;
+
+    window.gtag('event', 'conversion', { send_to: destino });
+}
+
+function conectarMedicion() {
+    document.addEventListener('click', (evento) => {
+        try {
+            const el = evento.target.closest(
+                'a[href*="wa.me"], a[href*="api.whatsapp.com"], [data-wa-origen], [data-add-producto]'
+            );
+            if (!el) return;
+
+            // «Agregar al pedido»: evento secundario, solo dataLayer.
+            if (el.hasAttribute('data-add-producto') && !esEntradaWhatsApp(el)) {
+                empujarDataLayer({
+                    event: 'add_to_order',
+                    producto: el.dataset.addProducto,
+                    pagina: window.location.pathname
+                });
+                return;
+            }
+
+            if (!esEntradaWhatsApp(el)) return;
+
+            empujarDataLayer({
+                event: 'whatsapp_click',
+                origen: origenDelClic(el),
+                producto: productoDelClic(el),
+                pagina: window.location.pathname
+            });
+
+            dispararConversionAds();
+        } catch (_e) {
+            // Medición rota != venta rota. Se ignora y WhatsApp se abre igual.
+        }
+    }, true);
 }
 
 /* --------------------------------------------------------------------------
@@ -1449,15 +1501,32 @@ function programarPopup() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Profundidad de carpeta de esta página, para que las rutas de las imágenes
+    // que pinta render-productos.js salgan bien también en /packs/ y
+    // /packs/colageno/.
+    fijarRaiz(raiz());
+
+    // La medición se conecta LO PRIMERO: si algo fallara más abajo, los clics
+    // a WhatsApp deben seguir contándose igual.
+    conectarMedicion();
+
     // El aviso de precios por cantidad se escribe desde CONFIG para que exista
     // un solo texto oficial en toda la web.
     document.querySelectorAll('[data-nota-cantidad]').forEach((el) => {
         el.textContent = CONFIG.notaCantidad;
     });
 
+    // Fecha de la lista de precios: un solo valor (config.js) para las tres
+    // páginas, en vez de estar escrita a mano en cada pie.
+    document.querySelectorAll('[data-lista-precios]').forEach((el) => {
+        el.textContent = `Lista de precios vigente: ${PRICE_LIST_DATE}. Precios en soles (S/), sujetos a disponibilidad de stock.`;
+    });
+
     // Todos los enlaces sueltos a WhatsApp apuntan al número configurado.
+    // Si el elemento trae su propio texto en data-wa, se respeta; si viene
+    // vacío, usa el mensaje prellenado de ESTA página (config.js → MENSAJES_WA).
     document.querySelectorAll('[data-wa]').forEach((el) => {
-        el.href = enlaceWhatsApp(el.dataset.wa);
+        el.href = enlaceWhatsApp(el.dataset.wa || mensajeGenerico());
     });
 
     sincronizarIconoTema();
@@ -1467,7 +1536,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // oficial «+60 productos», porque 30 de los 87 registros son packs y la
     // cifra del catálogo infla el dato (ver comentario en afiliacion.html).
     const heroTotal = document.getElementById('hero-total');
-    if (heroTotal) heroTotal.textContent = PRODUCTS.length;
+    if (heroTotal) heroTotal.textContent = CATALOGO.length;
 
     // Montos que dependen de PLANES_AFILIACION y viven dentro de textos
     // corridos del HTML. Se pintan desde aquí para que no haya cifras de plan
@@ -1511,6 +1580,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     pintarCategorias();
     pintarCatalogo();
+    pintarSeleccion();
     pintarCarrito();
     conectarControles();
     programarPopup();

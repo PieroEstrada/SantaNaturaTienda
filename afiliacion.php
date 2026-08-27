@@ -1,128 +1,33 @@
-<!DOCTYPE html>
-<html class="light" lang="es">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<title>Afíliate a Santa Natura Network — Planes y Plan de Compensación</title>
-<!-- OJO: es el único monto de plan escrito a mano en la web. Va estático a
-     propósito, porque los buscadores indexan el meta sin ejecutar JavaScript.
-     Si cambia la tabla de PLANES_AFILIACION, actualiza esta línea también. -->
-<meta name="description" content="Afíliate a Santa Natura Network desde S/ 240 y compra con 20–40% de descuento. Planes Básico, Profesional, Empresarial y Millonario."/>
-<!-- Abren DNS+TLS con Google Fonts en paralelo al parseo del HTML. Sin esto,
-     el navegador hace dos handshakes en serie (googleapis → gstatic) antes de
-     bajar el primer byte de fuente. -->
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@600;700&amp;display=swap" rel="stylesheet"/>
-<!-- icon_names recorta la fuente a los 45 iconos que usa la web: 9 KB en vez
-     de los 1.1 MB de la familia completa (~3000 iconos). Si agregas un icono
-     nuevo en el HTML o en store.js, súmalo A ESTA LISTA (en orden alfabético)
-     o saldrá en blanco. El único eje variable que usamos es FILL.
-     La lista es la misma que en index.html: mantén ambas sincronizadas. -->
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&amp;icon_names=account_tree,add,add_shopping_cart,apps,arrow_forward,celebration,check_circle,chevron_left,chevron_right,close,dark_mode,diamond,eco,expand_more,factory,flag,flight_takeoff,grid_view,group,groups,handshake,history,inventory_2,light_mode,local_florist,local_mall,local_shipping,menu,military_tech,payments,person,redeem,remove,schedule,search,search_off,sell,send,shopping_bag,shopping_cart,star,stars,support_agent,trending_up,verified,verified_user,workspace_premium&amp;display=block" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-        try {
-            // Misma configuración que index.html: los colores apuntan a las
-            // variables CSS de styles.css, así el tema claro/oscuro y las
-            // clases con opacidad funcionan igual en las dos páginas.
-            const TOKENS_COLOR = [
-                "inverse-on-surface", "tertiary-fixed", "on-tertiary-fixed", "primary",
-                "primary-container", "on-primary-fixed-variant", "surface-container-highest",
-                "on-surface-variant", "tertiary-container", "secondary-fixed", "secondary-fixed-dim",
-                "on-secondary-fixed-variant", "primary-fixed", "inverse-primary", "tertiary-fixed-dim",
-                "on-secondary-fixed", "on-tertiary-container", "surface-bright", "error-container",
-                "on-primary", "secondary", "on-primary-container", "on-secondary-container",
-                "surface-container-high", "on-primary-fixed", "background", "secondary-container",
-                "on-error-container", "outline", "on-surface", "outline-variant", "surface-container",
-                "on-background", "on-error", "surface-container-low", "error", "surface-tint",
-                "inverse-surface", "surface-dim", "surface", "on-tertiary", "primary-fixed-dim",
-                "on-tertiary-fixed-variant", "surface-variant", "surface-container-lowest",
-                "on-secondary", "tertiary"
-            ];
-            const colors = {};
-            TOKENS_COLOR.forEach((t) => { colors[t] = `rgb(var(--c-${t}) / <alpha-value>)`; });
+<?php
+/* ============================================================================
+   Afiliación — planes y plan de compensación
+   ----------------------------------------------------------------------------
+   El <head>, la cabecera, el carrito, la ficha de producto, el pie y el botón
+   flotante son los mismos de todo el sitio y viven en inc/partes/. Aquí queda
+   solo lo propio de esta página.
+   ========================================================================== */
 
-            colors["action-whatsapp"] = "#25D366";
-            colors["rating-gold"] = "#FFC107";
-            colors["botanical-white"] = "#FFFFFF";
+declare(strict_types=1);
+require __DIR__ . '/inc/render.php';
+require __DIR__ . '/inc/partes/cabeza.php';
+require __DIR__ . '/inc/partes/comunes.php';
 
-            tailwind.config = {
-                darkMode: "class",
-                theme: {
-                    extend: {
-                        colors,
-                        "borderRadius": {
-                            "DEFAULT": "0.5rem",
-                            "lg": "0.5rem",
-                            "xl": "0.75rem",
-                            "full": "9999px"
-                        },
-                        "spacing": {
-                            "xs": "8px",
-                            "lg": "40px",
-                            "md": "24px",
-                            "xl": "64px",
-                            "container-max": "1280px",
-                            "sm": "16px",
-                            "base": "4px",
-                            "gutter": "24px"
-                        },
-                        "fontFamily": {
-                            "display-lg-mobile": ["Plus Jakarta Sans", "Inter"],
-                            "label-md": ["Inter"],
-                            "label-caps": ["Inter"],
-                            "body-lg": ["Inter"],
-                            "headline-md-mobile": ["Plus Jakarta Sans", "Inter"],
-                            "headline-md": ["Plus Jakarta Sans", "Inter"],
-                            "body-md": ["Inter"],
-                            "display-lg": ["Plus Jakarta Sans", "Inter"],
-                            "title-lg": ["Plus Jakarta Sans", "Inter"],
-                            "title-sm": ["Plus Jakarta Sans", "Inter"]
-                        },
-                        "fontSize": {
-                            "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
-                            "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700"}],
-                            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                            "headline-md-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                            "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                            "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
-                            "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
-                        }
-                    },
-                },
-            }
-        } catch (_e) {}
-    </script>
-<!-- Fija el tema antes de pintar, igual que en el index, para que no parpadee
-     al navegar entre las dos páginas. -->
-<script>
-        (function () {
-            try {
-                var guardado = localStorage.getItem('tema');
-                var oscuro = guardado
-                    ? guardado === 'oscuro'
-                    : window.matchMedia('(prefers-color-scheme: dark)').matches;
-                var raiz = document.documentElement;
-                raiz.classList.toggle('dark', oscuro);
-                raiz.classList.toggle('light', !oscuro);
-            } catch (_e) {}
-        })();
-    </script>
-<link href="styles.css" rel="stylesheet"/>
-</head>
+sn_cabeza([
+    'titulo'      => "Afíliate a Santa Natura Network — Planes y Plan de Compensación",
+    'descripcion' => "Afíliate a Santa Natura Network y compra con 20–40% de descuento. Planes Básico, Profesional, Empresarial y Millonario. Consulta por WhatsApp de 8:00 a 23:00.",
+    'canonical'   => "https://santanatura.inmuno.lat/afiliacion.php",
+    'clave'       => "home",
+    'raiz'        => '',
+    'iconos'      => ["account_tree","add","celebration","check_circle","chevron_left","chevron_right","diamond","factory","flag","flight_takeoff","grid_view","group","groups","handshake","history","inventory_2","local_florist","local_mall","military_tech","person","redeem","remove","send","star","support_agent","trending_up","verified_user","workspace_premium"],
+    'extra'       => <<<'HTML'
+
+HTML,
+]);
+?>
 <body class="bg-background text-on-background font-body-md overflow-x-hidden">
 
 <!-- Icono de WhatsApp reutilizable (mismo que en el index) -->
-<svg class="hidden" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
-<symbol id="ico-whatsapp" viewBox="0 0 24 24">
-<path fill="currentColor" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413z"/>
-</symbol>
-</svg>
+<?php sn_simbolo_whatsapp(); ?>
 
 <!-- ==========================================================================
      Ficha de producto
@@ -206,7 +111,7 @@
 <div class="hidden py-xl text-center space-y-sm" id="carrito-vacio">
 <span class="material-symbols-outlined text-5xl text-outline-variant">shopping_bag</span>
 <p class="font-body-md text-on-surface-variant text-sm">Aún no agregas productos.</p>
-<a class="inline-block text-primary font-label-caps text-sm hover:underline" href="index.html#productos">Ver el catálogo</a>
+<a class="inline-block text-primary font-label-caps text-sm hover:underline" href="index.php#productos">Ver el catálogo</a>
 </div>
 </div>
 
@@ -244,102 +149,12 @@
 <!-- ==========================================================================
      Barra promocional
      ========================================================================== -->
-<div class="bg-primary text-on-primary">
-<a class="max-w-container-max mx-auto flex items-center justify-center gap-2 py-2 px-md text-[11px] md:text-xs font-label-caps hover:opacity-90 transition-opacity"
-   data-wa="Hola, quiero información para afiliarme a Santa Natura Network." href="#" target="_blank" rel="noopener">
-<span>🌿 Afíliate desde <span data-monto-entrada>S/ 240</span> y compra con descuento de distribuidor</span>
-<span class="hidden sm:inline-flex items-center gap-1 bg-white/20 rounded-full px-2 py-0.5">
-<svg class="w-3 h-3" aria-hidden="true"><use href="#ico-whatsapp"></use></svg> Escríbenos
-</span>
-</a>
-</div>
+<?php sn_barra_promo("🌿 Catálogo oficial vigente · Envíos y recojo en tienda a nivel nacional"); ?>
 
 <!-- ==========================================================================
      Header — el mismo del catálogo, para que la subpágina no se sienta aparte
      ========================================================================== -->
-<header class="bg-surface/80 backdrop-blur-md sticky top-0 z-[100] border-b border-outline-variant/30 shadow-sm transition-all">
-<div class="max-w-container-max mx-auto px-md md:px-lg">
-
-<div class="flex justify-between items-center gap-md h-20">
-<div class="flex items-center gap-sm shrink-0">
-<button aria-label="Abrir menú" class="lg:hidden p-2 rounded-full text-on-surface-variant hover:bg-surface-container transition-colors" onclick="alternarMegaMenu()">
-<span class="material-symbols-outlined">menu</span>
-</button>
-
-<a class="flex items-center gap-2 shrink-0 hover:opacity-90 active:scale-95 transition-transform" href="index.html">
-<span class="grid place-items-center w-10 h-10 rounded-full bg-primary text-on-primary shrink-0">
-<span class="material-symbols-outlined text-xl" style="font-variation-settings: 'FILL' 1;">eco</span>
-</span>
-<span class="leading-tight hidden sm:block">
-<span class="block font-headline-md text-headline-md-mobile md:text-headline-md font-bold text-primary whitespace-nowrap">Santa Natura</span>
-</span>
-</a>
-</div>
-
-<div class="hidden lg:flex items-center gap-md">
-<button class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors font-label-caps"
-        id="btn-mega" aria-expanded="false" aria-controls="mega-menu" onclick="alternarMegaMenu()">
-<span class="material-symbols-outlined text-lg">apps</span>
-        Categorías
-        <span class="material-symbols-outlined text-lg transition-transform duration-200" id="mega-flecha">expand_more</span>
-</button>
-
-<!-- Estamos en esta página: el enlace va subrayado y lleva al catálogo -->
-<a class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors font-label-caps" href="index.html#productos">
-<span class="material-symbols-outlined text-lg">grid_view</span>
-        Catálogo
-      </a>
-<span class="inline-flex items-center gap-1.5 text-primary font-label-caps border-b-2 border-primary pb-0.5">
-<span class="material-symbols-outlined text-lg">workspace_premium</span>
-        Afíliate
-      </span>
-</div>
-
-<div class="flex items-center gap-sm ml-auto">
-<div class="hidden lg:block relative w-64 xl:w-80">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">search</span>
-<input autocomplete="off" class="w-full bg-surface-container-low border border-transparent rounded-full py-2.5 pl-12 pr-4 text-sm placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="buscador" placeholder="Buscar…" type="search"
-       role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias"/>
-<ul class="hidden absolute left-0 right-0 top-full mt-2 z-[120] bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden max-h-96 overflow-y-auto scroll-suave" id="sugerencias" role="listbox"></ul>
-</div>
-
-<button aria-label="Cambiar tema claro/oscuro" class="p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-all duration-300" onclick="alternarTema()">
-<span class="material-symbols-outlined" id="icono-tema">dark_mode</span>
-</button>
-<button aria-label="Ver mi pedido" class="relative p-2 rounded-full text-on-surface-variant hover:bg-surface-container-low hover:text-primary transition-all duration-300" onclick="abrirCarrito()">
-<span class="material-symbols-outlined">shopping_cart</span>
-<span class="hidden absolute top-0 right-0 bg-primary text-on-primary text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full text-center leading-[18px] ring-2 ring-surface" id="carrito-contador">0</span>
-</button>
-<a class="hidden md:inline-flex bg-action-whatsapp text-white px-4 py-2 rounded-full font-label-caps text-sm hover:brightness-105 transition-all items-center gap-2 shadow-sm hover:opacity-90 active:scale-95"
-   data-wa="Hola, quiero información para afiliarme a Santa Natura Network." href="#" target="_blank" rel="noopener">
-<svg class="w-4 h-4 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg> WhatsApp
-</a>
-</div>
-</div>
-
-<!-- Buscador para pantallas pequeñas -->
-<div class="lg:hidden pb-3">
-<div class="relative w-full">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">search</span>
-<input autocomplete="off" class="w-full bg-surface-container-low border border-transparent rounded-full py-2.5 pl-10 pr-4 text-sm placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="buscador-movil" placeholder="Busca un producto…" type="search"
-       role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias-movil"/>
-<ul class="hidden absolute left-0 right-0 top-full mt-2 z-[120] bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden max-h-80 overflow-y-auto scroll-suave" id="sugerencias-movil" role="listbox"></ul>
-</div>
-</div>
-</div>
-
-<!-- Mega menú: al elegir una categoría se salta al catálogo ya filtrado. -->
-<div class="hidden border-t border-outline-variant/30 bg-surface shadow-xl max-h-[70vh] overflow-y-auto scroll-suave" id="mega-menu">
-<div class="lg:hidden max-w-container-max mx-auto px-md pt-md">
-<a class="flex items-center gap-2 bg-primary/5 border border-primary/20 text-primary rounded-2xl px-md py-3 font-title-sm text-base" href="index.html#productos">
-<span class="material-symbols-outlined">grid_view</span>
-      Ver el catálogo completo
-    </a>
-</div>
-<div class="max-w-container-max mx-auto px-md md:px-lg py-md grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-x-lg gap-y-md" id="mega-contenido"></div>
-</div>
-</div>
-</header>
+<?php sn_header('', true, '#inicio'); ?>
 
 <!-- ==========================================================================
      Índice de la página
@@ -1209,7 +1024,7 @@
 <svg class="w-6 h-6 shrink-0" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
                 Chatear con un asesor
             </a>
-<a class="bg-surface text-primary border border-primary/30 px-lg py-md rounded-full font-title-sm flex items-center justify-center gap-xs hover:bg-primary hover:text-on-primary transition-all" href="index.html#productos">
+<a class="bg-surface text-primary border border-primary/30 px-lg py-md rounded-full font-title-sm flex items-center justify-center gap-xs hover:bg-primary hover:text-on-primary transition-all" href="index.php#productos">
 <span class="material-symbols-outlined">grid_view</span> Ver el catálogo
 </a>
 </div>
@@ -1219,49 +1034,11 @@
 <!-- ==========================================================================
      Pie de página (idéntico al del catálogo)
      ========================================================================== -->
-<footer class="bg-primary-container text-botanical-white py-xl w-full mt-auto">
-<div class="max-w-container-max mx-auto px-md grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-lg">
-<div class="space-y-sm">
-<span class="font-headline-md text-2xl font-bold">Santa Natura</span>
-<p class="font-body-md text-sm text-botanical-white/80 leading-relaxed">Distribuidor Independiente Autorizado. Llevando lo mejor de nuestra tierra a tu hogar con productos 100% naturales.</p>
-</div>
-<div>
-<h3 class="font-headline-md text-lg mb-md">Líneas</h3>
-<ul class="space-y-xs font-body-md text-sm text-botanical-white/80" id="footer-categorias"></ul>
-</div>
-<div>
-<h3 class="font-headline-md text-lg mb-md">Atención al cliente</h3>
-<ul class="space-y-xs font-body-md text-sm text-botanical-white/80">
-<li><a class="hover:text-botanical-white transition-colors" href="index.html#productos">Catálogo de productos</a></li>
-<li><a class="hover:text-botanical-white transition-colors" href="#quiero-afiliarme">Quiero afiliarme</a></li>
-<li><a class="hover:text-botanical-white transition-colors" href="#">Términos y Condiciones</a></li>
-<li><a class="hover:text-botanical-white transition-colors" href="#">Libro de Reclamaciones</a></li>
-</ul>
-</div>
-<div class="space-y-md">
-<h3 class="font-headline-md text-lg">Síguenos</h3>
-<div class="flex gap-sm">
-<!-- Logos de marca en SVG inline: Material Symbols NO incluye iconos de marca.
-     "facebook" no es una ligadura válida (se descomponía en face + book) y
-     "photo_camera" era una cámara genérica, no el logo de Instagram. -->
-<a aria-label="Facebook" class="w-12 h-12 rounded-full bg-botanical-white/10 flex items-center justify-center text-botanical-white hover:bg-botanical-white/20 transition-colors" href="#"><svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07z"/></svg></a>
-<a aria-label="Instagram" class="w-12 h-12 rounded-full bg-botanical-white/10 flex items-center justify-center text-botanical-white hover:bg-botanical-white/20 transition-colors" href="#"><svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41-.56-.22-.96-.48-1.38-.9-.42-.42-.68-.82-.9-1.38-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38C1.35 2.68.93 3.35.63 4.14.33 4.9.13 5.78.07 7.05.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13.67.66 1.34 1.08 2.13 1.38.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56.79-.3 1.46-.72 2.13-1.38.66-.67 1.08-1.34 1.38-2.13.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91-.3-.79-.72-1.46-1.38-2.13C21.32 1.35 20.65.93 19.86.63 19.1.33 18.22.13 16.95.07 15.67.01 15.26 0 12 0z"/><path d="M12 5.84a6.16 6.16 0 1 0 0 12.32 6.16 6.16 0 0 0 0-12.32zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/><circle cx="18.41" cy="5.59" r="1.44"/></svg></a>
-</div>
-<p class="font-label-caps text-[10px] text-botanical-white/60 uppercase tracking-wider">Montos y porcentajes referenciales del plan oficial vigente. Tu asesor confirma los requisitos de cada bono.</p>
-</div>
-</div>
-<div class="max-w-container-max mx-auto mt-lg pt-md px-md border-t border-botanical-white/20 text-center">
-<p class="font-label-caps text-botanical-white/60 text-xs tracking-wider uppercase">© 2026 Santa Natura Distribuidor Autorizado. Todos los derechos reservados.</p>
-</div>
-</footer>
+<?php sn_pie(); ?>
 
 <!-- Botón flotante de WhatsApp -->
-<a aria-label="Escríbenos por WhatsApp" class="fixed bottom-6 right-6 z-[150] w-16 h-16 bg-action-whatsapp rounded-full flex items-center justify-center text-white shadow-2xl hover:scale-110 transition-transform pulse-whatsapp"
-   data-wa="Hola, quiero información para afiliarme a Santa Natura Network." href="#" target="_blank" rel="noopener">
-<svg class="w-8 h-8" aria-hidden="true"><use href="#ico-whatsapp"></use></svg>
-</a>
+<?php sn_boton_flotante(); ?>
 
-<script src="products.js"></script>
-<script src="store.js"></script>
+<?php sn_scripts(); ?>
 </body>
 </html>

@@ -1,0 +1,16 @@
+# Nada de esta carpeta se sirve por web.
+#
+# Aquí viven el hash de la contraseña del panel (admin-config.php), las copias
+# de seguridad del catálogo y el código PHP que solo se incluye desde otras
+# páginas. Ninguno debe poder pedirse por URL.
+#
+# Apache 2.4
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+# Apache 2.2 (hosting antiguo)
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

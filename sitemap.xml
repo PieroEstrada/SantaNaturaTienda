@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Mapa del sitio de santanatura.inmuno.lat
+
+  Solo lleva las páginas reales del sitio. Las URL van CON barra final, que es
+  la forma canónica: Apache redirige /packs a /packs/ con un 301, y el
+  <link rel="canonical"> de cada página apunta a la versión con barra.
+
+  Si añades una página nueva, súmala aquí y revisa que su canonical coincida.
+  <lastmod> se actualiza a mano cuando cambie el contenido de esa página.
+-->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+  <url>
+    <loc>https://santanatura.inmuno.lat/</loc>
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>1.0</priority>
+  </url>
+
+  <url>
+    <loc>https://santanatura.inmuno.lat/packs/</loc>
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://santanatura.inmuno.lat/packs/colageno/</loc>
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+
+  <url>
+    <loc>https://santanatura.inmuno.lat/afiliacion.php</loc>
+    <lastmod>2026-08-27</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+  </url>
+
+</urlset>
