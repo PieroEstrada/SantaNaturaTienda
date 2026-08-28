@@ -9,6 +9,7 @@
 
 declare(strict_types=1);
 require __DIR__ . '/inc/render.php';
+require __DIR__ . '/inc/popup.php';
 require __DIR__ . '/inc/partes/cabeza.php';
 require __DIR__ . '/inc/partes/comunes.php';
 
@@ -654,6 +655,7 @@ HTML,
 <?php sn_boton_flotante(); ?>
 
 <?php sn_scripts(); ?>
+<?php sn_popup(); ?>
 <!-- Los testimonios entran con un fundido hacia arriba, uno detrás de otro,
      la primera vez que aparecen en pantalla. Si el visitante pidió menos
      movimiento, simplemente se muestran sin animación. -->

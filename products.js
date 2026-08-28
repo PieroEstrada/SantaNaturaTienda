@@ -37,6 +37,14 @@
                         carpeta img/ y escribe aquí "img/nombre-del-archivo.jpg".
                         OJO: respeta mayúsculas y minúsculas del nombre real.
      descripcion        Texto corto que se ve en la ficha del producto.
+     contiene           SOLO PACKS. Lo que lleva dentro, como lista de productos
+                        de este mismo archivo:
+                          "contiene": [{"id": 12, "cant": 2},
+                                       {"id": 30, "cant": 1, "regalo": true}]
+                        No se dibuja en la web: es la lista de verdad, y de ella
+                        se escribe sola la frase «Contiene: … De regalo: …» de
+                        `descripcion` cada vez que se guarda desde el panel. Los
+                        packs que aún no la tienen conservan su frase a mano.
      precio_original    Precio de lista, se dibuja tachado al lado del pvp.
                         Solo para productos y packs con oferta pública vigente
                         en santanatura.com.pe.
@@ -57,7 +65,6 @@
    reescriben las líneas de PRODUCTS: se conserva TODO lo de fuera del array
    (esta cabecera, COLECCIONES, CATALOGO, CATEGORIAS) pero se pierden los
    comentarios que hayas escrito ENTRE registros. Las notas van aquí arriba.
-   Los saltos de línea del array quedan normalizados a LF.
 
    ----------------------------------------------------------------------------
    ESTADO ACTUAL DE LOS PACKS

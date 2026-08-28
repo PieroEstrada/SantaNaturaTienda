@@ -45,29 +45,36 @@ if (!sn_hay_password()) {
 
     sn_cabecera('Configurar acceso', false);
     ?>
-    <h1>Configura el acceso al panel</h1>
-    <p class="sub">Todavía no hay contraseña. Créala ahora: hasta entonces el panel no deja entrar a nadie.</p>
+    <div class="caja">
+      <div class="marca">
+        <div class="hoja">🌿</div>
+        <div><b>Santa Natura</b><span>Panel de gestión</span></div>
+      </div>
 
-    <?php if ($error): ?><p class="aviso mal"><?= h($error) ?></p><?php endif; ?>
+      <h2 style="margin:0 0 4px">Configura el acceso</h2>
+      <p class="sub">Todavía no hay contraseña. Créala ahora: hasta entonces el panel no deja entrar a nadie.</p>
 
-    <?php if ($hashGenerado !== null): ?>
-      <p class="aviso ojo">No tengo permiso para escribir <code>inc/admin-config.php</code>.
-      Crea ese archivo en el servidor y pega dentro exactamente esto:</p>
-      <textarea readonly style="min-height:150px;font-family:ui-monospace,monospace;font-size:13px"><?= h($hashGenerado) ?></textarea>
-      <p class="mini">Después recarga esta página.</p>
-    <?php else: ?>
-      <form method="post" class="caja" style="max-width:460px">
-        <input type="hidden" name="accion" value="crear">
-        <label>Contraseña
-          <span class="pista">Mínimo 10 caracteres. Se guarda cifrada; nadie puede leerla después, así que apúntala.</span>
-          <input type="password" name="password" required autofocus autocomplete="new-password">
-        </label>
-        <label>Repítela
-          <input type="password" name="password2" required autocomplete="new-password">
-        </label>
-        <p style="margin:18px 0 0"><button class="btn">Crear contraseña</button></p>
-      </form>
-    <?php endif; ?>
+      <?php if ($error): ?><p class="aviso mal"><?= h($error) ?></p><?php endif; ?>
+
+      <?php if ($hashGenerado !== null): ?>
+        <p class="aviso ojo">No tengo permiso para escribir <code>inc/admin-config.php</code>.
+        Crea ese archivo en el servidor y pega dentro exactamente esto:</p>
+        <textarea readonly style="min-height:150px;font-family:ui-monospace,monospace;font-size:13px"><?= h($hashGenerado) ?></textarea>
+        <p class="mini">Después recarga esta página.</p>
+      <?php else: ?>
+        <form method="post">
+          <input type="hidden" name="accion" value="crear">
+          <label>Contraseña
+            <span class="pista">Mínimo 10 caracteres. Se guarda cifrada; nadie puede leerla después, así que apúntala.</span>
+            <input type="password" name="password" required autofocus autocomplete="new-password">
+          </label>
+          <label>Repítela
+            <input type="password" name="password2" required autocomplete="new-password">
+          </label>
+          <p style="margin:20px 0 0"><button class="btn" style="width:100%">Crear contraseña</button></p>
+        </form>
+      <?php endif; ?>
+    </div>
     <?php
     sn_pie();
     exit;
@@ -94,16 +101,20 @@ if (!sn_autenticado()) {
 
     sn_cabecera('Acceso', false);
     ?>
-    <h1>Acceso</h1>
-    <p class="sub">Panel de gestión del catálogo.</p>
-    <?php if ($error): ?><p class="aviso mal"><?= h($error) ?></p><?php endif; ?>
-    <form method="post" class="caja" style="max-width:380px">
-      <input type="hidden" name="accion" value="entrar">
-      <label>Contraseña
-        <input type="password" name="password" required autofocus autocomplete="current-password">
-      </label>
-      <p style="margin:18px 0 0"><button class="btn">Entrar</button></p>
-    </form>
+    <div class="caja">
+      <div class="marca">
+        <div class="hoja">🌿</div>
+        <div><b>Santa Natura</b><span>Panel de gestión</span></div>
+      </div>
+      <?php if ($error): ?><p class="aviso mal"><?= h($error) ?></p><?php endif; ?>
+      <form method="post">
+        <input type="hidden" name="accion" value="entrar">
+        <label>Contraseña
+          <input type="password" name="password" required autofocus autocomplete="current-password">
+        </label>
+        <p style="margin:20px 0 0"><button class="btn" style="width:100%">Entrar</button></p>
+      </form>
+    </div>
     <?php
     sn_pie();
     exit;
@@ -145,7 +156,7 @@ if (($_POST['accion'] ?? '') === 'publicar') {
         }
 
         sn_guardar($productos);
-        sn_flash('ok', ($ver ? 'Publicado: ' : 'Retirado de la web: ') . $encontrado);
+        sn_flash('ok', ($ver ? 'Activado: ' : 'Desactivado: ') . $encontrado);
     } catch (Throwable $e) {
         sn_flash('mal', $e->getMessage());
     }
@@ -177,35 +188,43 @@ $total      = count($productos);
 $publicados = count(array_filter($productos, static fn($p) => ($p['activo'] ?? true) !== false));
 $sinFoto    = count(array_filter($productos, static fn($p) => ($p['activo'] ?? true) !== false && ($p['imagen'] ?? '') === ''));
 
-sn_cabecera('Catálogo');
+$packs = count(array_filter($productos, static fn($p) => in_array('Packs', $p['categorias'] ?? [], true)));
+
+sn_definir_acciones(static function (): void { ?>
+  <a class="btn" href="producto.php">＋ Nuevo producto</a>
+<?php });
+
+sn_cabecera('Catálogo', true, 'Precios, fotos y contenido de todo lo que se vende.');
 sn_mensaje_flash();
 ?>
-<h1>Catálogo</h1>
-<p class="sub">
-  <?= $publicados ?> productos publicados de <?= $total ?> guardados.
-  Retirar uno lo esconde de toda la web sin borrarlo: se puede volver a publicar cuando quieras.
-</p>
+<div class="datos">
+  <div class="dato"><b><?= $publicados ?></b><span>Activos en la web</span></div>
+  <div class="dato"><b><?= $total - $publicados ?></b><span>Desactivados</span></div>
+  <div class="dato"><b><?= $packs ?></b><span>Packs</span></div>
+  <div class="dato <?= $sinFoto > 0 ? 'ojo' : '' ?>"><b><?= $sinFoto ?></b><span>Activos sin foto</span></div>
+</div>
 
 <?php if ($sinFoto > 0): ?>
   <p class="aviso ojo">
-    Hay <?= $sinFoto ?> productos publicados <strong>sin foto</strong>: en la web salen con el icono
-    genérico de la marca. <a href="?f=sinfoto">Verlos</a>.
+    <span>Hay <?= $sinFoto ?> productos activos <strong>sin foto</strong>: en la web salen con el icono
+    genérico de la marca. <a href="?f=sinfoto">Verlos</a>.</span>
   </p>
 <?php endif; ?>
 
 <form class="barra" method="get">
   <input type="search" name="q" value="<?= h($q) ?>" placeholder="Buscar por nombre o categoría…">
-  <select name="f" onchange="this.form.submit()" style="width:auto">
+  <select name="f" onchange="this.form.submit()">
     <option value="">Todos</option>
-    <option value="on"      <?= $filtro === 'on' ? 'selected' : '' ?>>Solo publicados</option>
-    <option value="off"     <?= $filtro === 'off' ? 'selected' : '' ?>>Solo retirados</option>
+    <option value="on"      <?= $filtro === 'on' ? 'selected' : '' ?>>Solo activos</option>
+    <option value="off"     <?= $filtro === 'off' ? 'selected' : '' ?>>Solo desactivados</option>
     <option value="packs"   <?= $filtro === 'packs' ? 'selected' : '' ?>>Solo packs</option>
     <option value="sinfoto" <?= $filtro === 'sinfoto' ? 'selected' : '' ?>>Sin foto</option>
   </select>
-  <button class="btn gris mini">Filtrar</button>
-  <a class="btn" href="producto.php">Nuevo producto</a>
+  <button class="btn gris">Filtrar</button>
+  <span class="mini derecha"><?= count($vista) ?> de <?= $total ?></span>
 </form>
 
+<div class="tabla">
 <table>
 <thead><tr>
   <th></th><th>Producto</th><th class="num">Precio</th><th class="num">Antes</th>
@@ -223,32 +242,47 @@ sn_mensaje_flash();
       <?php endif; ?>
     </td>
     <td>
-      <a href="producto.php?id=<?= (int) $p['id'] ?>"><?= h($p['producto']) ?></a>
-      <div class="mini"><?= h(implode(' · ', array_slice($p['categorias'] ?? [], 0, 4))) ?></div>
+      <a class="nombre" href="producto.php?id=<?= (int) $p['id'] ?>"><?= h($p['producto']) ?></a>
+      <div class="mini">
+        <?= h(implode(' · ', array_slice($p['categorias'] ?? [], 0, 4))) ?>
+        <?php if (!empty($p['contiene'])): ?>
+          · <?= count($p['contiene']) ?> productos dentro
+        <?php endif; ?>
+      </div>
     </td>
-    <td class="num">S/ <?= number_format((float) $p['pvp'], 2) ?></td>
-    <td class="num"><?= isset($p['precio_original']) ? 'S/ ' . number_format((float) $p['precio_original'], 2) : '—' ?></td>
-    <td class="num"><?= h($p['etiqueta_descuento'] ?? '—') ?></td>
-    <td class="num"><?= number_format((float) $p['puntos'], 2) ?></td>
-    <td><span class="pill <?= $publicado ? '' : 'off' ?>"><?= $publicado ? 'En la web' : 'Retirado' ?></span></td>
+    <td class="num" data-th="Precio">S/ <?= number_format((float) $p['pvp'], 2) ?></td>
+    <td class="num" data-th="Antes"><?= isset($p['precio_original']) ? 'S/ ' . number_format((float) $p['precio_original'], 2) : '—' ?></td>
+    <td class="num" data-th="Descuento"><?= h($p['etiqueta_descuento'] ?? '—') ?></td>
+    <td class="num" data-th="Puntos"><?= number_format((float) $p['puntos'], 2) ?></td>
     <td>
-      <form method="post" style="margin:0">
-        <input type="hidden" name="accion" value="publicar">
-        <input type="hidden" name="csrf" value="<?= h(sn_csrf()) ?>">
-        <input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
-        <input type="hidden" name="q" value="<?= h($q) ?>">
-        <input type="hidden" name="ver" value="<?= $publicado ? '0' : '1' ?>">
-        <button class="btn mini <?= $publicado ? 'gris' : '' ?>">
-          <?= $publicado ? 'Retirar' : 'Publicar' ?>
-        </button>
-      </form>
+      <span class="pill <?= $publicado ? '' : 'off' ?>"><?= $publicado ? 'Activo' : 'Desactivado' ?></span>
+    </td>
+    <td>
+      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px">
+        <a class="btn mini" href="producto.php?id=<?= (int) $p['id'] ?>">Editar</a>
+        <form method="post" style="margin:0">
+          <input type="hidden" name="accion" value="publicar">
+          <input type="hidden" name="csrf" value="<?= h(sn_csrf()) ?>">
+          <input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
+          <input type="hidden" name="q" value="<?= h($q) ?>">
+          <input type="hidden" name="ver" value="<?= $publicado ? '0' : '1' ?>">
+          <button class="btn mini gris">
+            <?= $publicado ? 'Desactivar' : 'Activar' ?>
+          </button>
+        </form>
+      </div>
     </td>
   </tr>
 <?php endforeach; ?>
 <?php if (!$vista): ?>
-  <tr><td colspan="8" class="mini" style="padding:20px">Ningún producto coincide.</td></tr>
+  <tr><td colspan="8" class="mini" style="padding:26px;text-align:center">Ningún producto coincide con la búsqueda.</td></tr>
 <?php endif; ?>
 </tbody>
 </table>
+</div>
+
+<p class="mini" style="margin-top:16px">
+  Antes de cada cambio se archiva una copia del catálogo en <code>inc/copias/</code>.
+</p>
 <?php
 sn_pie();

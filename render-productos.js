@@ -128,6 +128,9 @@ function porRelevancia(a, b) {
    «GARANTIZADO» sobre crecimiento infantil es una promesa de resultado en
    salud, justo lo que las políticas de Google Ads sancionan. No compensa
    arriesgar la cuenta por un pack.
+
+   El gemelo en PHP es sn_vetado_en_ads() (inc/render.php): si tocas uno, toca
+   el otro.
    -------------------------------------------------------------------------- */
 const VETADOS_EN_ADS = ['PACK CRECIMIENTO GARANTIZADO DS30'];
 

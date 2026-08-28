@@ -91,7 +91,7 @@ function sn_catalogo(): array
 const SN_ORDEN_CLAVES = [
     'id', 'activo', 'categoria', 'producto', 'puntos', 'pvp',
     'precio_original', 'etiqueta_descuento', 'imagen', 'descripcion',
-    'categorias', 'descuentos',
+    'contiene', 'categorias', 'descuentos',
 ];
 
 /** Serializa un producto en una línea, con el mismo estilo del archivo. */
@@ -142,14 +142,26 @@ function sn_guardar(array $productos): void
     if (!is_dir(SN_COPIAS) && !@mkdir(SN_COPIAS, 0775, true) && !is_dir(SN_COPIAS)) {
         throw new RuntimeException('No puedo crear inc/copias/. Revisa permisos de escritura.');
     }
-    $copia = SN_COPIAS . '/products-' . date('Ymd-His') . '.js';
+    // El sufijo evita que dos guardados dentro del mismo segundo se pisen la
+    // copia: sin él, el segundo sobrescribe al primero y se pierde el estado
+    // al que se querría volver.
+    $sello = date('Ymd-His');
+    $copia = SN_COPIAS . '/products-' . $sello . '.js';
+    for ($n = 2; is_file($copia); $n++) {
+        $copia = SN_COPIAS . '/products-' . $sello . '-' . $n . '.js';
+    }
     if (!@copy(SN_PRODUCTS_JS, $copia)) {
         throw new RuntimeException('No pude guardar la copia de seguridad. No se ha cambiado nada.');
     }
 
     // 2. Reconstruir el archivo.
+    //    Se respeta el fin de línea que ya tenía el archivo (CRLF en Windows,
+    //    LF en el servidor). Si se escribiera siempre "\n", cada guardado desde
+    //    XAMPP dejaría products.js con finales mezclados y el diff de git
+    //    marcaría las 104 líneas como cambiadas aunque no se tocara ningún dato.
+    $eol    = str_contains($archivo['cabecera'], "\r\n") ? "\r\n" : "\n";
     $lineas = array_map('sn_producto_a_linea', array_values($productos));
-    $nuevo  = $archivo['cabecera'] . "\n" . implode(",\n", $lineas) . "\n]" . $archivo['pie'];
+    $nuevo  = $archivo['cabecera'] . $eol . implode(',' . $eol, $lineas) . $eol . ']' . $archivo['pie'];
 
     // 3. Escritura atómica.
     $tmp = SN_PRODUCTS_JS . '.tmp';
@@ -250,6 +262,175 @@ function sn_categorias_validas(): array
     $nombres = array_values(array_unique($nombres));
     sort($nombres, SORT_NATURAL | SORT_FLAG_CASE);
     return $nombres;
+}
+
+/* --------------------------------------------------------------------------
+   Contenido de un pack
+   --------------------------------------------------------------------------
+   Un pack es una lista de productos del propio catálogo con sus cantidades.
+   Hasta ahora eso solo existía como frase suelta dentro de `descripcion`
+   («Contiene: 2 Tocosh, 2 EnfoK+…»), así que no se podía consultar ni cuadrar
+   con nada: si un producto cambiaba de nombre o de precio, la frase seguía
+   diciendo lo de antes y nadie se enteraba.
+
+   Ahora el pack guarda además `contiene`, la lista de verdad, y la frase se
+   escribe sola desde ella. La web sigue leyendo `descripcion` y no se entera
+   del cambio: lo que gana es que la frase ya no puede mentir.
+
+   Los packs antiguos no tienen `contiene` todavía y conservan su frase tal
+   cual. En cuanto se les arma el contenido desde el panel, pasan al modo nuevo.
+   -------------------------------------------------------------------------- */
+
+/** Índice id => producto, para resolver las líneas de un pack. */
+function sn_por_id(array $productos): array
+{
+    $indice = [];
+    foreach ($productos as $p) {
+        $indice[(int) $p['id']] = $p;
+    }
+    return $indice;
+}
+
+/**
+ * Escribe la frase «Contiene: … De regalo: …» desde la lista de un pack.
+ * Devuelve '' si la lista está vacía, para que el pack se quede con la
+ * descripción que tuviera escrita a mano.
+ */
+function sn_texto_contenido(array $contiene, array $productos): string
+{
+    $indice = sn_por_id($productos);
+    $normal = [];
+    $regalo = [];
+
+    foreach ($contiene as $linea) {
+        $ref = $indice[(int) ($linea['id'] ?? 0)] ?? null;
+        if ($ref === null) {
+            continue;
+        }
+        $cant  = max(1, (int) ($linea['cant'] ?? 1));
+        $texto = $cant . ' ' . $ref['producto'];
+        if (!empty($linea['regalo'])) {
+            $regalo[] = $texto;
+        } else {
+            $normal[] = $texto;
+        }
+    }
+
+    $partes = [];
+    if ($normal) { $partes[] = 'Contiene: ' . implode(', ', $normal) . '.'; }
+    if ($regalo) { $partes[] = 'De regalo: ' . implode(', ', $regalo) . '.'; }
+
+    return implode(' ', $partes);
+}
+
+/**
+ * Suma de los precios sueltos de lo que lleva el pack. Es la referencia para
+ * ponerle precio: si el pack no cuesta menos que comprar sus productos por
+ * separado, no hay pack que vender.
+ */
+function sn_valor_contenido(array $contiene, array $productos): float
+{
+    $indice = sn_por_id($productos);
+    $total  = 0.0;
+
+    foreach ($contiene as $linea) {
+        $ref = $indice[(int) ($linea['id'] ?? 0)] ?? null;
+        if ($ref === null || !empty($linea['regalo'])) {
+            continue;      // el regalo no se cobra: no suma
+        }
+        $total += (float) $ref['pvp'] * max(1, (int) ($linea['cant'] ?? 1));
+    }
+
+    return round($total, 2);
+}
+
+/* --------------------------------------------------------------------------
+   Subida de fotos
+   --------------------------------------------------------------------------
+   Sin esto, dar de alta un pack nuevo se quedaba a medias: el formulario solo
+   dejaba elegir entre las fotos que YA estaban en img/, así que para publicar
+   uno nuevo había que entrar por FTP a subir la imagen y volver al panel. Con
+   tráfico de Ads esperando la landing, eso es una tarde perdida.
+   -------------------------------------------------------------------------- */
+
+/** Tamaño máximo por foto. Por encima, la tarjeta tarda de más en móvil. */
+const SN_FOTO_MAX = 5 * 1024 * 1024;
+
+/** Solo estos tres formatos: son los que el navegador dibuja sin sorpresas. */
+const SN_FOTO_TIPOS = [
+    IMAGETYPE_JPEG => 'jpg',
+    IMAGETYPE_PNG  => 'png',
+    IMAGETYPE_WEBP => 'webp',
+];
+
+/** Convierte un nombre cualquiera en algo válido y legible dentro de img/. */
+function sn_nombre_archivo(string $texto): string
+{
+    $texto = (string) preg_replace('/[^\p{L}\p{N}]+/u', '-', $texto);
+    // Acentos y ñ fuera: el nombre viaja en una URL y en un <img src>.
+    $texto = (string) @iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $texto);
+    $texto = strtolower((string) preg_replace('/[^A-Za-z0-9-]+/', '', $texto));
+    $texto = trim((string) preg_replace('/-+/', '-', $texto), '-');
+    return $texto === '' ? 'foto' : substr($texto, 0, 60);
+}
+
+/**
+ * Guarda en img/ la foto que llega del formulario y devuelve su ruta relativa
+ * («img/pack-mujer.png»), lista para el campo `imagen` del producto.
+ *
+ * No se fía de la extensión ni del content-type que manda el navegador: los
+ * dos los elige quien sube el archivo. El formato se decide leyendo la imagen
+ * de verdad, así que un .php renombrado a .jpg no pasa de aquí.
+ *
+ * @param array  $archivo Entrada de $_FILES.
+ * @param string $sugerido Nombre deseado (normalmente el del producto).
+ */
+function sn_subir_imagen(array $archivo, string $sugerido = ''): string
+{
+    $codigo = (int) ($archivo['error'] ?? UPLOAD_ERR_NO_FILE);
+    if ($codigo !== UPLOAD_ERR_OK) {
+        throw new RuntimeException(match ($codigo) {
+            UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE =>
+                'La foto pesa más de lo que admite el servidor. Redúcela y vuelve a subirla.',
+            UPLOAD_ERR_PARTIAL   => 'La foto se subió a medias. Inténtalo otra vez.',
+            UPLOAD_ERR_NO_FILE   => 'No llegó ninguna foto.',
+            UPLOAD_ERR_NO_TMP_DIR, UPLOAD_ERR_CANT_WRITE =>
+                'El servidor no pudo guardar la foto (carpeta temporal). Avisa a soporte del hosting.',
+            default              => 'No se pudo subir la foto (error ' . $codigo . ').',
+        });
+    }
+
+    $temporal = (string) ($archivo['tmp_name'] ?? '');
+    if (!is_uploaded_file($temporal)) {
+        throw new RuntimeException('El archivo recibido no es una subida válida.');
+    }
+
+    if ((int) ($archivo['size'] ?? 0) > SN_FOTO_MAX) {
+        throw new RuntimeException('La foto pesa más de '
+            . (int) (SN_FOTO_MAX / 1024 / 1024) . ' MB. Compárimela antes de subirla: '
+            . 'una imagen así de pesada hace lenta la ficha en móvil.');
+    }
+
+    $info = @getimagesize($temporal);
+    if (!$info || !isset(SN_FOTO_TIPOS[$info[2]])) {
+        throw new RuntimeException('El archivo no es una imagen JPG, PNG o WEBP.');
+    }
+    $extension = SN_FOTO_TIPOS[$info[2]];
+
+    $base = sn_nombre_archivo($sugerido !== '' ? $sugerido : pathinfo((string) ($archivo['name'] ?? ''), PATHINFO_FILENAME));
+
+    // Nunca se pisa una foto existente: otro producto podría estar usándola.
+    $nombre = $base . '.' . $extension;
+    for ($n = 2; is_file(SN_RAIZ . '/img/' . $nombre); $n++) {
+        $nombre = $base . '-' . $n . '.' . $extension;
+    }
+
+    if (!@move_uploaded_file($temporal, SN_RAIZ . '/img/' . $nombre)) {
+        throw new RuntimeException('No puedo escribir en la carpeta img/. Revisa sus permisos.');
+    }
+    @chmod(SN_RAIZ . '/img/' . $nombre, 0644);
+
+    return 'img/' . $nombre;
 }
 
 /** Fotos disponibles en img/, para el selector de imagen del panel. */

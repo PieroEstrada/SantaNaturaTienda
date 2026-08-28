@@ -16,6 +16,7 @@
 
 declare(strict_types=1);
 require __DIR__ . '/../inc/render.php';
+require __DIR__ . '/../inc/popup.php';
 require __DIR__ . '/../inc/partes/cabeza.php';
 require __DIR__ . '/../inc/partes/comunes.php';
 
@@ -113,5 +114,6 @@ sn_cabeza([
 <?php sn_pie($raiz, false); ?>
 <?php sn_boton_flotante(); ?>
 <?php sn_scripts($raiz); ?>
+<?php sn_popup($raiz, true); ?>
 </body>
 </html>

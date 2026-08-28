@@ -57,6 +57,57 @@ $ok('badge desde los precios', sn_etiqueta_descuento(388.50, 555.00) === '-30%')
 $ok('sin precio base, sin badge', sn_etiqueta_descuento(218.40, null) === null);
 $ok('base menor que pvp, sin badge', sn_etiqueta_descuento(300.0, 200.0) === null);
 
+echo PHP_EOL . "== Contenido de los packs ==" . PHP_EOL;
+$muestra = [
+    ['id' => 1, 'producto' => 'Allín Surka', 'pvp' => 50.00],
+    ['id' => 2, 'producto' => 'EnfoK+',      'pvp' => 30.00],
+];
+$lista = [
+    ['id' => 1, 'cant' => 2],
+    ['id' => 2, 'cant' => 1],
+    ['id' => 2, 'cant' => 1, 'regalo' => true],
+];
+$ok('escribe la frase de la ficha',
+    sn_texto_contenido($lista, $muestra) === 'Contiene: 2 Allín Surka, 1 EnfoK+. De regalo: 1 EnfoK+.',
+    sn_texto_contenido($lista, $muestra));
+$ok('sin contenido, no inventa frase', sn_texto_contenido([], $muestra) === '');
+$ok('ignora productos borrados', sn_texto_contenido([['id' => 999, 'cant' => 1]], $muestra) === '');
+$ok('suma solo lo que se cobra', abs(sn_valor_contenido($lista, $muestra) - 130.00) < 0.001,
+    'S/ ' . sn_valor_contenido($lista, $muestra));
+
+// El contenido tiene que sobrevivir a un guardado, o el pack perdería su lista
+// en el primer cambio de precio que se hiciera desde el panel.
+$linea = sn_producto_a_linea(['id' => 9, 'pvp' => 10, 'contiene' => [['id' => 1, 'cant' => 2]]]);
+$ok('«contiene» sobrevive al guardado', str_contains($linea, '"contiene": [{"id":1,"cant":2}]'), $linea);
+
+echo PHP_EOL . "== Nombres de las fotos que se suben ==" . PHP_EOL;
+$ok('espacios a guiones',       sn_nombre_archivo('PACK MUJER DS30') === 'pack-mujer-ds30');
+$ok('sin acentos ni ñ',         sn_nombre_archivo('Colágeno Año') === 'colageno-ano');
+$ok('sin barras ni puntos',     sn_nombre_archivo('../../evil.php') === 'evil-php');
+$ok('nunca queda vacío',        sn_nombre_archivo('¿¿¿') === 'foto');
+$ok('no se pasa de largo',      strlen(sn_nombre_archivo(str_repeat('pack ', 40))) <= 60);
+
+try {
+    sn_subir_imagen(['error' => UPLOAD_ERR_INI_SIZE, 'tmp_name' => '', 'name' => 'x.jpg', 'size' => 0]);
+    $ok('avisa si la foto pesa de más', false);
+} catch (Throwable $e) {
+    $ok('avisa si la foto pesa de más', str_contains($e->getMessage(), 'más de lo que admite'));
+}
+try {
+    // Un .php renombrado a .jpg: no es una imagen, no debe pasar de aquí.
+    $falsa = sys_get_temp_dir() . '/sn-falsa.jpg';
+    file_put_contents($falsa, "<?php echo 'hola';");
+    sn_subir_imagen(['error' => UPLOAD_ERR_OK, 'tmp_name' => $falsa, 'name' => 'falsa.jpg', 'size' => 20]);
+    $ok('rechaza lo que no es una imagen', false);
+} catch (Throwable $e) {
+    // Salta antes en is_uploaded_file (no viene de un POST real), que es la
+    // otra mitad de la defensa; cualquiera de las dos vale.
+    $ok('rechaza lo que no es una imagen',
+        str_contains($e->getMessage(), 'no es una imagen') || str_contains($e->getMessage(), 'subida válida'));
+} finally {
+    @unlink(sys_get_temp_dir() . '/sn-falsa.jpg');
+}
+
 echo PHP_EOL . "== Categorías e imágenes ==" . PHP_EOL;
 $cats = sn_categorias_validas();
 $ok('lee COLECCIONES', count($cats) >= 30, count($cats) . ' categorías');

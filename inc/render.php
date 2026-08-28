@@ -94,6 +94,11 @@ function sn_tiene(array $p, string $cat): bool
 /** Vetados en las landings de pago: siguen en el catálogo de la portada. */
 const SN_VETADOS_EN_ADS = ['PACK CRECIMIENTO GARANTIZADO DS30'];
 
+function sn_vetado_en_ads(array $p): bool
+{
+    return in_array($p['producto'] ?? '', SN_VETADOS_EN_ADS, true);
+}
+
 const SN_POR_LANDING = 8;
 
 /**
@@ -120,7 +125,7 @@ function sn_seleccion_packs(array $catalogo, int $limite = SN_POR_LANDING): arra
 {
     $packs = array_values(array_filter(
         $catalogo,
-        static fn(array $p) => sn_tiene($p, 'Packs') && !in_array($p['producto'], SN_VETADOS_EN_ADS, true)
+        static fn(array $p) => sn_tiene($p, 'Packs') && !sn_vetado_en_ads($p)
     ));
 
     $elegidos = [];
@@ -157,10 +162,7 @@ function sn_seleccion_packs(array $catalogo, int $limite = SN_POR_LANDING): arra
 
 function sn_seleccion_colageno(array $catalogo, int $limite = SN_POR_LANDING): array
 {
-    $vivos = array_values(array_filter(
-        $catalogo,
-        static fn(array $p) => !in_array($p['producto'], SN_VETADOS_EN_ADS, true)
-    ));
+    $vivos = array_values(array_filter($catalogo, static fn(array $p) => !sn_vetado_en_ads($p)));
 
     $individuales = array_values(array_filter($vivos, static fn($p) => sn_tiene($p, 'Colágenos') && !sn_tiene($p, 'Packs')));
     $packs        = array_values(array_filter($vivos, static fn($p) => sn_tiene($p, 'Packs Colágeno')));
