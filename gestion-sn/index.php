@@ -257,16 +257,19 @@ sn_mensaje_flash();
     <td>
       <span class="pill <?= $publicado ? '' : 'off' ?>"><?= $publicado ? 'Activo' : 'Desactivado' ?></span>
     </td>
-    <td>
-      <div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin-top:6px">
-        <a class="btn mini" href="producto.php?id=<?= (int) $p['id'] ?>">Editar</a>
+    <td class="acciones">
+      <div class="par">
+        <a class="btn mini gris" href="producto.php?id=<?= (int) $p['id'] ?>">Editar</a>
         <form method="post" style="margin:0">
           <input type="hidden" name="accion" value="publicar">
           <input type="hidden" name="csrf" value="<?= h(sn_csrf()) ?>">
           <input type="hidden" name="id" value="<?= (int) $p['id'] ?>">
           <input type="hidden" name="q" value="<?= h($q) ?>">
           <input type="hidden" name="ver" value="<?= $publicado ? '0' : '1' ?>">
-          <button class="btn mini gris">
+          <?php /* Rojo para retirar y verde para publicar: el color se lee
+                   antes que el texto, y aquí una equivocación quita un
+                   producto de una web con anuncios pagados. */ ?>
+          <button class="btn mini <?= $publicado ? 'rojo-suave' : '' ?>">
             <?= $publicado ? 'Desactivar' : 'Activar' ?>
           </button>
         </form>
