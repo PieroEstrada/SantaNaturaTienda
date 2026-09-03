@@ -1,0 +1,18 @@
+# Nada de esta carpeta se sirve por web.
+#
+# Aquí vive el generador de tailwind.css: la configuración, el archivo de
+# entrada y node_modules. No forma parte de la web y lo normal es ni subirlo
+# al hosting, pero si acaba subido, que al menos no se pueda pedir por URL.
+#
+# Va aquí dentro y no en el .htaccess de la raíz porque una regla anclada a la
+# raíz del dominio (^/build/) deja de aplicar en cuanto el sitio cuelga de una
+# subcarpeta, como pasa en XAMPP. Esto funciona esté montado donde esté.
+
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

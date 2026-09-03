@@ -730,6 +730,7 @@ function pintarCatalogo() {
             : `Mostrando ${desde + 1}–${desde + pagina.length} de ${lista.length} productos`;
 
     pintarPaginacion(paginas);
+    sincronizarBotonFiltros();
 }
 
 /* --- Paginación ---------------------------------------------------------- */
@@ -917,6 +918,9 @@ function filtrarPorCategoria(cat) {
     reiniciarPagina();
     pintarCategorias();
     pintarCatalogo();
+    // En móvil el panel de filtros tapa la rejilla: al elegir categoría se
+    // pliega, que es justo lo que se quiere ver a continuación.
+    alternarFiltros(false);
     document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
     cerrarMegaMenu();
 }
@@ -1148,11 +1152,59 @@ function cerrarMegaMenu() {
 }
 
 /* --------------------------------------------------------------------------
+   11.a-bis Panel de filtros en móvil
+   --------------------------------------------------------------------------
+   Categorías + precio + nota ocupan más de una pantalla de móvil, y en el DOM
+   van ANTES de la rejilla. Sin plegarlos, quien llega de un anuncio aterriza
+   en un formulario y tiene que hacer scroll para ver el primer producto.
+
+   A partir de lg el panel es la barra lateral de siempre (`lg:block` gana a
+   `hidden`), así que estas funciones solo hacen algo en pantallas pequeñas.
+   -------------------------------------------------------------------------- */
+
+function alternarFiltros(abrir) {
+    const panel = document.getElementById('panel-filtros');
+    if (!panel) return;
+
+    const visible = abrir === undefined ? panel.classList.contains('hidden') : abrir;
+    panel.classList.toggle('hidden', !visible);
+
+    const boton = document.getElementById('btn-filtros');
+    if (boton) {
+        boton.setAttribute('aria-expanded', String(visible));
+        boton.classList.toggle('border-primary', visible);
+        boton.classList.toggle('text-primary', visible);
+    }
+    if (visible) panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function cerrarFiltros() {
+    const panel = document.getElementById('panel-filtros');
+    if (!panel || panel.classList.contains('hidden')) return;
+    alternarFiltros(false);
+    document.getElementById('productos').scrollIntoView({ behavior: 'smooth' });
+}
+
+/** Cuántos filtros del panel están puestos. Con el panel cerrado es lo único
+    que delata que el catálogo se está viendo recortado. */
+function sincronizarBotonFiltros() {
+    const marca = document.getElementById('filtros-contador');
+    if (!marca) return;
+
+    const activos = (filtros.categoria ? 1 : 0)
+                  + (filtros.precioMin !== null || filtros.precioMax !== null ? 1 : 0);
+
+    marca.textContent = String(activos);
+    marca.classList.toggle('hidden', activos === 0);
+}
+
+/* --------------------------------------------------------------------------
    11.b Buscador con sugerencias
 
-   Los dos buscadores (header y móvil) escriben en el mismo filtro, así que
-   escribir en uno filtra el catálogo igual que antes; lo nuevo es la lista de
-   sugerencias que sale debajo. Al elegir una se abre la ficha del producto.
+   Los tres buscadores (header, móvil y el del propio catálogo) escriben en el
+   mismo filtro, así que escribir en uno filtra el catálogo igual que antes; lo
+   nuevo es la lista de sugerencias que sale debajo. Al elegir una se abre la
+   ficha del producto.
    -------------------------------------------------------------------------- */
 
 /** Hasta 7 productos cuyo nombre o categoría empiece o contenga lo escrito. */
@@ -1186,10 +1238,18 @@ function resaltar(nombre, texto) {
         escapar(nombre.slice(i + q.length));
 }
 
+/* Todos los buscadores conectados. Escriben en el mismo filtro, así que al
+   teclear en uno hay que copiar el texto a los demás: si no, el visitante ve
+   el catálogo ya filtrado pero con la caja de al lado vacía y no entiende por
+   qué faltan productos. */
+const BUSCADORES = [];
+
 function conectarBuscador(idInput, idLista) {
     const input = document.getElementById(idInput);
     const lista = document.getElementById(idLista);
     if (!input || !lista) return;
+
+    BUSCADORES.push(input);
 
     let activa = -1;      // fila resaltada con las flechas
     let visibles = [];
@@ -1227,9 +1287,10 @@ function conectarBuscador(idInput, idLista) {
 
     input.addEventListener('input', () => {
         filtros.busqueda = input.value;
-        // Mantener los dos buscadores en sintonía.
-        const otro = document.getElementById(idInput === 'buscador' ? 'buscador-movil' : 'buscador');
-        if (otro && otro.value !== input.value) otro.value = input.value;
+        // Mantener todos los buscadores en sintonía.
+        BUSCADORES.forEach((otro) => {
+            if (otro !== input && otro.value !== input.value) otro.value = input.value;
+        });
 
         activa = -1;
         reiniciarPagina();
@@ -1399,9 +1460,11 @@ function conectarMedicion() {
    -------------------------------------------------------------------------- */
 
 function conectarControles() {
-    // Buscadores (el del header y el de móvil), con sugerencias al escribir
+    // Buscadores (header, móvil y el que está sobre la rejilla), con
+    // sugerencias al escribir. Los tres filtran lo mismo y se copian el texto.
     conectarBuscador('buscador', 'sugerencias');
     conectarBuscador('buscador-movil', 'sugerencias-movil');
+    conectarBuscador('buscador-catalogo', 'sugerencias-catalogo');
 
     // Orden
     const orden = document.getElementById('orden');

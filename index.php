@@ -19,7 +19,7 @@ sn_cabeza([
     'canonical'   => "https://santanatura.inmuno.lat/",
     'clave'       => "home",
     'raiz'        => '',
-    'iconos'      => ["account_tree","add","celebration","check_circle","chevron_left","chevron_right","diamond","factory","flag","flight_takeoff","grid_view","group","groups","handshake","history","inventory_2","local_florist","local_mall","military_tech","person","redeem","remove","send","star","support_agent","trending_up","verified_user","workspace_premium"],
+    'iconos'      => ["account_tree","add","celebration","check_circle","chevron_left","chevron_right","diamond","factory","flag","flight_takeoff","grid_view","group","groups","handshake","history","inventory_2","local_florist","local_mall","military_tech","person","redeem","remove","search_off","send","star","support_agent","trending_up","tune","verified_user","workspace_premium"],
     'extra'       => <<<'HTML'
 
 <style id="hero-ajustes">
@@ -294,13 +294,82 @@ HTML,
      ========================================================================== -->
 <section class="py-xl" id="productos">
 <div class="max-w-container-max mx-auto px-md">
+
+<!-- --------------------------------------------------------------------------
+     Encabezado del catálogo: título, buscador a la vista y acceso a filtros
+     --------------------------------------------------------------------------
+     El buscador del header se pierde: está arriba del todo, es estrecho y,
+     cuando alguien ya está mirando productos, ha quedado fuera de la pantalla.
+     Aquí va otro ancho, con la lupa bien visible y pegado a la rejilla, que es
+     donde se busca de verdad. Los tres escriben en el mismo filtro: store.js
+     los mantiene sincronizados, así que da igual cuál se use.
+
+     En móvil la columna de filtros (categorías + precio + nota) ocupaba una
+     pantalla entera ANTES del primer producto: quien llegaba de un anuncio veía
+     un formulario, no el catálogo. Ahora vive detrás del botón «Filtros» y se
+     abre solo si se pide. En pantalla grande no cambia nada: la barra lateral
+     sigue siempre desplegada.
+     -------------------------------------------------------------------------- -->
+<div class="mb-md space-y-sm">
+
+<div class="flex flex-wrap justify-between items-end gap-sm">
+<div>
+<h2 class="font-headline-md text-3xl text-on-surface font-bold">Nuestro catálogo</h2>
+<p class="font-body-md text-sm text-on-surface-variant mt-1" id="contador-resultados">0 productos</p>
+</div>
+<div class="flex flex-wrap items-center gap-sm">
+<div class="flex items-center gap-xs">
+<label class="font-label-caps text-xs text-on-surface-variant uppercase tracking-wider" for="por-pagina">Mostrar:</label>
+<select class="bg-surface border-outline-variant/50 rounded-full py-1.5 px-4 text-sm focus:ring-primary focus:border-primary font-body-md" id="por-pagina">
+<option value="12">12</option>
+<option selected value="24">24</option>
+<option value="48">48</option>
+<option value="96">96</option>
+</select>
+</div>
+<div class="flex items-center gap-xs">
+<label class="font-label-caps text-xs text-on-surface-variant uppercase tracking-wider" for="orden">Ordenar:</label>
+<select class="bg-surface border-outline-variant/50 rounded-full py-1.5 px-4 text-sm focus:ring-primary focus:border-primary font-body-md" id="orden">
+<option value="popular">Recomendados</option>
+<option value="precio-asc">Precio: de menor a mayor</option>
+<option value="precio-desc">Precio: de mayor a menor</option>
+<option value="puntos-asc">Puntos: de menor a mayor</option>
+<option value="puntos-desc">Puntos: de mayor a menor</option>
+</select>
+</div>
+</div>
+</div>
+
+<div class="flex items-center gap-sm">
+<div class="relative flex-1 min-w-0">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary text-2xl pointer-events-none">search</span>
+<input autocomplete="off" type="search" id="buscador-catalogo"
+       class="w-full bg-surface border border-outline-variant rounded-full py-3 pl-12 pr-4 text-base placeholder:text-on-surface-variant/70 focus:border-primary focus:ring-1 focus:ring-primary transition-colors shadow-sm"
+       placeholder="Buscar producto, pack o categoría…"
+       role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias-catalogo"/>
+<ul class="hidden absolute left-0 right-0 top-full mt-2 z-[120] bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden max-h-96 overflow-y-auto scroll-suave" id="sugerencias-catalogo" role="listbox"></ul>
+</div>
+
+<!-- Solo en móvil y tablet: en lg la barra lateral ya está a la vista. -->
+<button type="button" id="btn-filtros" onclick="alternarFiltros()"
+        class="lg:hidden shrink-0 inline-flex items-center gap-1.5 bg-surface border border-outline-variant rounded-full px-4 py-3 font-label-caps text-sm text-on-surface hover:border-primary hover:text-primary transition-colors shadow-sm"
+        aria-expanded="false" aria-controls="panel-filtros">
+<span class="material-symbols-outlined text-xl">tune</span>
+<span class="hidden sm:inline">Filtros</span>
+<span class="hidden bg-primary text-on-primary text-[10px] font-bold min-w-[18px] h-[18px] px-1 rounded-full leading-[18px] text-center" id="filtros-contador">0</span>
+</button>
+</div>
+</div>
+
 <div class="flex flex-col lg:flex-row gap-gutter">
 
 <!-- Barra lateral -->
 <!-- La barra lateral se queda fija al hacer scroll. Como junta varias tarjetas
      y puede pasar del alto de la pantalla, se le limita la altura y se le da
-     scroll propio; si no, el filtro de precio queda fuera de alcance. -->
-<aside class="w-full lg:w-72 flex-shrink-0 space-y-md lg:sticky lg:top-28 lg:self-start lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto scroll-suave lg:pr-2">
+     scroll propio; si no, el filtro de precio queda fuera de alcance.
+     `hidden lg:block`: plegada en móvil (la abre el botón «Filtros»), siempre
+     visible a partir de lg. -->
+<aside id="panel-filtros" class="hidden lg:block w-full lg:w-72 flex-shrink-0 space-y-md lg:sticky lg:top-28 lg:self-start lg:max-h-[calc(100vh-8rem)] lg:overflow-y-auto scroll-suave lg:pr-2">
 <div class="bg-surface p-md rounded-3xl shadow-sm border border-outline-variant/50">
 <h3 class="font-headline-md text-lg mb-sm text-on-surface">Categorías</h3>
 <!-- Árbol completo (categorías y subcategorías). Se genera desde COLECCIONES
@@ -347,37 +416,17 @@ HTML,
 <h3 class="font-headline-md text-sm text-primary">Precios especiales</h3>
 <p class="font-body-md text-xs text-on-surface-variant" data-nota-cantidad></p>
 </div>
+
+<!-- Cierre en móvil: tras elegir un filtro hay que poder volver a los productos
+     sin buscar el botón de arriba ni hacer scroll a ciegas. -->
+<button type="button" onclick="cerrarFiltros()"
+        class="lg:hidden w-full bg-primary text-on-primary py-3 rounded-full font-title-sm shadow-md active:scale-[0.98] transition-transform">
+Ver productos
+</button>
 </aside>
 
 <!-- Grilla -->
 <div class="flex-1">
-<div class="flex flex-wrap justify-between items-center gap-sm mb-md">
-<div>
-<h2 class="font-headline-md text-3xl text-on-surface font-bold">Nuestro catálogo</h2>
-<p class="font-body-md text-sm text-on-surface-variant mt-1" id="contador-resultados">0 productos</p>
-</div>
-<div class="flex flex-wrap items-center gap-sm">
-<div class="flex items-center gap-xs">
-<label class="font-label-caps text-xs text-on-surface-variant uppercase tracking-wider" for="por-pagina">Mostrar:</label>
-<select class="bg-surface border-outline-variant/50 rounded-full py-1.5 px-4 text-sm focus:ring-primary focus:border-primary font-body-md" id="por-pagina">
-<option value="12">12</option>
-<option selected value="24">24</option>
-<option value="48">48</option>
-<option value="96">96</option>
-</select>
-</div>
-<div class="flex items-center gap-xs">
-<label class="font-label-caps text-xs text-on-surface-variant uppercase tracking-wider" for="orden">Ordenar:</label>
-<select class="bg-surface border-outline-variant/50 rounded-full py-1.5 px-4 text-sm focus:ring-primary focus:border-primary font-body-md" id="orden">
-<option value="popular">Recomendados</option>
-<option value="precio-asc">Precio: de menor a mayor</option>
-<option value="precio-desc">Precio: de mayor a menor</option>
-<option value="puntos-asc">Puntos: de menor a mayor</option>
-<option value="puntos-desc">Puntos: de mayor a menor</option>
-</select>
-</div>
-</div>
-</div>
 
 <!-- La primera página del catálogo ya viene escrita desde el servidor, para que
      el robot de Google la lea sin ejecutar JavaScript. store.js la repinta al

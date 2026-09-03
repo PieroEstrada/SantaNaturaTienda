@@ -17,6 +17,21 @@ sn_iniciar_sesion();
 
 /* --------------------------------------------------------------------------
    1. Primer arranque: crear la contraseña
+   --------------------------------------------------------------------------
+   OJO AL SUBIR AL HOSTING. Mientras no exista inc/admin-config.php, esta
+   pantalla se la enseña a CUALQUIERA que pida la URL, y quien la rellene se
+   queda con el panel: los precios, las fotos y el aviso emergente de la web.
+
+   No se puede distinguir al dueño de un desconocido en esa primera visita, así
+   que la única defensa es que la ventana dure lo menos posible:
+
+     · Subir inc/admin-config.php junto con el resto del sitio (no va al
+       repositorio, así que hay que copiarlo a mano por FTP), o
+     · si se prefiere crear la contraseña ya en el servidor, entrar aquí y
+       crearla ANTES de dar el dominio a nadie y antes de encender los anuncios.
+
+   Lo mismo vale si algún día se borra ese archivo para recuperar el acceso:
+   entre borrarlo y volver a crear la contraseña, el panel está abierto.
    -------------------------------------------------------------------------- */
 if (!sn_hay_password()) {
     $hashGenerado = null;
@@ -52,7 +67,12 @@ if (!sn_hay_password()) {
       </div>
 
       <h2 style="margin:0 0 4px">Configura el acceso</h2>
-      <p class="sub">Todavía no hay contraseña. Créala ahora: hasta entonces el panel no deja entrar a nadie.</p>
+      <p class="sub">Todavía no hay contraseña guardada en este servidor.</p>
+
+      <p class="aviso ojo">Hasta que la crees, esta pantalla se la enseña el panel
+      a cualquiera que escriba la dirección, y quien la rellene se queda con el
+      control de los precios de la web. <strong>Créala ahora</strong>, antes de
+      encender los anuncios o de dar el dominio a nadie.</p>
 
       <?php if ($error): ?><p class="aviso mal"><?= h($error) ?></p><?php endif; ?>
 

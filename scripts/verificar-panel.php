@@ -1,7 +1,26 @@
 <?php
-/* Prueba temporal del panel: autenticación, guardado y round-trip de datos.
-   Deja products.js exactamente como estaba. */
+/* Prueba del panel: autenticación, guardado y round-trip de datos.
+   Deja products.js exactamente como estaba.
+
+   SOLO POR CONSOLA:  php scripts/verificar-panel.php
+
+   Este archivo llama a sn_guardar(), o sea que ESCRIBE en products.js. Vive
+   dentro de la carpeta pública, así que sin este cerrojo bastaba con abrir
+   /scripts/verificar-panel.php en el navegador —sin contraseña, sin sesión, sin
+   nada— para reescribir el catálogo de la tienda y desactivar y reactivar un
+   pack. La prueba lo deja todo como estaba, pero eso es una casualidad
+   afortunada, no una defensa: cualquiera con la URL podía dispararlo.
+
+   El .htaccess de la raíz también responde 404 a toda la carpeta /scripts/.
+   Van los dos porque este archivo no se puede quedar dependiendo de que el
+   hosting lea .htaccess (Nginx no lo hace). */
 declare(strict_types=1);
+
+if (PHP_SAPI !== 'cli') {
+    http_response_code(404);
+    exit;
+}
+
 require __DIR__ . '/../inc/auth.php';
 require __DIR__ . '/../inc/catalogo.php';
 

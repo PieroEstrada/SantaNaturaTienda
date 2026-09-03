@@ -12,6 +12,10 @@ inc/copias/
 # Temporales de la escritura atómica de products.js
 products.js.tmp
 
+# Dependencias del generador de estilos. Se reinstalan con: cd build && npm install
+build/node_modules/
+build/package-lock.json
+
 # Sistema
 Thumbs.db
 .DS_Store

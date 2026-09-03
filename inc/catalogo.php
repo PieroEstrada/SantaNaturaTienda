@@ -441,3 +441,17 @@ function sn_imagenes(): array
     sort($rutas, SORT_NATURAL | SORT_FLAG_CASE);
     return array_values(array_unique($rutas));
 }
+
+/**
+ * ¿Es «img/algo.jpg» de la lista de verdad?
+ *
+ * El formulario manda el campo `imagen` como texto, y comprobar solo que el
+ * archivo exista deja pasar cualquier ruta del servidor: «inc/admin-config.php»
+ * existe, y acabaría escrita en products.js —que es público— apuntando a un
+ * archivo que no es una foto. Aquí se compara contra las fotos que hay en img/,
+ * que es lo único que el selector ofrece.
+ */
+function sn_imagen_valida(string $ruta): bool
+{
+    return $ruta !== '' && in_array($ruta, sn_imagenes(), true);
+}

@@ -16,16 +16,26 @@
      raiz        prefijo hasta la raíz: '' | '../' | '../../'
      iconos      lista de iconos de Material Symbols que usa la página
      extra       HTML suelto para el <head> (JSON-LD, estilos propios…)
+
+   La configuración de Tailwind ya NO vive aquí: se mudó a build/tailwind.config.js
+   y de ahí sale ../tailwind.css. Antes eran ~80 líneas de JavaScript incrustadas
+   en el <head> de cada página que el navegador del visitante tenía que leer y
+   ejecutar antes de pintar. Si tocas clases en el HTML o el JS:
+
+       cd build && npm run build
    ========================================================================== */
 
 declare(strict_types=1);
 
-/** Iconos que usan todas las páginas. Cada página suma los suyos. */
+/** Iconos que usan todas las páginas. Cada página suma los suyos.
+    'add', 'remove' y 'check_circle' los pinta el carrito, que va en TODAS las
+    páginas (también en las landings de Ads): sin declararlos, los botones de
+    cantidad salían en blanco justo donde se confirma el pedido. */
 const SN_ICONOS_BASE = [
-    'add_shopping_cart', 'apps', 'arrow_forward', 'close', 'dark_mode', 'eco',
-    'expand_more', 'light_mode', 'local_shipping', 'menu', 'payments',
-    'schedule', 'search', 'sell', 'shopping_bag', 'shopping_cart', 'stars',
-    'storefront', 'verified',
+    'add', 'add_shopping_cart', 'apps', 'arrow_forward', 'check_circle',
+    'close', 'dark_mode', 'eco', 'expand_more', 'light_mode', 'local_shipping',
+    'menu', 'payments', 'remove', 'schedule', 'search', 'sell', 'shopping_bag',
+    'shopping_cart', 'stars', 'storefront', 'verified',
 ];
 
 function sn_cabeza(array $pagina): void
@@ -43,7 +53,13 @@ function sn_cabeza(array $pagina): void
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <title><?= sn_e($pagina['titulo']) ?></title>
 <meta name="description" content="<?= sn_e($pagina['descripcion']) ?>"/>
+<?php /* Sin canonical no se escribe la etiqueta. Una <link rel="canonical" href="">
+         vacía le dice a Google que la página canónica es ella misma con la URL
+         actual, y en la página de error eso sería declarar canónica cualquier
+         dirección inventada que alguien teclee. */ ?>
+<?php if (($pagina['canonical'] ?? '') !== ''): ?>
 <link rel="canonical" href="<?= sn_e($pagina['canonical']) ?>"/>
+<?php endif; ?>
 
 <!-- ==========================================================================
      Google Ads — etiqueta de conversión (PENDIENTE DE ACTIVAR)
@@ -74,89 +90,6 @@ function sn_cabeza(array $pagina): void
      HTML o en el JS, súmalo a SN_ICONOS_BASE (o a los iconos de esa página) o
      saldrá en blanco. El único eje variable que usamos es FILL. -->
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:FILL@0..1&amp;icon_names=<?= sn_e(implode(',', $iconos)) ?>&amp;display=block" rel="stylesheet"/>
-<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-<script id="tailwind-config">
-        try {
-            // Cada token de color apunta a una variable CSS con los canales RGB
-            // (definidas en styles.css). Así, al alternar la clase .dark en <html>,
-            // todo el catálogo cambia de tema sin tocar cada elemento, y las clases
-            // con opacidad (bg-surface/90, text-primary/50, …) siguen funcionando.
-            const TOKENS_COLOR = [
-                "inverse-on-surface", "tertiary-fixed", "on-tertiary-fixed", "primary",
-                "primary-container", "on-primary-fixed-variant", "surface-container-highest",
-                "on-surface-variant", "tertiary-container", "secondary-fixed", "secondary-fixed-dim",
-                "on-secondary-fixed-variant", "primary-fixed", "inverse-primary", "tertiary-fixed-dim",
-                "on-secondary-fixed", "on-tertiary-container", "surface-bright", "error-container",
-                "on-primary", "secondary", "on-primary-container", "on-secondary-container",
-                "surface-container-high", "on-primary-fixed", "background", "secondary-container",
-                "on-error-container", "outline", "on-surface", "outline-variant", "surface-container",
-                "on-background", "on-error", "surface-container-low", "error", "surface-tint",
-                "inverse-surface", "surface-dim", "surface", "on-tertiary", "primary-fixed-dim",
-                "on-tertiary-fixed-variant", "surface-variant", "surface-container-lowest",
-                "on-secondary", "tertiary"
-            ];
-            const colors = {};
-            TOKENS_COLOR.forEach((t) => { colors[t] = `rgb(var(--c-${t}) / <alpha-value>)`; });
-
-            // Colores de marca que NO cambian entre tema claro y oscuro:
-            // el verde oficial de WhatsApp, el dorado de las estrellas de
-            // valoración y el blanco puro del pie de página.
-            colors["action-whatsapp"] = "#25D366";
-            colors["rating-gold"] = "#FFC107";
-            colors["botanical-white"] = "#FFFFFF";
-
-            tailwind.config = {
-                darkMode: "class",
-                theme: {
-                    extend: {
-                        colors,
-                        "borderRadius": {
-                            "DEFAULT": "0.5rem",
-                            "lg": "0.5rem",
-                            "xl": "0.75rem",
-                            "full": "9999px"
-                        },
-                        "spacing": {
-                            "xs": "8px",
-                            "lg": "40px",
-                            "md": "24px",
-                            "xl": "64px",
-                            "container-max": "1280px",
-                            "sm": "16px",
-                            "base": "4px",
-                            "gutter": "24px"
-                        },
-                        // Los títulos usan Plus Jakarta Sans (más carácter y
-                        // mejor peso en negrita); el cuerpo se queda en Inter.
-                        "fontFamily": {
-                            "display-lg-mobile": ["Plus Jakarta Sans", "Inter"],
-                            "label-md": ["Inter"],
-                            "label-caps": ["Inter"],
-                            "body-lg": ["Inter"],
-                            "headline-md-mobile": ["Plus Jakarta Sans", "Inter"],
-                            "headline-md": ["Plus Jakarta Sans", "Inter"],
-                            "body-md": ["Inter"],
-                            "display-lg": ["Plus Jakarta Sans", "Inter"],
-                            "title-lg": ["Plus Jakarta Sans", "Inter"],
-                            "title-sm": ["Plus Jakarta Sans", "Inter"]
-                        },
-                        "fontSize": {
-                            "display-lg-mobile": ["36px", {"lineHeight": "42px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                            "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.05em", "fontWeight": "600"}],
-                            "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.1em", "fontWeight": "700"}],
-                            "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
-                            "headline-md-mobile": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
-                            "headline-md": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
-                            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
-                            "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
-                            "title-lg": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
-                            "title-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
-                        }
-                    },
-                },
-            }
-        } catch (_e) {}
-    </script>
 <!-- Fija el tema (claro/oscuro) ANTES de pintar para evitar el parpadeo inicial.
      Respeta lo guardado por el usuario y, si no hay, la preferencia del sistema. -->
 <script>
@@ -173,6 +106,19 @@ function sn_cabeza(array $pagina): void
         })();
     </script>
 <link href="<?= sn_e($raiz) ?>styles.css?v=<?= sn_v('styles.css') ?>" rel="stylesheet"/>
+<!-- Tailwind, ya generado. Antes se cargaba cdn.tailwindcss.com: 409 KB de
+     JavaScript que cada visitante se bajaba y ejecutaba para que le calcularan
+     el CSS en su propio teléfono, en cada visita. Ahora el cálculo se hace una
+     vez en build/ (npm run build) y aquí solo viaja el resultado: ~40 KB de CSS
+     con las clases que la web usa de verdad. Con anuncios pagados eso es el
+     primer producto visible varios cientos de milisegundos antes.
+
+     VA DESPUÉS DE styles.css a propósito: es el orden que tenía el CDN, y hay
+     reglas propias escritas contando con él (styles.css → .drawer-abierto lleva
+     !important justo por eso). Si algún día se invierte, hay que revisarlas.
+
+     Si tocas clases en el HTML o el JS, regenera:  cd build && npm run build -->
+<link href="<?= sn_e($raiz) ?>tailwind.css?v=<?= sn_v('tailwind.css') ?>" rel="stylesheet"/>
 <?= $pagina['extra'] ?? '' ?>
 </head>
 <?php

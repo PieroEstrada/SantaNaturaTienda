@@ -201,8 +201,10 @@ function sn_header(string $raiz = '', bool $afiliacion = true, string $inicio = 
 
 <div class="flex items-center gap-sm ml-auto">
 <div class="hidden lg:block relative w-64 xl:w-80">
-<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">search</span>
-<input autocomplete="off" class="w-full bg-surface-container-low border border-transparent rounded-full py-2.5 pl-12 pr-4 text-sm placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="buscador" placeholder="Buscar…" type="search"
+<!-- Lupa en color de marca y borde visible: con el icono gris y sin borde, la
+     caja se confundía con el fondo del header y nadie la veía. -->
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-primary text-xl pointer-events-none">search</span>
+<input autocomplete="off" class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2.5 pl-12 pr-4 text-sm placeholder:text-on-surface-variant focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="buscador" placeholder="Buscar producto…" type="search"
        role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias"/>
 <ul class="hidden absolute left-0 right-0 top-full mt-2 z-[120] bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden max-h-96 overflow-y-auto scroll-suave" id="sugerencias" role="listbox"></ul>
 </div>
@@ -224,8 +226,8 @@ function sn_header(string $raiz = '', bool $afiliacion = true, string $inicio = 
 <!-- Buscador para pantallas pequeñas -->
 <div class="lg:hidden pb-3">
 <div class="relative w-full">
-<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline text-xl pointer-events-none">search</span>
-<input autocomplete="off" class="w-full bg-surface-container-low border border-transparent rounded-full py-2.5 pl-10 pr-4 text-sm placeholder:text-outline focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="buscador-movil" placeholder="Busca un producto…" type="search"
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-xl pointer-events-none">search</span>
+<input autocomplete="off" class="w-full bg-surface-container-low border border-outline-variant rounded-full py-2.5 pl-10 pr-4 text-sm placeholder:text-on-surface-variant focus:bg-surface focus:border-primary focus:ring-1 focus:ring-primary transition-colors" id="buscador-movil" placeholder="Busca un producto…" type="search"
        role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="sugerencias-movil"/>
 <ul class="hidden absolute left-0 right-0 top-full mt-2 z-[120] bg-surface border border-outline-variant rounded-2xl shadow-2xl overflow-hidden max-h-80 overflow-y-auto scroll-suave" id="sugerencias-movil" role="listbox"></ul>
 </div>

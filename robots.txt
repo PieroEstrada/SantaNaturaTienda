@@ -6,17 +6,25 @@
 # Calidad se hunde y los anuncios pueden quedar rechazados.
 #
 # No añadas aquí un Disallow para esas dos rutas.
+#
+# ----------------------------------------------------------------------------
+# POR QUÉ NO SE LISTA AQUÍ EL PANEL DE GESTIÓN
+# ----------------------------------------------------------------------------
+# robots.txt es un archivo PÚBLICO: cualquiera puede leerlo escribiendo
+# /robots.txt en el navegador, y es de lo primero que mira quien busca por
+# dónde entrar. Poner «Disallow: /gestion-sn/» no escondía el panel: lo
+# anunciaba, y encima marcado como «esto es lo interesante».
+#
+# Lo que de verdad protege cada cosa:
+#   /gestion-sn/  contraseña con hash + <meta name="robots" content="noindex">
+#                 en todas sus pantallas (para que no se indexe hay que dejar
+#                 que Google entre y LEA el noindex; un Disallow se lo impide,
+#                 y entonces la URL puede acabar indexada igualmente).
+#   /inc/         .htaccess propio: «Require all denied». No se sirve nada.
+#   /scripts/     .htaccess de la raíz: responde 404.
+# ----------------------------------------------------------------------------
 
 User-agent: *
 Allow: /
-
-# Carpeta de utilidades del proyecto: no aporta nada en el buscador.
-Disallow: /scripts/
-
-# Panel de gestión e internos. Las páginas del panel llevan además
-# <meta name="robots" content="noindex">, porque robots.txt solo pide que no
-# se rastree, no impide que una URL descubierta por otra vía acabe indexada.
-Disallow: /gestion-sn/
-Disallow: /inc/
 
 Sitemap: https://santanatura.inmuno.lat/sitemap.xml

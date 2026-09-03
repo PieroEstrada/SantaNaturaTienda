@@ -1,0 +1,13 @@
+/* Punto de partida de la hoja de estilos. De aquí sale ../tailwind.css.
+
+   base       el «reset» de Tailwind: pone todos los navegadores de acuerdo
+   components clases de componente (las de los plugins, como las de forms)
+   utilities  las miles de clases sueltas (bg-primary, rounded-full, gap-sm…),
+              de las que solo se escriben las que la web usa de verdad
+
+   Los estilos propios del sitio NO van aquí: siguen en styles.css, que se
+   carga aparte y sin pasar por este build. */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

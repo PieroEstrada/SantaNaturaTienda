@@ -1,0 +1,41 @@
+# ============================================================================
+# Carpeta de fotos: aquí NO se ejecuta código, solo se sirven imágenes.
+# ----------------------------------------------------------------------------
+# El panel deja subir fotos, y la subida ya comprueba el formato leyendo la
+# imagen de verdad (inc/catalogo.php → sn_subir_imagen), así que un .php
+# renombrado a .jpg no llega hasta aquí.
+#
+# Esto es el segundo cerrojo: aunque un día ese control fallara o se relajara,
+# lo que quede en esta carpeta se descargaría como archivo, nunca se ejecutaría.
+# En una carpeta de subidas es la diferencia entre un archivo basura y que
+# alguien se quede con el servidor.
+# ============================================================================
+
+<IfModule mod_php.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php7.c>
+    php_flag engine off
+</IfModule>
+<IfModule mod_php8.c>
+    php_flag engine off
+</IfModule>
+
+# Hostings con PHP en FPM/CGI: ahí php_flag no existe y hay que cortar por el
+# manejador y por la extensión.
+<FilesMatch "\.(php|php3|php4|php5|php7|php8|phtml|phar|pl|py|cgi|shtml|htaccess)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+<IfModule mod_mime.c>
+    RemoveHandler .php .phtml .phar .php3 .php4 .php5 .php7 .php8
+    RemoveType .php .phtml .phar
+</IfModule>
+
+Options -Indexes -ExecCGI

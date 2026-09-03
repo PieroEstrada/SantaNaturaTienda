@@ -210,8 +210,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!$cats) {
         $errores[] = 'Elige al menos una categoría, o el producto no aparecerá en ninguna sección.';
     }
-    if (!$haySubida && $imagen !== '' && !is_file(SN_RAIZ . '/' . $imagen)) {
-        $errores[] = 'La imagen «' . $imagen . '» no existe en la carpeta img/.';
+    if (!$haySubida && $imagen !== '' && !sn_imagen_valida($imagen)) {
+        $errores[] = 'La imagen «' . $imagen . '» no está en la carpeta img/. '
+                   . 'Elígela del desplegable o sube una nueva.';
     }
 
     // La foto se guarda con todo lo demás ya validado. Si falla la subida, el

@@ -1,0 +1,138 @@
+# ============================================================================
+# Santa Natura — reglas del servidor
+# ----------------------------------------------------------------------------
+# Todo lo que hay en esta carpeta se sirve por web tal cual. Eso incluye cosas
+# que NO son la tienda: notas internas, la hoja de precios de origen, la carpeta
+# de utilidades y, si alguna vez se sube por FTP, el propio .git. Aquí se cierra
+# lo que no debe poder pedirse desde fuera.
+#
+# Apache y LiteSpeed leen este archivo. Nginx NO: si el hosting fuera Nginx,
+# estas mismas reglas hay que pedírselas al panel del proveedor.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# 1. Sin listados de carpetas
+# ----------------------------------------------------------------------------
+# Sin esto, /img/ devuelve el índice con las 84 fotos y /inc/copias/ el
+# histórico del catálogo.
+Options -Indexes
+
+# ----------------------------------------------------------------------------
+# 2. Archivos que no son parte del sitio
+# ----------------------------------------------------------------------------
+# .md      notas internas (PENDIENTE-PANEL.md dice dónde está el panel y cómo
+#          se reinicia su contraseña: es un mapa para quien lo encuentre)
+# .xlsx    la lista de precios de origen
+# .json    configuración; el catálogo se sirve como .js, no como .json
+# .tmp     restos de una escritura atómica interrumpida
+# .ejemplo.php  plantilla de configuración del panel
+<FilesMatch "\.(md|xlsx|xls|json|tmp|bak|log|sql|ini|ejemplo\.php)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Archivos ocultos: .git, .gitignore, .env, .htpasswd… (el propio .htaccess ya
+# lo protege Apache por su cuenta).
+<FilesMatch "^\.">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# La carpeta .git entera, por si el despliegue se hace copiando el repositorio.
+# Sin esto se puede descargar el historial completo del proyecto.
+RedirectMatch 404 /\.git
+
+# ----------------------------------------------------------------------------
+# 3. Carpetas que no son la web
+# ----------------------------------------------------------------------------
+# scripts/  utilidades de consola (verificar-panel.php ESCRIBE en products.js)
+# build/    el generador de tailwind.css, con su node_modules
+# inc/      el código PHP y la configuración del panel
+#
+# Cada una lleva su PROPIO .htaccess con «Require all denied», y es ahí donde
+# está la protección de verdad. No se ponen aquí como RedirectMatch ^/scripts/
+# porque una regla anclada a la raíz del dominio deja de aplicar en cuanto el
+# sitio cuelga de una subcarpeta —en XAMPP, sin ir más lejos— y entonces parece
+# que está cerrado cuando no lo está. Si tocas esto, comprueba las URLs de la
+# lista del punto 5 de DESPLIEGUE.md.
+
+# ----------------------------------------------------------------------------
+# 4. Página de error propia
+# ----------------------------------------------------------------------------
+# Se hace con mod_rewrite y no con «ErrorDocument 404 /404.php» porque
+# ErrorDocument entiende la ruta desde la raíz del DOMINIO: funcionaría en el
+# hosting y no en XAMPP, donde el sitio cuelga de /SantaNaturaTienda/. Así se
+# comporta igual en los dos sitios y se puede probar antes de subirlo.
+#
+# Solo entra cuando lo pedido no es un archivo ni una carpeta que existan, así
+# que no toca las páginas reales ni interfiere con las carpetas cerradas más
+# arriba (esas existen: siguen respondiendo 403).
+#
+# 404.php devuelve el código 404 de verdad; sin eso Google indexaría
+# direcciones inventadas como si fueran páginas buenas.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ 404.php [L]
+</IfModule>
+
+# ----------------------------------------------------------------------------
+# 5. Cabeceras de seguridad
+# ----------------------------------------------------------------------------
+<IfModule mod_headers.c>
+    # La tienda no debe poder incrustarse en un iframe ajeno: es la vía de
+    # engañar a alguien para que haga clic en algo que no ve.
+    Header always set X-Frame-Options "SAMEORIGIN"
+    # Nada de adivinar el tipo de un archivo por su contenido: una foto subida
+    # al panel se sirve como foto y no como otra cosa.
+    Header always set X-Content-Type-Options "nosniff"
+    # Al salir hacia WhatsApp solo viaja el dominio, no la URL completa.
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always set Permissions-Policy "geolocation=(), microphone=(), camera=(), payment=()"
+</IfModule>
+
+# ----------------------------------------------------------------------------
+# 6. HTTPS obligatorio
+# ----------------------------------------------------------------------------
+# DESCOMENTA LAS TRES LÍNEAS cuando el candado del navegador ya funcione en el
+# dominio. Antes de eso dejarían la web inaccesible, y la cookie de sesión del
+# panel solo se marca `secure` si la visita llega por https (inc/auth.php).
+#
+# <IfModule mod_rewrite.c>
+#     RewriteEngine On
+#     RewriteCond %{HTTPS} !=on
+#     RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+# </IfModule>
+
+# ----------------------------------------------------------------------------
+# 7. Caché de los estáticos
+# ----------------------------------------------------------------------------
+# Los .js y el .css llevan ?v=<hash> (sn_v), así que pueden cachearse fuerte:
+# al cambiar el catálogo cambia el hash y el navegador vuelve a bajarlos. Sin
+# esto, cada visitante que llega de un anuncio se descarga otra vez las fotos.
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpeg              "access plus 1 year"
+    ExpiresByType image/png               "access plus 1 year"
+    ExpiresByType image/webp              "access plus 1 year"
+    ExpiresByType image/svg+xml           "access plus 1 year"
+    ExpiresByType text/css                "access plus 1 year"
+    ExpiresByType application/javascript  "access plus 1 year"
+    ExpiresByType text/html               "access plus 0 seconds"
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/css text/plain text/xml \
+        application/javascript application/json image/svg+xml
+</IfModule>

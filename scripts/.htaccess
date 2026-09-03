@@ -1,0 +1,20 @@
+# Nada de esta carpeta se sirve por web.
+#
+# Son utilidades de mantenimiento que se ejecutan a mano desde la consola.
+# verificar-panel.php ESCRIBE en products.js: pedirlo por URL era reescribir el
+# catálogo de la tienda sin haber iniciado sesión. El archivo ya se niega a
+# ejecutarse fuera de la consola; esto es el segundo cerrojo, y el que cubre
+# cualquier script que se añada aquí en el futuro y se olvide del suyo.
+#
+# Va aquí dentro y no en el .htaccess de la raíz porque una regla anclada a la
+# raíz del dominio (^/scripts/) deja de aplicar en cuanto el sitio cuelga de una
+# subcarpeta, como pasa en XAMPP. Esto funciona esté montado donde esté.
+
+<IfModule mod_authz_core.c>
+    Require all denied
+</IfModule>
+
+<IfModule !mod_authz_core.c>
+    Order allow,deny
+    Deny from all
+</IfModule>

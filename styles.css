@@ -199,8 +199,9 @@ details > summary::-webkit-details-marker { display: none; }
 }
 
 /* Panel lateral del carrito.
-   Lleva !important para ganarle a la clase translate-x-full de Tailwind, que el
-   CDN inyecta después de esta hoja de estilos. */
+   Lleva !important para ganarle a la clase translate-x-full de Tailwind, que se
+   carga DESPUÉS de esta hoja (tailwind.css va detrás de styles.css en el <head>,
+   igual que hacía el CDN cuando inyectaba sus estilos al final). */
 .drawer-abierto { transform: translateX(0) !important; }
 
 /* Barra de scroll discreta dentro del carrito y los paneles con scroll propio.

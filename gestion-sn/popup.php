@@ -47,8 +47,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } catch (Throwable $e) {
             $errores[] = $e->getMessage();
         }
-    } elseif ($nuevo['imagen'] !== '' && !is_file(SN_RAIZ . '/' . $nuevo['imagen'])) {
-        $errores[] = 'La imagen «' . $nuevo['imagen'] . '» no existe en la carpeta img/.';
+    } elseif ($nuevo['imagen'] !== '' && !sn_imagen_valida($nuevo['imagen'])) {
+        $errores[] = 'La imagen «' . $nuevo['imagen'] . '» no está en la carpeta img/. '
+                   . 'Elígela del desplegable o sube una nueva.';
+    }
+
+    /* El enlace del botón se escribe a mano y acaba en un href de la web
+       pública. Sin filtrar el esquema, un «javascript:…» pegado ahí por
+       descuido (o copiado de cualquier sitio) se ejecutaría en el navegador de
+       cada visitante. Solo pasan los enlaces que tienen sentido en un cartel:
+       una dirección web, un WhatsApp, un correo o un teléfono. */
+    $enlace = $nuevo['boton_enlace'];
+    if ($enlace !== '' && !preg_match('#^(https?://|mailto:|tel:|/|\#)#i', $enlace)) {
+        $errores[] = 'El enlace del botón tiene que empezar por https:// (o mailto:, tel:, / o #). '
+                   . 'Lo que hay escrito ahora no es una dirección válida.';
     }
 
     if ($nuevo['activo'] && $nuevo['titulo'] === '' && $nuevo['texto'] === '') {
