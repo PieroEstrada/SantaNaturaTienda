@@ -45,8 +45,11 @@ const PRICE_LIST_DATE = 'AGOSTO 2026';
    Mientras estén vacías NO se dispara ninguna conversión (pero el dataLayer
    sigue registrando los clics, así que Tag Manager ya puede leerlos).
 
-   Falta también descomentar el snippet de gtag.js en el <head> de las tres
-   páginas y poner ahí el mismo AW-… de conversionId.
+   OJO, SON DOS SITIOS: aquí se dispara el evento, pero la etiqueta la carga
+   inc/partes/cabeza.php → SN_GTAG_ADS, que tiene que llevar EL MISMO 'AW-…'
+   que conversionId. Con uno solo de los dos no se mide nada.
+
+   El paso a paso para sacar cada valor está en MEDICION.md.
    -------------------------------------------------------------------------- */
 const ADS_CONFIG = {
     conversionId: '',      // p. ej. 'AW-123456789'

@@ -38,6 +38,27 @@ const SN_ICONOS_BASE = [
     'shopping_cart', 'stars', 'storefront', 'verified',
 ];
 
+/* ----------------------------------------------------------------------------
+   Medición: Google Ads y Google Analytics 4
+   ----------------------------------------------------------------------------
+   Rellena lo que uses y déjalo vacío si no. Con los dos vacíos no se carga
+   NADA: ni una petición a Google, ni cookies, ni el aviso de cookies que
+   tocaría poner después. Con uno solo, se carga solo ese.
+
+   Los dos van en la MISMA etiqueta (gtag.js). Es la forma que recomienda
+   Google y ahorra una descarga: no se pone un script por producto.
+
+   SN_GTAG_ADS  ID de conversiones de Google Ads. Empieza por AW-.
+                Tiene que ser EL MISMO valor que ADS_CONFIG.conversionId de
+                config.js: aquí carga la etiqueta y allí se dispara el evento
+                al pulsar WhatsApp. Si solo pones uno de los dos, no se mide.
+   SN_GTAG_GA4  ID de medición de Google Analytics 4. Empieza por G-.
+
+   El paso a paso para sacar los dos valores está en MEDICION.md.
+   -------------------------------------------------------------------------- */
+const SN_GTAG_ADS = '';     // p. ej. 'AW-123456789'
+const SN_GTAG_GA4 = '';     // p. ej. 'G-ABCD123456'
+
 function sn_cabeza(array $pagina): void
 {
     $raiz    = $pagina['raiz'] ?? '';
@@ -61,22 +82,38 @@ function sn_cabeza(array $pagina): void
 <link rel="canonical" href="<?= sn_e($pagina['canonical']) ?>"/>
 <?php endif; ?>
 
-<!-- ==========================================================================
-     Google Ads — etiqueta de conversión (PENDIENTE DE ACTIVAR)
-     --------------------------------------------------------------------------
-     Descomenta estas cuatro líneas y cambia AW-XXXXXXXXXX por tu ID de
-     conversión; el MISMO valor va en config.js → ADS_CONFIG.conversionId.
-     Al estar aquí, se activa de golpe en TODAS las páginas.
-     ========================================================================== -->
-<!--
-<script async src="https://www.googletagmanager.com/gtag/js?id=AW-XXXXXXXXXX"></script>
+<!-- Icono de la pestaña y de la pantalla de inicio. Se generan a partir del
+     isotipo oficial con:
+         C:/xampp/php/php.exe -d extension=gd scripts/generar-favicon.php
+     El favicon.ico lleva dentro 16, 32 y 48 px; el navegador elige. -->
+<link rel="icon" href="<?= sn_e($raiz) ?>favicon.ico?v=<?= sn_v('favicon.ico') ?>" sizes="any"/>
+<link rel="icon" type="image/png" sizes="192x192" href="<?= sn_e($raiz) ?>img/icono-192.png?v=<?= sn_v('img/icono-192.png') ?>"/>
+<link rel="apple-touch-icon" href="<?= sn_e($raiz) ?>apple-touch-icon.png?v=<?= sn_v('apple-touch-icon.png') ?>"/>
+
+<?php
+/* ==========================================================================
+   Etiqueta de Google (gtag.js): Google Ads y/o Analytics 4
+   --------------------------------------------------------------------------
+   No hay nada que descomentar: se escribe sola en cuanto rellenes SN_GTAG_ADS
+   o SN_GTAG_GA4 ahí arriba, y se activa de golpe en TODAS las páginas. Con
+   las dos vacías no sale ni una línea de HTML.
+
+   El src lleva el primer ID y los gtag('config', …) van uno por producto: así
+   es como Google mide dos productos con una sola etiqueta.
+   ========================================================================== */
+$sn_gtag = array_values(array_filter([SN_GTAG_ADS, SN_GTAG_GA4]));
+?>
+<?php if ($sn_gtag): ?>
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?= sn_e($sn_gtag[0]) ?>"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'AW-XXXXXXXXXX');
+<?php foreach ($sn_gtag as $sn_id): ?>
+  gtag('config', '<?= sn_e($sn_id) ?>');
+<?php endforeach; ?>
 </script>
--->
+<?php endif; ?>
 
 <!-- Abren DNS+TLS con Google Fonts en paralelo al parseo del HTML. Sin esto,
      el navegador hace dos handshakes en serie (googleapis → gstatic) antes de

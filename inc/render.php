@@ -407,6 +407,107 @@ function sn_bloque_cobertura(): string
 }
 
 /* --------------------------------------------------------------------------
+   Preguntas frecuentes
+   --------------------------------------------------------------------------
+   Google puntúa la experiencia de la página de destino, y una landing que solo
+   tiene titular + rejilla + pie se queda corta: quien llega de un anuncio se
+   pregunta cuánto cuesta el envío, cuándo llega y qué pasa si no le gusta, y
+   si no lo encuentra se va. Esto responde eso sin sacarlo de la página.
+
+   REGLA AL EDITAR: aquí solo va lo que la web ya cumple. Nada de plazos de
+   entrega concretos ni de porcentajes de devolución que después no se puedan
+   sostener: el envío y la fecha se cierran por WhatsApp, caso por caso, y eso
+   es justo lo que dicen las respuestas.
+
+   Y nada de atribuir propiedades curativas: es categoría restringida en Google
+   Ads y en Perú DIGEMID no permite prometer que un suplemento cure o prevenga.
+   La última pregunta está puesta a propósito para dejarlo claro.
+   -------------------------------------------------------------------------- */
+
+const SN_FAQ = [
+    [
+        '¿Cómo hago mi pedido?',
+        'Eliges los productos, los agregas al pedido y pulsas «Pedir por WhatsApp». Se abre el chat con tu pedido ya escrito y un asesor te confirma el total, el envío y la forma de pago. En la web no se paga nada ni se piden datos de tarjeta.',
+    ],
+    [
+        '¿Cuánto cuesta el envío y en cuánto llega?',
+        'Enviamos a todo el Perú —Lima, Ayacucho, Tarapoto, Huánuco y el resto del país— y también puedes recoger en tienda donde la haya. El costo y la fecha de entrega dependen de tu ciudad y del tamaño del pedido, y te los confirmamos por WhatsApp antes de que pagues nada.',
+    ],
+    [
+        '¿Cómo puedo pagar?',
+        'En Lima puedes pagar contra entrega, al recibir el pedido. En provincias, por Yape, Plin o transferencia bancaria.',
+    ],
+    [
+        '¿Los productos son originales?',
+        'Sí. Somos distribuidores autorizados de Santa Natura y los productos llegan sellados, con su etiqueta y su fecha de vencimiento.',
+    ],
+    /* REVISAR CON EL ASESOR: esta respuesta compromete un cambio. Es lo mínimo
+       que espera quien compra sin ver el producto, pero si la política real es
+       otra (plazo distinto, solo cambio y no devolución…), cámbiala aquí. */
+    [
+        '¿Y si el producto llega dañado o no es el que pedí?',
+        'Revisa tu pedido al recibirlo. Si algo llega dañado o no corresponde a lo que pediste, escríbenos por WhatsApp el mismo día con una foto y te lo cambiamos.',
+    ],
+    [
+        '¿Tengo que afiliarme para comprar?',
+        'No. Compras como cliente, al precio que ves en la página. La afiliación es aparte y es opcional: no hace falta para hacer un pedido.',
+    ],
+    [
+        '¿Son medicamentos?',
+        'No. Son suplementos y alimentos naturales: no son medicamentos ni reemplazan un tratamiento médico. Si estás en tratamiento, embarazada o dando de lactar, consulta a tu médico antes de tomarlos.',
+    ],
+];
+
+/**
+ * Acordeón de preguntas frecuentes + su JSON-LD de tipo FAQPage.
+ *
+ * Va con <details>/<summary>, sin una línea de JavaScript: se abre y se cierra
+ * solo, funciona si el JS falla y el buscador lee el texto de las respuestas
+ * aunque estén plegadas (no se ocultan con display:none, las pliega el propio
+ * elemento).
+ *
+ * @param array $extra Pares [pregunta, respuesta] propios de esa página, que
+ *                     se añaden al final de los comunes.
+ */
+function sn_faq(array $extra = []): string
+{
+    $preguntas = array_merge(SN_FAQ, $extra);
+
+    $html = '<section class="bg-surface-container-low border border-outline-variant/50 rounded-3xl p-md md:p-lg" aria-labelledby="faq-titulo">
+<h2 class="font-headline-md text-headline-md-mobile md:text-headline-md text-on-surface mb-sm" id="faq-titulo">Preguntas frecuentes</h2>
+<div class="divide-y divide-outline-variant/50">';
+
+    foreach ($preguntas as [$pregunta, $respuesta]) {
+        $html .= '
+<details class="group py-xs">
+<summary class="faq-resumen flex items-start justify-between gap-sm cursor-pointer py-2 font-title-sm text-base text-on-surface hover:text-primary transition-colors">
+<span>' . sn_e($pregunta) . '</span>
+<span class="material-symbols-outlined text-2xl text-on-surface-variant shrink-0 transition-transform group-open:rotate-180" aria-hidden="true">expand_more</span>
+</summary>
+<p class="font-body-md text-[15px] text-on-surface-variant leading-relaxed pb-sm pr-lg">' . sn_e($respuesta) . '</p>
+</details>';
+    }
+
+    $html .= '
+</div>
+</section>';
+
+    $ld = [
+        '@context'   => 'https://schema.org',
+        '@type'      => 'FAQPage',
+        'mainEntity' => array_map(static fn(array $p) => [
+            '@type'          => 'Question',
+            'name'           => $p[0],
+            'acceptedAnswer' => ['@type' => 'Answer', 'text' => $p[1]],
+        ], $preguntas),
+    ];
+
+    return $html . "\n" . '<script type="application/ld+json">' . "\n"
+        . json_encode($ld, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)
+        . "\n" . '</script>';
+}
+
+/* --------------------------------------------------------------------------
    JSON-LD
    -------------------------------------------------------------------------- */
 

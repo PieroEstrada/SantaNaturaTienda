@@ -101,6 +101,13 @@ sn_cabeza([
      tiene que estar en el HTML servido, no inyectado por JavaScript. -->
 <?= sn_bloque_cobertura() ?>
 
+<!-- Lo que pregunta quien compra sin ver el producto. Las comunes están en
+     inc/render.php (SN_FAQ); aquí solo se añade la propia de esta landing. -->
+<?= sn_faq([[
+    '¿Qué gano comprando un pack en vez de los productos por separado?',
+    'El pack ya trae el descuento aplicado sobre la suma de lo que lleva dentro, así que sale por menos que comprar cada producto suelto. El precio tachado que ves es justo esa suma.',
+]]) ?>
+
 <!-- Enlace discreto al catálogo completo -->
 <p class="text-center">
 <a class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors font-label-caps text-sm" href="<?= $raiz ?>index.php#productos">

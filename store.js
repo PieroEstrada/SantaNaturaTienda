@@ -24,13 +24,20 @@ const CONFIG = {
     notaCantidad: '¿Llevas mayor cantidad? Solicita tu precio especial con descuento al enviar tu pedido por WhatsApp.',
 
     // Imagen grande del Hero (columna derecha de la portada).
-    // Cambia SOLO esta línea para poner la foto real de tus productos: acepta
-    // una URL (https://…) o una ruta dentro del proyecto ('img/hero.jpg').
-    // Se recomienda una foto horizontal de al menos 1200 px de ancho.
-    heroImagen: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBqG9y0bjIcgMdE3FMn7UHAU_LGr2bVGAs7xwFENL-5IH5DC2cOZIkyKiFtagOBYwt0LvkEDQC5SlM4_ocueZob4EYRQDuU52bOSLWaNmsNkMhmlvI_MCfBEBBXPLV_B3yg9u1jduE73NscYHGLICStSb8_ptn_7E2ksWBNFUf96Kg6QwDClJwTYeJBD1_NyJi8XcCcYKX7n6EkhoTX4FfeHCOWQy57sNp0-v_XE0QReor8oXLWHqV_tA',
+    // Cambia SOLO esta línea para poner otra foto: acepta una URL (https://…)
+    // o una ruta dentro del proyecto. Se recomienda una foto horizontal de al
+    // menos 1200 px de ancho, en proporción 5:4 (el marco del hero).
+    //
+    // Hasta septiembre de 2026 esto apuntaba a una imagen de la maqueta de
+    // Stitch alojada en lh3.googleusercontent.com. Se bajó a img/ por tres
+    // razones: es el elemento que Google mide como LCP y dependía de un
+    // servidor ajeno; solo estaba a 512x279; y era una ilustración de IA con
+    // las etiquetas de los frascos deformadas. La de ahora se arma con las
+    // fotos reales de producto (scripts/componer-hero.php).
+    heroImagen: 'img/hero-portada.jpg',
 
     // Texto alternativo de esa imagen (accesibilidad y SEO).
-    heroImagenAlt: 'Productos naturales Santa Natura',
+    heroImagenAlt: 'Productos Santa Natura: colágeno hidrolizado, aloe vera, uña de gato, chancapiedra, toxizero y EnfoK+',
 
     // Clave con la que se guarda el carrito en el navegador del cliente.
     storageKey: 'sn_carrito_v1'

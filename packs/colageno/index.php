@@ -78,6 +78,14 @@ sn_cabeza([
 
 <?= sn_bloque_cobertura() ?>
 
+<!-- Las comunes están en inc/render.php (SN_FAQ); aquí solo la de esta landing.
+     No dice qué colágeno es mejor a propósito: eso lo decide el asesor con el
+     cliente, y afirmarlo aquí sería atribuirle una propiedad que no consta. -->
+<?= sn_faq([[
+    '¿En qué se diferencian el Plus, el Premium y el de maracuyá y camu camu?',
+    'Los tres son colágeno hidrolizado en envase de 450 g y se diferencian en su fórmula; el de maracuyá y camu camu, además, lleva esas dos frutas. Si no sabes cuál te conviene, escríbenos por WhatsApp y el asesor te orienta.',
+]]) ?>
+
 <p class="text-center">
 <a class="inline-flex items-center gap-1.5 text-on-surface-variant hover:text-primary transition-colors font-label-caps text-sm" href="<?= $raiz ?>index.php#productos">
     Ver todo el catálogo

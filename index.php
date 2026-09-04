@@ -229,16 +229,25 @@ HTML,
      https://… o una ruta local como 'img/hero.jpg'). El src de abajo es solo
      el respaldo que se ve mientras carga el JavaScript.
      Si la imagen no existe, se muestra el fondo decorativo con la hoja.
+
+     El src tiene que decir EXACTAMENTE lo mismo que CONFIG.heroImagen (sin
+     ?v=, sin ruta equivalente pero distinta): store.js compara las dos cadenas
+     y, si no calzan, vuelve a asignar el src y el navegador se descarga la
+     foto dos veces. Justo la que Google mide como LCP.
+
+     La foto se genera con scripts/componer-hero.php a partir de las fotos
+     reales de producto.
      ---------------------------------------------------------------------- -->
 <div class="relative order-last">
 <div class="absolute -inset-6 bg-primary/10 blur-3xl rounded-full" aria-hidden="true"></div>
 <figure class="hero-marco relative bg-surface p-2 md:p-3 rounded-3xl shadow-2xl border border-outline-variant/50 overflow-hidden">
 <div class="hero-media img-placeholder">
 <span class="material-symbols-outlined hero-media__respaldo" style="font-variation-settings: 'FILL' 1;">local_florist</span>
-<img alt="Productos naturales Santa Natura" decoding="async" id="hero-imagen"
-     width="1200" height="960" loading="eager" fetchpriority="high"
+<img alt="Productos Santa Natura: colágeno hidrolizado, aloe vera, uña de gato, chancapiedra, toxizero y EnfoK+"
+     decoding="async" id="hero-imagen"
+     width="1600" height="1280" loading="eager" fetchpriority="high"
      onerror="this.style.display='none'"
-     src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqG9y0bjIcgMdE3FMn7UHAU_LGr2bVGAs7xwFENL-5IH5DC2cOZIkyKiFtagOBYwt0LvkEDQC5SlM4_ocueZob4EYRQDuU52bOSLWaNmsNkMhmlvI_MCfBEBBXPLV_B3yg9u1jduE73NscYHGLICStSb8_ptn_7E2ksWBNFUf96Kg6QwDClJwTYeJBD1_NyJi8XcCcYKX7n6EkhoTX4FfeHCOWQy57sNp0-v_XE0QReor8oXLWHqV_tA" />
+     src="img/hero-portada.jpg" />
 </div>
 </figure>
 

@@ -1,23 +1,29 @@
 # Pendiente antes (y después) de encender Google Ads
 
-Revisión del 3 de septiembre de 2026. Este archivo no se sirve por web: el
-`.htaccess` de la raíz bloquea los `.md`.
+Revisión del 3 de septiembre de 2026, actualizada el 4 de septiembre. Este
+archivo no se sirve por web: el `.htaccess` de la raíz bloquea los `.md`.
 
 Está ordenado por lo que cuesta dinero, no por lo que cuesta trabajo. Marca con
 `[x]` lo que vayas cerrando.
 
-**Ya hecho en esta revisión:** página 404 propia (`404.php`), Tailwind compilado
-en vez del CDN, y el repaso de seguridad (ver `DESPLIEGUE.md`).
+**Ya hecho el 3 de septiembre:** página 404 propia (`404.php`), Tailwind
+compilado en vez del CDN, y el repaso de seguridad (ver `DESPLIEGUE.md`).
+
+**Ya hecho el 4 de septiembre:** preguntas frecuentes en las dos landings (7),
+foto de portada propia y en alta (9) y favicon (11). Los puntos 5 y 6 quedan
+descartados por decisión tuya; abajo se explica qué implica.
 
 ---
 
 ## 🔴 Bloqueante — no enciendas la campaña sin esto
 
+> **Paso a paso desde cero de los puntos 1 y 2: `MEDICION.md`.** Lo de aquí
+> abajo es el porqué; allí está el dónde pulsar.
+
 ### [ ] 1. Medición de conversiones
 
 **Dónde:** `config.js` → `ADS_CONFIG.conversionId` y `conversionLabel` están
-vacíos. Y en `inc/partes/cabeza.php` el bloque de `gtag.js` sigue comentado
-(busca `AW-XXXXXXXXXX`).
+vacíos, y `inc/partes/cabeza.php` → `SN_GTAG_ADS` también.
 
 **Qué pasa ahora:** el código para disparar la conversión ya existe y está bien
 hecho, pero se autodesactiva solo mientras esos dos valores estén vacíos
@@ -37,8 +43,9 @@ gtag('event', 'conversion', {'send_to': 'AW-123456789/AbC-D_efGhIjKlMn'})
 ```
 
 Lo de antes de la barra va en `conversionId`; lo de después, en
-`conversionLabel`. El mismo `AW-…` va también en las cuatro líneas comentadas
-de `cabeza.php`, que hay que descomentar. El propio `config.js` lo explica.
+`conversionLabel`. El mismo `AW-…` va también en `SN_GTAG_ADS` de `cabeza.php`.
+Ya no hay que descomentar nada: la etiqueta se escribe sola en cuanto esas
+constantes dejen de estar vacías.
 
 **Ojo con qué estás midiendo:** la conversión es el *clic* al botón de WhatsApp,
 no una venta cerrada. Sirve para optimizar, pero no confundas conversiones con
@@ -47,8 +54,12 @@ pedidos: el cierre pasa por el asesor y eso Google no lo ve.
 ### [ ] 2. Google Analytics (GA4)
 
 No hay ninguno instalado. Sin él no sabes si la gente llega y se va a los tres
-segundos, ni por dónde abandona, ni qué productos mira. Se instala en el mismo
-sitio de `cabeza.php`, junto al de Ads.
+segundos, ni por dónde abandona, ni qué productos mira.
+
+Se instala en el mismo sitio y con la misma etiqueta que el de Ads: pegar el
+`G-…` en `SN_GTAG_GA4` de `cabeza.php`. Con las dos constantes vacías la web no
+carga NADA de Google —ni una petición, ni una cookie—, que es la razón de que
+hoy no haga falta aviso de cookies.
 
 ---
 
@@ -104,48 +115,73 @@ afiliación que enlaza ahí. Si el anuncio apunta a la portada, el revisor la ve
 
 ## 🟡 Información de negocio que falta (política de Tergiversación)
 
-### [ ] 5. Identidad del negocio
+### [~] 5. Identidad del negocio — DESCARTADO el 4/9/2026
 
 No aparecen en ninguna página: **RUC, dirección, correo ni teléfono**. Solo
 WhatsApp. Y la barra promocional dice «recojo en tienda a nivel nacional» sin
 decir en qué tienda ni dónde.
 
-Google pide identidad clara en sitios que venden. Lo mínimo: RUC, una dirección
-real y un correo, en el pie (`inc/partes/comunes.php` → `sn_pie()`), que sale en
-todas las páginas de una vez.
+**Decisión tuya:** no publicar datos personales por seguridad. Se respeta.
 
-### [ ] 6. Páginas legales
+Lo que hay que saber para no llevarse un susto: Google pide identidad clara en
+sitios que venden, y si un revisor abre la web y no encuentra quién está detrás,
+puede desaprobar por Tergiversación. Si eso llega a pasar, la salida más barata
+**no** es publicar tu dirección de casa: basta con datos de negocio, que son
+públicos igualmente (RUC y razón social salen en la consulta RUC de SUNAT) y un
+correo de contacto que no sea el personal. Si prefieres no poner nada, ten
+preparada la respuesta por si Google la pide.
 
-No existe ninguna. Hacen falta tres:
+### [~] 6. Páginas legales — DESCARTADO el 4/9/2026
 
-- **Política de privacidad** — obligatoria si algún día activas remarketing
-  (política de datos de Google Ads), y aplica la Ley 29733 de Protección de
-  Datos Personales del Perú. El formulario de afiliación pide nombre, teléfono
-  y ciudad; no se guardan en tu servidor (`enviarAfiliacion()` solo abre
-  WhatsApp con el mensaje escrito), pero se recogen igual.
-- **Términos y condiciones**
-- **Política de envíos y devoluciones** — lo que más pregunta quien compra
+No existe ninguna: ni privacidad, ni términos, ni envíos y devoluciones.
 
-Se hacen como `afiliacion.php`: PHP normal usando `sn_cabeza()`, `sn_header()`
-y `sn_pie()`. Enlazarlas desde el pie.
+**Decisión tuya:** para una landing de aterrizaje no hacen falta. Se respeta, y
+lo de envíos y devoluciones ya está cubierto de otra forma: las preguntas
+frecuentes del punto 7 responden envío, plazo, pago y qué hacer si el producto
+llega mal.
+
+Dos matices que conviene tener por escrito, para el día que cambie algo:
+
+- La **política de privacidad** deja de ser opcional el día que actives
+  **remarketing o audiencias** en Google Ads: la política de datos de Google la
+  exige, y en Perú aplica la Ley 29733 de Protección de Datos Personales. Hoy no
+  hace falta porque no hay ni píxel de remarketing ni formulario que guarde
+  datos: `enviarAfiliacion()` solo abre WhatsApp con el mensaje escrito, no
+  almacena nada en tu servidor.
+- Si algún día se venden productos con pago en línea (hoy no: todo se cierra por
+  WhatsApp), términos y devoluciones pasan a ser obligatorios.
+
+Si hay que hacerlas, se hacen como `afiliacion.php`: PHP normal con
+`sn_cabeza()`, `sn_header()` y `sn_pie()`, enlazadas desde el pie.
 
 ---
 
 ## 🟢 Calidad de la página de destino (te abarata o encarece el clic)
 
-### [ ] 7. La landing `/packs/` está delgada
+### [x] 7. ~~La landing `/packs/` está delgada~~ — HECHO el 4/9/2026
 
-Su estructura completa es: barra promo → cabecera → un titular → la rejilla de
-packs → pie. Google puntúa la experiencia del destino, y contenido relevante y
-original es parte de la nota. Falta lo que un comprador pregunta antes de
-decidir:
+Se añadió un bloque de **preguntas frecuentes** a las dos landings, debajo de
+`sn_bloque_cobertura()`. Son siete comunes (`SN_FAQ` en `inc/render.php`) más
+una propia de cada página: en `/packs/`, qué se gana comprando el pack en vez de
+los productos sueltos; en `/packs/colageno/`, en qué se diferencian el Plus, el
+Premium y el de maracuyá y camu camu.
 
-- cuánto tarda el envío y cuánto cuesta
-- qué pasa si el producto no le gusta
-- por qué fiarse (años, distribuidor autorizado, clientes)
-- preguntas frecuentes
+Se abre y se cierra con `<details>`/`<summary>`, sin una línea de JavaScript, y
+lleva su JSON-LD de tipo `FAQPage`.
 
-Las formas de pago y el horario **sí** están, en el pie (`sn_bloque_cobertura()`).
+**Al editarlas, dos reglas:**
+
+1. Solo lo que la web cumpla de verdad. Nada de «llega en 24 horas» ni de un
+   porcentaje de devolución que después no se sostenga: el envío y la fecha se
+   cierran por WhatsApp, caso por caso, y eso es justo lo que dicen.
+2. Nada de propiedades curativas, por lo mismo del punto 3. La última pregunta
+   («¿Son medicamentos?») está puesta a propósito para dejarlo claro ante un
+   revisor de Google.
+
+**Queda una por confirmar contigo**, marcada con `REVISAR CON EL ASESOR` en el
+código: la de «¿Y si el producto llega dañado o no es el que pedí?» promete un
+cambio si avisas el mismo día con una foto. Es lo mínimo que espera quien compra
+sin ver el producto, pero si tu política real es otra, cámbiala en `SN_FAQ`.
 
 ### [x] 8. ~~23 productos publicados sin foto~~ — HECHO el 3/9/2026
 
@@ -155,12 +191,31 @@ activos tienen foto** y ninguna ficha apunta a una imagen que no exista.
 Para volver a comprobarlo cuando des de alta productos nuevos:
 `/gestion-sn/?f=sinfoto`.
 
-### [ ] 9. La foto del hero vive en un servidor ajeno
+### [x] 9. ~~La foto del hero vive en un servidor ajeno~~ — HECHO el 4/9/2026
 
-`store.js` → `CONFIG.heroImagen` apunta a una URL de `googleusercontent.com`.
-Es el elemento más grande de la portada —justo el que Google mide como LCP— y
-está en un servidor que no controlas y que puede dejar de servirla cualquier
-día. Hay que bajarla a `img/` y cambiar esa constante.
+Ahora es `img/hero-portada.jpg`, 1600x1280 (la proporción 5:4 del marco), 168 KB.
+
+No se bajó la que había, se hizo otra. La anterior era una ilustración generada
+por IA de la maqueta de Stitch: a 512x279 y, al ampliarla, con las etiquetas de
+los frascos deformadas y con faltas. La nueva se compone con las **fotos reales
+de producto** que la tienda oficial publica a resolución completa (1080-1600 px):
+aloe vera, EnfoK+, uña de gato, toxizero, colágeno hidrolizado y chancapiedra.
+
+Se regenera con:
+
+```
+C:/xampp/php/php.exe -d extension=gd scripts/componer-hero.php
+```
+
+Para cambiar qué productos salen o dónde, se toca `$PIEZAS` dentro del script.
+**Las piezas no pueden solaparse**: la mezcla es «multiplicar», que no tapa lo
+que hay debajo, así que dos productos encimados se transparentarían.
+
+Y si cambias la ruta, cámbiala **en los dos sitios**: `CONFIG.heroImagen` de
+`store.js` y el `src` del `<img id="hero-imagen">` de `index.php`. Tienen que
+decir exactamente lo mismo, porque store.js compara las dos cadenas y, si no
+calzan, reasigna el `src` y el navegador se baja la foto dos veces. Justo la
+que Google mide como LCP.
 
 ---
 
@@ -172,11 +227,26 @@ día. Hay que bajarla a `img/` y cambiar esa constante.
 en **todas** las páginas, landings incluidas: enlaces muertos en el destino de
 un anuncio. O se ponen las URLs reales, o se quitan los dos iconos.
 
-### [ ] 11. No hay favicon
+### [x] 11. ~~No hay favicon~~ — HECHO el 4/9/2026
 
-La pestaña del navegador sale en blanco. Hace falta un `favicon.ico` (o un
-`.png` de 32×32 y otro de 180×180 para iOS) y sus `<link>` en
-`inc/partes/cabeza.php`.
+Sale del **isotipo oficial** de Santa Natura (el globo de hojas). Tres archivos:
+
+- `favicon.ico` — 16, 32 y 48 px dentro del mismo archivo; el navegador elige.
+- `apple-touch-icon.png` — 180x180, sin transparencia, porque iOS pinta negro
+  detrás de lo que sea transparente.
+- `img/icono-192.png` — Android y pantallas de alta densidad.
+
+Los `<link>` van en `inc/partes/cabeza.php`, así que salen en todas las páginas.
+
+Se regenera con:
+
+```
+C:/xampp/php/php.exe -d extension=gd scripts/generar-favicon.php
+```
+
+El isotipo lleva un **círculo blanco detrás a propósito**: el verde de la marca
+es oscuro y sobre una barra de pestañas en tema oscuro casi no se distingue. Si
+alguna vez lo prefieres «a pelo», pon `$FONDO = false` en el script.
 
 ### [ ] 12. No hay etiquetas `og:`
 
@@ -197,10 +267,12 @@ una vez: `og:title`, `og:description`, `og:image` (en URL absoluta, ya tienes
 
 ## Orden sugerido
 
+Lo que queda, de arriba abajo:
+
 1. Conversiones + GA4 (1 y 2) — **antes de gastar el primer sol**
 2. Afirmaciones de salud y nombre del pack 102 (3)
 3. Apuntar los anuncios solo a las landings (4) — decisión, no trabajo
-4. Enlaces muertos, favicon, foto del hero a `img/` (9, 10, 11)
-5. Páginas legales y datos de negocio (5 y 6)
-6. Engordar la landing (7) y las fotos que faltan (8)
-7. Etiquetas `og:` (12)
+4. Enlaces muertos de Facebook e Instagram (10)
+5. Etiquetas `og:` (12)
+
+Cerrados: 7, 8, 9 y 11. Descartados por decisión: 5 y 6.

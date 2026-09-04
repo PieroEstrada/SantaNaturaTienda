@@ -258,3 +258,20 @@ details > summary::-webkit-details-marker { display: none; }
     margin-inline: auto;
     background: rgb(var(--c-outline-variant));
 }
+
+/* ----------------------------------------------------------------------------
+   Preguntas frecuentes (inc/render.php → sn_faq)
+   ----------------------------------------------------------------------------
+   El acordeón usa <details>/<summary>, sin una línea de JavaScript. Lo único
+   que Tailwind no cubre con utilidades es quitar el triangulito que cada
+   navegador dibuja por su cuenta delante del <summary>: Chrome y Safari lo
+   pintan con un pseudoelemento propio y Firefox con list-style, así que hay
+   que apagar los dos.
+   -------------------------------------------------------------------------- */
+.faq-resumen {
+    list-style: none;
+}
+
+.faq-resumen::-webkit-details-marker {
+    display: none;
+}

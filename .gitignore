@@ -20,3 +20,7 @@ build/package-lock.json
 Thumbs.db
 .DS_Store
 desktop.ini
+
+# Fotos originales que bajan scripts/componer-hero.php y generar-favicon.php.
+# Se vuelven a descargar solas; no tiene sentido versionarlas.
+scripts/.hero-fuentes/
